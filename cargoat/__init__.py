@@ -7,6 +7,7 @@ __version__ = v
 del v
 
 # imports
+from .core import *
 from .errors import *
 from .mhp import *
 from .sim import *
