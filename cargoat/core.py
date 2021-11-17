@@ -7,9 +7,9 @@ Core functions for doing things in cargoat.
 from cargoat.errors import MontyHallError
 from cargoat.sim import MontyHallSim
 
-def simulate(steps, n=100):
+def simulate(game, n=100):
     sim = MontyHallSim(n=n)
-    for i, step in enumerate(steps):
+    for i, step in enumerate(game):
         try:
             step(sim)
         except Exception as error:
