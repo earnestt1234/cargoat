@@ -64,8 +64,16 @@ class PickDoorWeighted(MontyHallRule):
 
     def __call__(self, sim):
         w = self.weights
-        if isinstance(w, Iterable) and len(w) == sim.shape[1]:
-            pass
+        n, d = sim.shape
+        if isinstance(w, Iterable) and len(w) == d:
+            wmat = np.tile(w, (n, 1))
+            pmat = wmat / wmat.sum(axis=1)[:, np.newaxis]
+            cum_p = np.cumsum(pmat, axis=1)
+            draws = np.random.rand(n, 1)
+            lt = (cum_p < draws)
+            picks = lt.sum(axis=1)
+
+            sim.picked[sim.idx, picks] = 1
         else:
             raise NotImplementedError("Only implemented weights of same "
                                       "length as number of doors.")
