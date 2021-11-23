@@ -33,6 +33,9 @@ class MontyHallSim:
         rd = ~np.logical_or.reduce([self.cars, self.picked, self.revealed])
         return rd.astype(int)
 
+    def validate_picks(self, picks):
+        return ~ np.logical_and(self.revealed, picks)
+
     def get_results(self):
         wins = np.sum(np.any(self.picked * self.cars, axis=1))
         losses = self.n - wins

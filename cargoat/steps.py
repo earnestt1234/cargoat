@@ -55,40 +55,54 @@ class PickDoor(MontyHallRule):
         sim.picked = newpicks.astype(int)
 
 class PickDoorWeighted(MontyHallRule):
-    def __init__(self, weights):
-        if self.weights_type_okay(weights):
-            self.weights = weights
-        else:
-            raise TypeError("weights must be None, a number, or an "
-                            f"iterable of numbers, not {type(weights)}")
+    def __init__(self, weights, unweight_revealed=True, unweight_picked=True):
+        self.weights = weights
+        self.unweight_revealed = unweight_revealed
+        self.unweight_picked = unweight_picked
 
     def __call__(self, sim):
         w = self.weights
         n, d = sim.shape
+
+        # init empty weights
+        wmat = np.full(sim.shape, np.nan)
+
+        # unweight if desired
+        if self.unweight_revealed:
+            wmat[sim.revealed] = 0
+        if self.unweight_picked:
+            wmat[sim.picked] = 0
+
+        # fill in provided weights
         if isinstance(w, Iterable) and len(w) == d:
-            wmat = np.tile(w, (n, 1))
-            pmat = wmat / wmat.sum(axis=1)[:, np.newaxis]
-            cum_p = np.cumsum(pmat, axis=1)
-            draws = np.random.rand(n, 1)
-            lt = (cum_p < draws)
-            picks = lt.sum(axis=1)
+            wmat = np.where(np.isnan(wmat),
+                            np.tile(w, (n, 1)),
+                            wmat)
+        elif isinstance(w, Iterable):
+            lw = len(w)
 
-            sim.picked[sim.idx, picks] = 1
-        else:
-            raise NotImplementedError("Only implemented weights of same "
-                                      "length as number of doors.")
+            pass
 
-    def weights_type_okay(self, weights):
-        ok1 = weights is None
-        ok2 = isinstance(weights, Number)
+        # convert to probabilities
+        pmat = wmat / wmat.sum(axis=1)[:, np.newaxis]
 
-        isiterable = isinstance(weights, Iterable)
-        if isiterable:
-            nonnull = len(weights) >= 1
-            numbers = all(isinstance(i, Number) for i in weights)
-            ok3 = nonnull and numbers
+        cum_p = np.cumsum(pmat, axis=1)
+        draws = np.random.rand(n, 1)
+        lt = (cum_p < draws)
+        to_pick = lt.sum(axis=1)
 
-        return any([ok1, ok2, ok3])
+        picks = np.zeros(sim.shape)
+        picks[sim.idx, to_pick] = 1
+
+        # verify revealed doors aren't chosen
+        valid = sim.validate_picks(picks)
+        if np.any(~valid):
+            badrows = np.any(~valid, axis=1)
+            msg = "Revealed doors were picked."
+            self.bad_trials_raise(badrows, msg, BadPick)
+
+        # set the new picks
+        sim.picked = picks
 
 class Stay(MontyHallRule):
     def __call__(self, sim):
