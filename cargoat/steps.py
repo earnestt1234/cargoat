@@ -79,8 +79,7 @@ class PickDoorWeighted(MontyHallRule):
                             np.tile(w, (n, 1)),
                             wmat)
         elif isinstance(w, Iterable):
-            lw = len(w)
-
+            # TODO
             pass
 
         # convert to probabilities
