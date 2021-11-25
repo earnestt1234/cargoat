@@ -7,6 +7,8 @@ running a given Monty Hall experiment many times.
 
 import numpy as np
 
+from .errors import BadPick
+
 class MontyHallSim:
     def __init__(self, n):
         self.n = n
@@ -35,6 +37,21 @@ class MontyHallSim:
 
     def validate_picks(self, picks):
         return ~ np.logical_and(self.revealed, picks)
+
+    def bad_trials_raise(self, badrows, msg, errortype):
+        idx = np.arange(len(badrows))[badrows]
+        n = len(idx)
+        raise errortype(f"{msg} Found for {n} trial(s):\n{idx}")
+
+    def set_picks(self, picks, raise_badpicks=True):
+        if raise_badpicks:
+            valid = self.validate_picks(picks)
+            if np.any(~valid):
+                badrows = np.any(~valid, axis=1)
+                msg = "Revealed doors were picked."
+                self.bad_trials_raise(badrows, msg, BadPick)
+
+        self.picked = picks
 
     def get_results(self):
         wins = np.sum(np.any(self.picked * self.cars, axis=1))

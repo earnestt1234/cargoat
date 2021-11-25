@@ -19,11 +19,6 @@ class MontyHallRule(object):
         args = ', '.join(f'{arg}={val}' for arg, val in vars(self).items())
         return f'{name}({args})'
 
-    def bad_trials_raise(self, badrows, msg, errortype):
-        idx = np.arange(len(badrows))[badrows]
-        n = len(idx)
-        raise errortype(f"{msg} Found for {n} trial(s):\n{idx}")
-
 # ---- Initialization
 class InitDoorsRandom(MontyHallRule):
     def __init__(self, cars=1, goats=2):
@@ -32,9 +27,9 @@ class InitDoorsRandom(MontyHallRule):
 
     def __call__(self, sim):
         shape = (sim.n, self.cars + self.goats)
-        sim.cars = np.zeros(shape).astype(int)
-        sim.picked = np.zeros(shape).astype(int)
-        sim.revealed = np.zeros(shape).astype(int)
+        sim.cars = np.zeros(shape, dtype=int)
+        sim.picked = np.zeros(shape, dtype=int)
+        sim.revealed = np.zeros(shape, dtype=int)
 
         p = np.random.rand(shape[0], shape[1]).argsort(1)
         sim.cars[p < self.cars] = 1
@@ -42,17 +37,19 @@ class InitDoorsRandom(MontyHallRule):
 # ---- Picking Doors
 class PickDoor(MontyHallRule):
     def __call__(self, sim):
+
+        # enforce a door is picked
         pickable = sim.pickable_doors()
         badrows = ~np.any(pickable, axis=1)
         if np.any(badrows):
             msg = "No pickable doors."
-            self.bad_trials_raise(badrows, msg, BadPick)
+            sim.bad_trials_raise(badrows, msg, BadPick)
 
         newpicks = np.zeros(sim.shape)
         weights = np.random.rand(*sim.shape) * pickable
         to_pick = weights.argmax(1)
         newpicks[sim.idx, to_pick] = 1
-        sim.picked = newpicks.astype(int)
+        sim.set_picks(newpicks)
 
 class PickDoorWeighted(MontyHallRule):
     def __init__(self, weights, unweight_revealed=True, unweight_picked=True):
@@ -69,9 +66,9 @@ class PickDoorWeighted(MontyHallRule):
 
         # unweight if desired
         if self.unweight_revealed:
-            wmat[sim.revealed] = 0
+            wmat[sim.revealed.astype(bool)] = 0
         if self.unweight_picked:
-            wmat[sim.picked] = 0
+            wmat[sim.picked.astype(bool)] = 0
 
         # fill in provided weights
         if isinstance(w, Iterable) and len(w) == d:
@@ -79,8 +76,13 @@ class PickDoorWeighted(MontyHallRule):
                             np.tile(w, (n, 1)),
                             wmat)
         elif isinstance(w, Iterable):
-            # TODO
-            pass
+            lw = len(w)
+            spots = np.sum(np.isnan(wmat), axis=1)
+            if ~ np.all(spots == lw):
+                badtrials = spots != lw
+                msg = 'Weights do not match number of pickable doors.'
+                sim.bad_trials_raise(badtrials, msg, ValueError)
+            wmat[np.isnan(wmat)] = np.tile(w, n)
 
         # convert to probabilities
         pmat = wmat / wmat.sum(axis=1)[:, np.newaxis]
@@ -90,18 +92,9 @@ class PickDoorWeighted(MontyHallRule):
         lt = (cum_p < draws)
         to_pick = lt.sum(axis=1)
 
-        picks = np.zeros(sim.shape)
+        picks = np.zeros(sim.shape, dtype=int)
         picks[sim.idx, to_pick] = 1
-
-        # verify revealed doors aren't chosen
-        valid = sim.validate_picks(picks)
-        if np.any(~valid):
-            badrows = np.any(~valid, axis=1)
-            msg = "Revealed doors were picked."
-            self.bad_trials_raise(badrows, msg, BadPick)
-
-        # set the new picks
-        sim.picked = picks
+        sim.set_picks(picks, raise_badpicks=True)
 
 class Stay(MontyHallRule):
     def __call__(self, sim):
@@ -122,7 +115,7 @@ class Switch(MontyHallRule):
 #         badpicks = np.logical_and(sim.picked - prior, sim.revealed)
 #         if np.any(badpicks):
 #             msg = "A revealed door was picked."
-#             self.bad_trials_raise(np.any(badpicks, axis=1), msg, BadPick)
+#             sim.bad_trials_raise(np.any(badpicks, axis=1), msg, BadPick)
 
 # ---- Revealing Doors
 class RevealGoat(MontyHallRule):
@@ -131,7 +124,7 @@ class RevealGoat(MontyHallRule):
         badrows = ~np.any(revealable, axis=1)
         if np.any(badrows):
             msg = "No goats to reveal."
-            self.bad_trials_raise(badrows, msg, BadReveal)
+            sim.bad_trials_raise(badrows, msg, BadReveal)
 
         weights = np.random.rand(*sim.shape) * revealable
         to_reveal = weights.argmax(1)
