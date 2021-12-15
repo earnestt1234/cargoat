@@ -39,7 +39,7 @@ class MontyHallSim:
         return rd.astype(int)
 
     # ---- Handling door picking
-    def set_picks(self, picks, add=False, allow_spoiled=True):
+    def set_picks(self, picks, add=False, allow_spoiled=False):
         valid = self.validate_picks(picks)
         badrows = np.any(~valid, axis=1)
         if not allow_spoiled and np.any(~valid):
