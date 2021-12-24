@@ -46,12 +46,14 @@ class PickDoor(MontyHallRule):
         pickable = sim.pickable_doors(self.exclude_current)
         badrows = ~np.any(pickable, axis=1)
         if np.any(badrows):
-            msg = "Some trials have no pickable doors."
+            i = badrows.argmax()
+            msg = (f"Some trials have no pickable doors, e.g. trial {i}.")
             sim.bad_trials_raise(badrows, msg, BadPick)
 
         newpicks = np.zeros(sim.shape, dtype=int)
         weights = np.random.rand(*sim.shape) * pickable
         to_pick = weights.argmax(1)
+        to_pick[weights.sum(1) == 0] = 0
         newpicks[sim.idx, to_pick] = 1
         sim.set_picks(newpicks, add=self.add)
 
@@ -67,7 +69,7 @@ class PickDoors(MontyHallRule):
         n_pickable = pickable.sum(axis=1)
         badrows = (n_pickable < self.n)
         if np.any(badrows):
-            i = badrows.argmin()
+            i = badrows.argmax()
             msg = (f"Some trials have less than {self.n} pickable doors, "
                    f"e.g. trial {i} with {n_pickable[i]}.")
             sim.bad_trials_raise(badrows, msg, BadPick)

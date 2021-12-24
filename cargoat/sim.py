@@ -39,16 +39,31 @@ class MontyHallSim:
         return rd.astype(int)
 
     # ---- Handling door picking
-    def set_picks(self, picks, add=False, allow_spoiled=False):
+    def set_picks(self, picks, add=False, allow_spoiled=False, n_per_row=None):
+
+        # check for correct number of picks
+        if n_per_row is not None:
+            wrong_n_picks = (picks.astype(int).sum(axis=1) != n_per_row)
+            if np.any(wrong_n_picks):
+                idx = np.argmax(wrong_n_picks)
+                val = wrong_n_picks[idx]
+                msg = ("Some trials have incorrect number of picks, e.g. "
+                       f"trial {idx}, picked {val} but expected {n_per_row}.")
+                self.bad_trials_raise(wrong_n_picks, msg, BadPick)
+
+        # check for valid picks
         valid = self.validate_picks(picks)
-        badrows = np.any(~valid, axis=1)
+        invalid_rows = np.any(~valid, axis=1)
         if not allow_spoiled and np.any(~valid):
             trial, door = self.get_index_success(~valid)
             msg = ("Revealed doors were picked, e.g. "
                    f"trial {trial} door {door}.")
-            self.bad_trials_raise(badrows, msg, BadPick)
+            self.bad_trials_raise(invalid_rows, msg, BadPick)
 
-        self.spoiled[badrows] = 1
+        # mark spoiled games (only based on invalid picks)
+        self.spoiled[invalid_rows] = 1
+
+        # update sim.picked
         if add:
             picks = np.logical_or(picks, self.picked).astype(int)
         self.picked = picks
