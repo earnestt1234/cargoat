@@ -28,11 +28,12 @@ class MontyHallSim:
         return self.cars.shape
 
     # ---- Status of the sim
-    def pickable_doors(self, exclude_current=True):
-        if exclude_current:
-            return (~np.logical_or(self.picked, self.revealed)).astype(int)
-        else:
-            return 1 - self.revealed
+    def pickable_doors(self, exclude_current=True, exclude_revealed=True):
+        pickable = np.ones(self.shape, dtype=int)
+        bad = np.logical_or(int(exclude_current) * self.picked,
+                            int(exclude_revealed) * self.revealed)
+        pickable -= bad
+        return pickable
 
     def revealable_doors(self):
         rd = ~np.logical_or.reduce([self.cars, self.picked, self.revealed])
@@ -43,12 +44,14 @@ class MontyHallSim:
 
         # check for correct number of picks
         if n_per_row is not None:
-            wrong_n_picks = (picks.astype(int).sum(axis=1) != n_per_row)
+            picks_per_row = picks.astype(int).sum(axis=1)
+            wrong_n_picks = (picks_per_row != n_per_row)
             if np.any(wrong_n_picks):
                 idx = np.argmax(wrong_n_picks)
-                val = wrong_n_picks[idx]
+                val = picks_per_row[idx]
                 msg = ("Some trials have incorrect number of picks, e.g. "
-                       f"trial {idx}, picked {val} but expected {n_per_row}.")
+                       f"on trial {idx}, there are {val} new picks "
+                       f"but expected {n_per_row}.")
                 self.bad_trials_raise(wrong_n_picks, msg, BadPick)
 
         # check for valid picks

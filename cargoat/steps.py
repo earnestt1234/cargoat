@@ -36,56 +36,46 @@ class InitDoorsRandom(MontyHallRule):
 
 # ---- Picking Doors
 class PickDoor(MontyHallRule):
-    def __init__(self, exclude_current=True, add=False):
+    def __init__(self, exclude_current=True, exclude_revealed=True, add=False,
+                 allow_spoiled=False):
         self.exclude_current = exclude_current
+        self.exclude_revealed = exclude_revealed
+        self.allow_spoiled = allow_spoiled
         self.add = add
 
     def __call__(self, sim):
-
-        # enforce a door is picked
-        pickable = sim.pickable_doors(self.exclude_current)
-        badrows = ~np.any(pickable, axis=1)
-        if np.any(badrows):
-            i = badrows.argmax()
-            msg = (f"Some trials have no pickable doors, e.g. trial {i}.")
-            sim.bad_trials_raise(badrows, msg, BadPick)
-
+        pickable = sim.pickable_doors(self.exclude_current, self.exclude_revealed)
         newpicks = np.zeros(sim.shape, dtype=int)
         weights = np.random.rand(*sim.shape) * pickable
         to_pick = weights.argmax(1)
-        to_pick[weights.sum(1) == 0] = 0
         newpicks[sim.idx, to_pick] = 1
-        sim.set_picks(newpicks, add=self.add)
+        newpicks[~pickable.astype(bool)] = 0
+        sim.set_picks(newpicks, add=self.add, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class PickDoors(MontyHallRule):
-    def __init__(self, n, exclude_current=True, add=False):
+    def __init__(self, n, exclude_current=True, exclude_revealed=True, add=False,
+                 allow_spoiled=False):
         self.n = n
         self.exclude_current = exclude_current
+        self.exclude_revealed = exclude_revealed
         self.add = add
+        self.allow_spoiled = allow_spoiled
 
     def __call__(self, sim):
-        # enforce n doors are picked
-        pickable = sim.pickable_doors(self.exclude_current)
-        n_pickable = pickable.sum(axis=1)
-        badrows = (n_pickable < self.n)
-        if np.any(badrows):
-            i = badrows.argmax()
-            msg = (f"Some trials have less than {self.n} pickable doors, "
-                   f"e.g. trial {i} with {n_pickable[i]}.")
-            sim.bad_trials_raise(badrows, msg, BadPick)
-
+        pickable = sim.pickable_doors(self.exclude_current, self.exclude_revealed)
         newpicks = np.zeros(sim.shape, dtype=int)
         weights = np.random.rand(*sim.shape) * pickable
         indices = weights.argsort(1)
         newpicks[indices < self.n] = 1
-        sim.set_picks(newpicks, add=self.add)
+        newpicks[~pickable.astype(bool)] = 0
+        sim.set_picks(newpicks, add=self.add, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
 class PickDoorWeighted(MontyHallRule):
-    def __init__(self, weights, unweight_revealed=True, unweight_picked=True,
+    def __init__(self, weights, exclude_revealed=True, exclude_current=True,
                  allow_spoiled=False, add=False):
         self.weights = weights
-        self.unweight_revealed = unweight_revealed
-        self.unweight_picked = unweight_picked
+        self.exclude_revealed = exclude_revealed
+        self.exclude_current = exclude_current
         self.allow_spoiled = allow_spoiled
         self.add = add
 
@@ -97,9 +87,9 @@ class PickDoorWeighted(MontyHallRule):
         wmat = np.full(sim.shape, np.nan)
 
         # unweight if desired
-        if self.unweight_revealed:
+        if self.exclude_revealed:
             wmat[sim.revealed.astype(bool)] = 0
-        if self.unweight_picked:
+        if self.exclude_current:
             wmat[sim.picked.astype(bool)] = 0
 
         # fill in provided weights
