@@ -9,7 +9,7 @@ import pprint
 
 import numpy as np
 
-from cargoat.errors import (BadPick, BadReveal)
+from cargoat.errors import (BadReveal)
 
 # ---- Parent class
 class MontyHallRule(object):
@@ -44,7 +44,8 @@ class PickDoor(MontyHallRule):
         self.add = add
 
     def __call__(self, sim):
-        pickable = sim.pickable_doors(self.exclude_current, self.exclude_revealed)
+        pickable = ~sim.query_doors_or(picked=self.exclude_current,
+                                       revealed=self.exclude_revealed)
         newpicks = np.zeros(sim.shape, dtype=int)
         weights = np.random.rand(*sim.shape) * pickable
         to_pick = weights.argmax(1)
@@ -62,7 +63,8 @@ class PickDoors(MontyHallRule):
         self.allow_spoiled = allow_spoiled
 
     def __call__(self, sim):
-        pickable = sim.pickable_doors(self.exclude_current, self.exclude_revealed)
+        pickable = ~sim.query_doors_or(picked=self.exclude_current,
+                                       revealed=self.exclude_revealed)
         newpicks = np.zeros(sim.shape, dtype=int)
         weights = np.random.rand(*sim.shape) * pickable
         indices = weights.argsort(1)

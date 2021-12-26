@@ -28,16 +28,30 @@ class MontyHallSim:
         return self.cars.shape
 
     # ---- Status of the sim
-    def pickable_doors(self, exclude_current=True, exclude_revealed=True):
-        pickable = np.ones(self.shape, dtype=int)
-        bad = np.logical_or(int(exclude_current) * self.picked,
-                            int(exclude_revealed) * self.revealed)
-        pickable -= bad
-        return pickable
+    def query_doors_or(self, cars=False, picked=False, revealed=False,
+                       not_cars=False, not_picked=False, not_revealed=False):
+        c = int(cars)
+        p = int(picked)
+        r = int(revealed)
+        notc = int(not_cars)
+        notp = int(not_picked)
+        notr = int(not_revealed)
+
+        out = np.logical_or.reduce([
+            c * self.cars,
+            p * self.picked,
+            r * self.revealed,
+            notc * (1 - self.cars),
+            notp * (1 - self.picked),
+            notr * (1 - self.revealed)
+            ])
+        return out
+
+    def pickable_doors(self, exclude_current=True):
+        return ~self.query_doors_or(picked=exclude_current, revealed=True)
 
     def revealable_doors(self):
-        rd = ~np.logical_or.reduce([self.cars, self.picked, self.revealed])
-        return rd.astype(int)
+        return ~self.query_doors_or(cars=True, picked=True, revealed=True)
 
     # ---- Handling door picking
     def set_picks(self, picks, add=False, allow_spoiled=False, n_per_row=None):
