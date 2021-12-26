@@ -19,6 +19,17 @@ class MontyHallRule(object):
         return f'{name}({args})'
 
 # ---- Initialization
+class InitDoorsFixed(MontyHallRule):
+    def __init__(self, placement=[0, 0, 1]):
+        self.placement = np.array(placement).astype(int)
+
+    def __call__(self, sim):
+        shape = (sim.n, len(self.placement))
+        sim.cars = np.tile(self.placement, (sim.n, 1))
+        sim.picked = np.zeros(shape, dtype=int)
+        sim.revealed = np.zeros(shape, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=int)
+
 class InitDoorsRandom(MontyHallRule):
     def __init__(self, cars=1, goats=2):
         self.cars = cars
