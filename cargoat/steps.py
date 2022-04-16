@@ -153,6 +153,22 @@ class Switch(MontyHallRule):
         PickDoor()(sim)
 
 # ---- Revealing Doors
+class RevealDoor(MontyHallRule):
+    def __init__(self, exclude_current=True, exclude_cars=True, allow_spoiled=False):
+        self.exclude_current = exclude_current
+        self.exclude_cars = exclude_cars
+        self.allow_spoiled = allow_spoiled
+
+    def __call__(self, sim):
+        revealable = ~sim.query_doors_or(cars=self.exclude_cars,
+                                         revealed=self.exclude_current)
+        newreveals = np.zeros(sim.shape, dtype=int)
+        weights = np.random.rand(*sim.shape) * revealable
+        to_reveal = weights.argmax(1)
+        newreveals[sim.idx, to_reveal] = 1
+        newreveals[~revealable.astype(bool)] = 0
+        sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
+
 class RevealGoat(MontyHallRule):
     def __call__(self, sim):
         revealable = sim.revealable_doors()
