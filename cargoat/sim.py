@@ -53,6 +53,21 @@ class MontyHallSim:
     def revealable_doors(self):
         return ~self.query_doors_or(cars=True, picked=True, revealed=True)
 
+    # ---- Helpers for generating picks/reveals/cars
+
+    def generate_rowwise_selections(self, n=1, array_allowed=None):
+
+        if array_allowed is None:
+            array_allowed = np.ones(self.shape, dtype=int)
+
+        output = np.zeros(self.shape, dtype=int)
+        weights = np.random.rand(*self.shape) * array_allowed
+        indices = weights.argsort(1)
+        output[indices < n] = 1
+        output[~array_allowed.astype(bool)] = 0
+
+        return output
+
     # ---- Handling door picking
     def set_picks(self, picks, add=False, allow_spoiled=False, n_per_row=None):
 

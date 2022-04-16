@@ -57,11 +57,7 @@ class PickDoor(MontyHallRule):
     def __call__(self, sim):
         pickable = ~sim.query_doors_or(picked=self.exclude_current,
                                        revealed=self.exclude_revealed)
-        newpicks = np.zeros(sim.shape, dtype=int)
-        weights = np.random.rand(*sim.shape) * pickable
-        to_pick = weights.argmax(1)
-        newpicks[sim.idx, to_pick] = 1
-        newpicks[~pickable.astype(bool)] = 0
+        newpicks = sim.generate_rowwise_selections(n=1, array_allowed=pickable)
         sim.set_picks(newpicks, add=self.add, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class PickDoors(MontyHallRule):
@@ -76,11 +72,7 @@ class PickDoors(MontyHallRule):
     def __call__(self, sim):
         pickable = ~sim.query_doors_or(picked=self.exclude_current,
                                        revealed=self.exclude_revealed)
-        newpicks = np.zeros(sim.shape, dtype=int)
-        weights = np.random.rand(*sim.shape) * pickable
-        indices = weights.argsort(1)
-        newpicks[indices < self.n] = 1
-        newpicks[~pickable.astype(bool)] = 0
+        newpicks = sim.generate_rowwise_selections(n=self.n, array_allowed=pickable)
         sim.set_picks(newpicks, add=self.add, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
 class PickDoorWeighted(MontyHallRule):
@@ -162,11 +154,7 @@ class RevealDoor(MontyHallRule):
     def __call__(self, sim):
         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
                                          revealed=self.exclude_current)
-        newreveals = np.zeros(sim.shape, dtype=int)
-        weights = np.random.rand(*sim.shape) * revealable
-        to_reveal = weights.argmax(1)
-        newreveals[sim.idx, to_reveal] = 1
-        newreveals[~revealable.astype(bool)] = 0
+        newreveals = sim.generate_rowwise_selections(n=1, array_allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class RevealGoat(MontyHallRule):
