@@ -7,7 +7,7 @@ running a given Monty Hall experiment many times.
 
 import numpy as np
 
-from .errors import BadPick
+from .errors import BadPick, BadReveal
 
 class MontyHallSim:
     def __init__(self, n):

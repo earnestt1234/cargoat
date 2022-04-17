@@ -146,16 +146,32 @@ class Switch(MontyHallRule):
 
 # ---- Revealing Doors
 class RevealDoor(MontyHallRule):
-    def __init__(self, exclude_current=True, exclude_cars=True, allow_spoiled=False):
+    def __init__(self, exclude_current=True, exclude_cars=True,
+                 exclude_picked=True, allow_spoiled=False):
         self.exclude_current = exclude_current
         self.exclude_cars = exclude_cars
         self.allow_spoiled = allow_spoiled
 
     def __call__(self, sim):
         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
-                                         revealed=self.exclude_current)
+                                         revealed=self.exclude_current,
+                                         picked=self.exclude_picked)
         newreveals = sim.generate_rowwise_selections(n=1, array_allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
+
+class RevealDoors(MontyHallRule):
+    def __init__(self, n, exclude_current=True, exclude_cars=True, allow_spoiled=False):
+        self.n = n
+        self.exclude_current = exclude_current
+        self.exclude_cars = exclude_cars
+        self.allow_spoiled = allow_spoiled
+
+    def __call__(self, sim):
+        revealable = ~sim.query_doors_or(cars=self.exclude_cars,
+                                         revealed=self.exclude_current,
+                                         picked=self.exclude_picked)
+        newreveals = sim.generate_rowwise_selections(n=self.n, array_allowed=revealable)
+        sim.set_revealed(newreveals, add=True, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
 class RevealGoat(MontyHallRule):
     def __call__(self, sim):
