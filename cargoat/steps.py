@@ -150,6 +150,7 @@ class RevealDoor(MontyHallRule):
                  exclude_picked=True, allow_spoiled=False):
         self.exclude_current = exclude_current
         self.exclude_cars = exclude_cars
+        self.exclude_picked=exclude_picked
         self.allow_spoiled = allow_spoiled
 
     def __call__(self, sim):
