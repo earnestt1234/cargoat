@@ -28,6 +28,6 @@ setup(name='cargoat',
       author_email='earnestt1234@gmail.com',
       license='MIT',
       packages=['cargoat'],
-      install_requires=['numpy'],
+      install_requires=['numpy>=1.2'],
       long_description=long_description,
       long_description_content_type='text/markdown')

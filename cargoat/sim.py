@@ -105,9 +105,10 @@ class MontyHallSim:
 
     # ---- Generic errors
     def bad_trials_raise(self, badrows, msg, errortype):
-        idx = np.arange(len(badrows))[badrows]
-        n = len(idx)
-        raise errortype(f"{msg} Found for {n} trial(s):\n{idx}")
+        with np.printoptions(threshold=100):
+            idx = np.arange(len(badrows))[badrows]
+            n = len(idx)
+            raise errortype(f"{msg} Found for {n} trial(s):\n{idx}")
 
     # ---- Other helpers
     def get_index_success(self, boolarray, i=0):
