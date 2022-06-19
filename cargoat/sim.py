@@ -55,14 +55,28 @@ class MontyHallSim:
 
     # ---- Helpers for generating picks/reveals/cars
 
-    def generate_rowwise_selections(self, n=1, array_allowed=None):
+    def choose_one_per_row(self, array_allowed=None):
+        if array_allowed is None:
+            array_allowed = np.ones(self.shape, dtype=int)
+
+        output = np.zeros(self.shape, dtype=int)
+        weights = np.random.rand(*self.shape) * array_allowed
+        chosen = weights.argmax(1)
+        output[self.idx, chosen] = 1
+        output[~array_allowed.astype(bool)] = 0
+
+        return output
+
+    def choose_n_per_row(self, n, array_allowed=None):
+        if n == 1:
+            return self.choose_one_per_row(array_allowed=array_allowed)
 
         if array_allowed is None:
             array_allowed = np.ones(self.shape, dtype=int)
 
         output = np.zeros(self.shape, dtype=int)
         weights = np.random.rand(*self.shape) * array_allowed
-        indices = weights.argsort(1)
+        indices = (-weights).argsort(1).argsort(1) # add note about this
         output[indices < n] = 1
         output[~array_allowed.astype(bool)] = 0
 

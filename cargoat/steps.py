@@ -57,7 +57,7 @@ class PickDoor(MontyHallRule):
     def __call__(self, sim):
         pickable = ~sim.query_doors_or(picked=self.exclude_current,
                                        revealed=self.exclude_revealed)
-        newpicks = sim.generate_rowwise_selections(n=1, array_allowed=pickable)
+        newpicks = sim.choose_one_per_row(array_allowed=pickable)
         sim.set_picks(newpicks, add=self.add, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class PickDoors(MontyHallRule):
@@ -72,7 +72,7 @@ class PickDoors(MontyHallRule):
     def __call__(self, sim):
         pickable = ~sim.query_doors_or(picked=self.exclude_current,
                                        revealed=self.exclude_revealed)
-        newpicks = sim.generate_rowwise_selections(n=self.n, array_allowed=pickable)
+        newpicks = sim.choose_n_per_row(n=self.n, array_allowed=pickable)
         sim.set_picks(newpicks, add=self.add, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
 class PickDoorWeighted(MontyHallRule):
@@ -157,7 +157,7 @@ class RevealDoor(MontyHallRule):
         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
                                          revealed=self.exclude_current,
                                          picked=self.exclude_picked)
-        newreveals = sim.generate_rowwise_selections(n=1, array_allowed=revealable)
+        newreveals = sim.choose_one_per_row(array_allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class RevealDoors(MontyHallRule):
@@ -171,7 +171,7 @@ class RevealDoors(MontyHallRule):
         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
                                          revealed=self.exclude_current,
                                          picked=self.exclude_picked)
-        newreveals = sim.generate_rowwise_selections(n=self.n, array_allowed=revealable)
+        newreveals = sim.choose_n_per_row(n=self.n, array_allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
 class RevealGoat(MontyHallRule):
