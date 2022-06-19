@@ -162,10 +162,12 @@ class RevealDoor(MontyHallRule):
         sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class RevealDoors(MontyHallRule):
-    def __init__(self, n, exclude_current=True, exclude_cars=True, allow_spoiled=False):
+    def __init__(self, n, exclude_current=True, exclude_cars=True,
+                 exclude_picked=True, allow_spoiled=False):
         self.n = n
         self.exclude_current = exclude_current
         self.exclude_cars = exclude_cars
+        self.exclude_picked=exclude_picked
         self.allow_spoiled = allow_spoiled
 
     def __call__(self, sim):

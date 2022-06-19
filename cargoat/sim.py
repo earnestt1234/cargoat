@@ -8,7 +8,7 @@ running a given Monty Hall experiment many times.
 import numpy as np
 
 from cargoat.arrayops import get_index_success
-from cargoat.errors import BadPick, BadReveal, bad_trials_raise
+from cargoat.errors import BadPick, BadReveal, bad_trials_raise, check_n_per_row
 
 class MontyHallSim:
     def __init__(self, n):
@@ -54,20 +54,13 @@ class MontyHallSim:
     def revealable_doors(self):
         return ~self.query_doors_or(cars=True, picked=True, revealed=True)
 
-    # ---- Handling door picking
+    # ---- Door picking
     def set_picks(self, picks, add=False, allow_spoiled=False, n_per_row=None):
 
         # check for correct number of picks
         if n_per_row is not None:
-            picks_per_row = picks.astype(int).sum(axis=1)
-            wrong_n_picks = (picks_per_row != n_per_row)
-            if np.any(wrong_n_picks):
-                idx = np.argmax(wrong_n_picks)
-                val = picks_per_row[idx]
-                msg = ("Some trials have incorrect number of picks, e.g. "
-                       f"on trial {idx}, there are {val} new picks "
-                       f"but expected {n_per_row}.")
-                bad_trials_raise(wrong_n_picks, msg, BadPick)
+            check_n_per_row(picks, n=n_per_row, etype=BadPick,
+                            emessage='Some trials have incorrect number of picks.')
 
         # check for valid picks
         valid = self.validate_picks(picks)
@@ -88,6 +81,35 @@ class MontyHallSim:
 
     def validate_picks(self, picks):
         return ~ np.logical_and(self.revealed, picks)
+
+    # ---- Door revealing
+    def set_revealed(self, reveals, add=True, allow_spoiled=False, n_per_row=None):
+
+        # check for correct number of reveals
+        if n_per_row is not None:
+            check_n_per_row(reveals, n=n_per_row, etype=BadReveal,
+                            emessage='Some trials have incorrect number of reveals.')
+
+        # check for valid reveals
+        valid = self.validate_reveals(reveals)
+        invalid_rows = np.any(~valid, axis=1)
+        if not allow_spoiled and np.any(~valid):
+            trial, door = get_index_success(~valid)
+            msg = ("Cars or picked doors were revealed, e.g. "
+                   f"trial {trial} door {door}.")
+            bad_trials_raise(invalid_rows, msg, BadReveal)
+
+        # mark spoiled games (only based on invalid picks)
+        self.spoiled[invalid_rows] = 1
+
+        # update sim.revealed
+        if add:
+            reveals = np.logical_or(reveals, self.revealed).astype(int)
+        self.revealed = reveals
+
+    def validate_reveals(self, reveals):
+        notokay = self.query_doors_or(cars=True, picked=True)
+        return ~ np.logical_and(notokay, reveals)
 
     # ---- Results
     def get_results(self):
