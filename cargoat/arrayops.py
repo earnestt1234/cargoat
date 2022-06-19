@@ -6,6 +6,8 @@ General operaions on numpy arrays used for cargoat.
 @author: earnestt1234
 """
 
+from collections.abc import Iterable
+
 import numpy as np
 
 def get_index_success(boolarray2D, i=0):
@@ -59,3 +61,54 @@ def one_per_row(shape2D, allowed=None, dtype=int, enforce_allowed=True):
         output[~allowed.astype(bool)] = 0
 
     return output.astype(dtype)
+
+def one_per_row_weighted(shape2D, weights, allowed=None, dtype=int):
+    '''Generate a binary/boolean array with one True per row, where
+    the probabilities for each column are weighted.  Similar to
+    `one_per_row()`, but allows for custom weighting.
+
+    Weights must either be the same length as the number of columns,
+    or the same length as there are "allowed" cells for each row.
+
+    Use `allowed` to mask some cells as being non-selectable.  Having no
+    allowed cells for a given row or all 0 weights will throw an error.'''
+
+    w = weights
+    n, d = shape2D
+
+    # init empty weights
+    wmat = np.full(shape2D, np.nan)
+
+    # unweight if desired
+    if allowed is None:
+        allowed = np.ones(shape2D, dtype=bool)
+    wmat[~allowed] = 0
+
+    # fill in provided weights
+    if isinstance(w, Iterable) and len(w) == d:
+        wmat = np.where(np.isnan(wmat),
+                        np.tile(w, (n, 1)),
+                        wmat)
+    elif isinstance(w, Iterable):
+        lw = len(w)
+        spots = np.sum(np.isnan(wmat), axis=1)
+        if ~ np.all(spots == lw):
+            raise ValueError(f"Number of weights ({lw}) does not match number of open spots "
+                             f"for some rows.")
+        wmat[np.isnan(wmat)] = np.tile(w, n)
+
+    wsum = np.sum(wmat, axis=1)
+    if np.any(wsum == 0):
+        raise ValueError("Weights sum to zero.")
+
+    # convert to probabilities
+    pmat = wmat / wsum[:, np.newaxis]
+
+    cum_p = np.cumsum(pmat, axis=1)
+    draws = np.random.rand(n, 1)
+    lt = (cum_p < draws)
+    chosen = lt.sum(axis=1)
+
+    output = np.zeros(shape2D, dtype=int)
+    output[np.arange(n), chosen] = 1
+    return output

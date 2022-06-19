@@ -9,7 +9,9 @@ import pprint
 
 import numpy as np
 
-from cargoat.arrayops import one_per_row, n_per_row
+from cargoat.arrayops import (one_per_row,
+                              one_per_row_weighted,
+                              n_per_row)
 from cargoat.errors import (BadReveal, bad_trials_raise)
 
 # ---- Parent class
@@ -86,42 +88,15 @@ class PickDoorWeighted(MontyHallRule):
         self.add = add
 
     def __call__(self, sim):
-        w = self.weights
-        n, d = sim.shape
 
-        # init empty weights
-        wmat = np.full(sim.shape, np.nan)
-
-        # unweight if desired
+        allowed = np.ones(sim.shape, dtype=bool)
         if self.exclude_revealed:
-            wmat[sim.revealed.astype(bool)] = 0
+            allowed[sim.revealed.astype(bool)] = 0
         if self.exclude_current:
-            wmat[sim.picked.astype(bool)] = 0
+            allowed[sim.picked.astype(bool)] = 0
 
-        # fill in provided weights
-        if isinstance(w, Iterable) and len(w) == d:
-            wmat = np.where(np.isnan(wmat),
-                            np.tile(w, (n, 1)),
-                            wmat)
-        elif isinstance(w, Iterable):
-            lw = len(w)
-            spots = np.sum(np.isnan(wmat), axis=1)
-            if ~ np.all(spots == lw):
-                badtrials = spots != lw
-                msg = 'Weights do not match number of pickable doors.'
-                bad_trials_raise(badtrials, msg, ValueError)
-            wmat[np.isnan(wmat)] = np.tile(w, n)
-
-        # convert to probabilities
-        pmat = wmat / wmat.sum(axis=1)[:, np.newaxis]
-
-        cum_p = np.cumsum(pmat, axis=1)
-        draws = np.random.rand(n, 1)
-        lt = (cum_p < draws)
-        to_pick = lt.sum(axis=1)
-
-        picks = np.zeros(sim.shape, dtype=int)
-        picks[sim.idx, to_pick] = 1
+        picks = one_per_row_weighted(sim.shape, weights=self.weights,
+                                     allowed=allowed)
         sim.set_picks(picks, allow_spoiled=self.allow_spoiled, add=self.add)
 
 class PickSpecificDoors(MontyHallRule):
