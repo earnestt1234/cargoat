@@ -9,7 +9,8 @@ import pprint
 
 import numpy as np
 
-from cargoat.errors import (BadReveal)
+from cargoat.arrayops import one_per_row, n_per_row
+from cargoat.errors import (BadReveal, bad_trials_raise)
 
 # ---- Parent class
 class MontyHallRule(object):
@@ -57,7 +58,7 @@ class PickDoor(MontyHallRule):
     def __call__(self, sim):
         pickable = ~sim.query_doors_or(picked=self.exclude_current,
                                        revealed=self.exclude_revealed)
-        newpicks = sim.choose_one_per_row(array_allowed=pickable)
+        newpicks = one_per_row(sim.shape, allowed=pickable)
         sim.set_picks(newpicks, add=self.add, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class PickDoors(MontyHallRule):
@@ -72,7 +73,7 @@ class PickDoors(MontyHallRule):
     def __call__(self, sim):
         pickable = ~sim.query_doors_or(picked=self.exclude_current,
                                        revealed=self.exclude_revealed)
-        newpicks = sim.choose_n_per_row(n=self.n, array_allowed=pickable)
+        newpicks = n_per_row(sim.shape, n=self.n, allowed=pickable)
         sim.set_picks(newpicks, add=self.add, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
 class PickDoorWeighted(MontyHallRule):
@@ -108,7 +109,7 @@ class PickDoorWeighted(MontyHallRule):
             if ~ np.all(spots == lw):
                 badtrials = spots != lw
                 msg = 'Weights do not match number of pickable doors.'
-                sim.bad_trials_raise(badtrials, msg, ValueError)
+                bad_trials_raise(badtrials, msg, ValueError)
             wmat[np.isnan(wmat)] = np.tile(w, n)
 
         # convert to probabilities
@@ -157,7 +158,7 @@ class RevealDoor(MontyHallRule):
         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
                                          revealed=self.exclude_current,
                                          picked=self.exclude_picked)
-        newreveals = sim.choose_one_per_row(array_allowed=revealable)
+        newreveals = one_per_row(sim.shape, allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
 class RevealDoors(MontyHallRule):
@@ -171,7 +172,7 @@ class RevealDoors(MontyHallRule):
         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
                                          revealed=self.exclude_current,
                                          picked=self.exclude_picked)
-        newreveals = sim.choose_n_per_row(n=self.n, array_allowed=revealable)
+        newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
 class RevealGoat(MontyHallRule):
@@ -180,7 +181,7 @@ class RevealGoat(MontyHallRule):
         badrows = ~np.any(revealable, axis=1)
         if np.any(badrows):
             msg = "No goats to reveal."
-            sim.bad_trials_raise(badrows, msg, BadReveal)
+            bad_trials_raise(badrows, msg, BadReveal)
 
         weights = np.random.rand(*sim.shape) * revealable
         to_reveal = weights.argmax(1)
