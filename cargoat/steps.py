@@ -164,6 +164,28 @@ class RevealSpecificDoors(MontyHallRule):
         newreveals[:, self.doors] = 1
         sim.set_revealed(newreveals, allow_spoiled=self.allow_spoiled)
 
+class RevealDoorWeighted(MontyHallRule):
+    def __init__(self, weights, exclude_current=True, exclude_cars=True,
+                 exclude_picked=True, allow_spoiled=False):
+        self.weights = weights
+        self.exclude_current = exclude_current
+        self.exclude_cars = exclude_cars
+        self.exclude_picked=exclude_picked
+        self.allow_spoiled = allow_spoiled
+
+    def __call__(self, sim):
+
+        allowed = np.ones(sim.shape, dtype=bool)
+        if self.exclude_current:
+            allowed[sim.revealed.astype(bool)] = 0
+        if self.exclude_cars:
+            allowed[sim.cars.astype(bool)] = 0
+        if self.exclude_picked:
+            allowed[sim.picked.astype(bool)] = 0
+
+        reveals = one_per_row_weighted(sim.shape, weights=self.weights, allowed=allowed)
+        sim.set_revealed(reveals, allow_spoiled=self.allow_spoiled)
+
 class RevealGoat(MontyHallRule):
     def __call__(self, sim):
         revealable = sim.revealable_doors()
