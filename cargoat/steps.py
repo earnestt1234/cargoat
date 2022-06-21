@@ -152,6 +152,18 @@ class RevealDoors(MontyHallRule):
         newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
+class RevealSpecificDoors(MontyHallRule):
+    def __init__(self, doors, allow_spoiled=False):
+        if not isinstance(doors, Iterable):
+            doors = [doors]
+        self.doors = list(doors)
+        self.allow_spoiled = allow_spoiled
+
+    def __call__(self, sim):
+        newreveals = np.zeros(sim.shape, dtype=int)
+        newreveals[:, self.doors] = 1
+        sim.set_revealed(newreveals, allow_spoiled=self.allow_spoiled)
+
 class RevealGoat(MontyHallRule):
     def __call__(self, sim):
         revealable = sim.revealable_doors()
@@ -160,9 +172,22 @@ class RevealGoat(MontyHallRule):
             msg = "No goats to reveal."
             bad_trials_raise(badrows, msg, BadReveal)
 
-        weights = np.random.rand(*sim.shape) * revealable
-        to_reveal = weights.argmax(1)
-        sim.revealed[sim.idx, to_reveal] = 1
+        newreveals = one_per_row(sim.shape, allowed=revealable)
+        sim.set_revealed(newreveals, add=True, n_per_row=1)
+
+class RevealGoats(MontyHallRule):
+    def __init__(self, n):
+        self.n = n
+
+    def __call__(self, sim):
+        revealable = sim.revealable_doors()
+        badrows = revealable.sum(axis=1) < self.n
+        if np.any(badrows):
+            msg = f"Less than {self.n} goats to reveal."
+            bad_trials_raise(badrows, msg, BadReveal)
+
+        newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
+        sim.set_revealed(newreveals, add=True, n_per_row=self.n)
 
 # ---- Other
 class Finish(MontyHallRule):
