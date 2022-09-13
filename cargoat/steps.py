@@ -12,7 +12,7 @@ import numpy as np
 from cargoat.arrayops import (one_per_row,
                               one_per_row_weighted,
                               n_per_row)
-from cargoat.errors import (BadReveal, bad_trials_raise)
+from cargoat.errors import (BadClose, BadReveal, bad_trials_raise)
 
 # ---- Parent class
 class MontyHallRule(object):
@@ -210,6 +210,36 @@ class RevealGoats(MontyHallRule):
 
         newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
         sim.set_revealed(newreveals, add=True, n_per_row=self.n)
+
+# ---- Closing Doors
+
+class CloseDoor(MontyHallRule):
+    def __call__(self, sim):
+        closable = sim.revealed.astype(bool)
+        badrows = ~np.any(closable, axis=1)
+        if np.any(badrows):
+            msg = 'No open doors to close.'
+            bad_trials_raise(badrows, msg, BadClose)
+
+        to_close = one_per_row(sim.shape, allowed=closable, enforce_allowed=True)
+        newreveals = (closable - to_close).astype(int)
+        sim.set_revealed(newreveals, add=False)
+
+class CloseDoors(MontyHallRule):
+    def __init__(self, n):
+        self.n = n
+
+    def __call__(self, sim):
+        closable = sim.revealed.astype(bool)
+        badrows = ~np.any(closable, axis=1)
+        if np.any(badrows):
+            msg = f"Less than {self.n} open doors to close."
+            bad_trials_raise(badrows, msg, BadClose)
+
+        to_close = n_per_row(sim.shape, self.n,
+                             allowed=closable, enforce_allowed=True)
+        newreveals = (closable - to_close).astype(int)
+        sim.set_revealed(newreveals, add=False)
 
 # ---- Other
 class Finish(MontyHallRule):

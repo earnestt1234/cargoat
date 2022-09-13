@@ -9,6 +9,10 @@ import numpy as np
 class MontyHallError(Exception):
     """Custom Exception for general Monty Hall game violations."""
 
+class BadClose(MontyHallError):
+    '''Exception indicating a bad door close request, typically
+    when there are no open doors available to close.'''
+
 class BadPick(MontyHallError):
     """Exception indicating a player's door choice violated the game rules,
     typically that an open door was selected."""
