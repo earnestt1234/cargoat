@@ -259,27 +259,40 @@ class CloseSpecificDoors(MontyHallRule):
         newreveals = (sim.revealed - to_close).astype(int)
         sim.set_revealed(newreveals, add=False)
 
-# ---- Changing Doors
+# ---- Adding & Removing Doors
 
 class AddDoors(MontyHallRule):
     def __init__(self, positions):
         self.positions = positions
 
     def __call__(self, sim):
-        for attr in ['cars', 'picked', 'revealed']:
-            a = getattr(sim, attr)
-            newa = np.insert(arr=a, obj=self.positions, values=0, axis=1)
-            setattr(sim, attr, newa)
+        foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
+        sim.apply_func(foo)
 
 class RemoveDoors(MontyHallRule):
     def __init__(self, positions):
         self.positions = positions
 
     def __call__(self, sim):
-        for attr in ['cars', 'picked', 'revealed']:
-            a = getattr(sim, attr)
-            newa = np.delete(arr=a, obj=self.positions, axis=1)
-            setattr(sim, attr, newa)
+        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+        sim.apply_func(foo)
+
+# ---- Rearranging Doors
+
+class RearrangeDoors(MontyHallRule):
+    def __init__(self, positions):
+        self.positions = positions
+
+    def __call__(self, sim):
+        col_range = list(range(sim.shape[1]))
+        a = np.all(np.isin(col_range, self.positions))
+        b = len(col_range) == len(self.positions)
+        if not a or not b:
+            raise ValueError("Positions must be a permutation of "
+                             f"the column indices, i.e. {col_range}.")
+
+        foo = lambda a: a.copy()[:, self.positions]
+        sim.apply_func(foo)
 
 # ---- Other
 class Finish(MontyHallRule):

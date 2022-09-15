@@ -111,6 +111,17 @@ class MontyHallSim:
         notokay = self.query_doors_or(cars=True, picked=True)
         return ~ np.logical_and(notokay, reveals)
 
+    # ---- Other Helpers
+    def apply_func(self, func, inplace=False, cars=True, picked=True, revealed=True):
+        apply_to = [x for i, x in enumerate(['cars', 'picked', 'revealed'])
+                    if [cars, picked, revealed][i]]
+        for attr in apply_to:
+            a = getattr(self, attr)
+            if inplace:
+                func(a)
+            else:
+                setattr(self, attr, func(a))
+
     # ---- Results
     def get_results(self):
         wins = np.sum(np.any(self.picked * self.cars, axis=1))
