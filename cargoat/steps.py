@@ -259,6 +259,27 @@ class CloseSpecificDoors(MontyHallRule):
         newreveals = (sim.revealed - to_close).astype(int)
         sim.set_revealed(newreveals, add=False)
 
+# ---- Changing Doors
+
+class AddDoors(MontyHallRule):
+    def __init__(self, positions):
+        self.positions = positions
+
+    def __call__(self, sim):
+        for attr in ['cars', 'picked', 'revealed']:
+            a = getattr(sim, attr)
+            newa = np.insert(arr=a, obj=self.positions, values=0, axis=1)
+            setattr(sim, attr, newa)
+
+class RemoveDoors(MontyHallRule):
+    def __init__(self, positions):
+        self.positions = positions
+
+    def __call__(self, sim):
+        for attr in ['cars', 'picked', 'revealed']:
+            a = getattr(sim, attr)
+            newa = np.delete(arr=a, obj=self.positions, axis=1)
+            setattr(sim, attr, newa)
 
 # ---- Other
 class Finish(MontyHallRule):
