@@ -48,6 +48,33 @@ class InitDoorsRandom(MontyHallRule):
         p = np.random.rand(shape[0], shape[1]).argsort(1)
         sim.cars[p < self.cars] = 1
 
+# ---- Generic
+
+class _GenericActionSingleDoor():
+    def __init__(self, target, pre_func=None, allowed_func=None,
+                 behavior='overwrite', allow_spoiled=False):
+        self.target = target
+        self.pre_func = pre_func
+        self.allowed_func = allowed_func
+        self.behavior = behavior
+        self.allow_spoiled = allow_spoiled
+
+    def __call__(self, sim):
+
+        if self.pre_func:
+            self.pre_func(sim)
+
+        if self.allowed_func is not None:
+            allowed = self.allowed_func(sim)
+        else:
+            allowed = np.ones(sim.shape, dtype=bool)
+
+        selections = one_per_row(sim.shape, allowed=allowed, dtype=int)
+        setter = sim._get_setter_func(self.target)
+        setter(selections, n_per_row=1, behavior=self.behavior,
+               allow_spoiled=self.allow_spoiled)
+
+
 # ---- Picking Doors
 class PickDoor(MontyHallRule):
     def __init__(self, exclude_current=True, exclude_revealed=True, add=False,

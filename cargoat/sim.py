@@ -54,7 +54,20 @@ class MontyHallSim:
     def revealable_doors(self):
         return ~self.query_doors_or(cars=True, picked=True, revealed=True)
 
-    # ---- Door picking
+    # ---- Array setter functions
+
+    def _get_setter_func(self, key):
+
+        if key == 'picks':
+            return self.set_new_picks
+        elif key == 'revealed':
+            return self.set_revealed
+        elif key == 'cars':
+            raise NotImplementedError
+        else:
+            raise ValueError("Key must be one of 'cars', 'picked', or 'revealed' "
+                             f"not '{key}'.")
+
     def set_picks(self, picks, add=False, allow_spoiled=False, n_per_row=None):
 
         # check for correct number of picks
@@ -79,7 +92,58 @@ class MontyHallSim:
             picks = np.logical_or(picks, self.picked).astype(int)
         self.picked = picks
 
+    def set_new_picks(self, pick_array, behavior='overwrite',
+                      strict_validate=False, n_per_row=None,
+                      allow_spoiled=False):
+
+        actionname = 'unpick' if behavior == 'remove' else 'pick'
+
+         # strict validation
+         #  - add/overwrite MUST satisfy n_per_row
+         #  - remove must only target picked doors
+         #    (and satisfy n_per_row unpicks)
+        if behavior == 'remove':
+            if strict_validate:
+                valid = (self.picks - pick_array) >= 0
+                invalid_rows = np.any(~valid, axis=1)
+                if np.any(~valid, axis=1):
+                    trial, door = get_index_success(~valid)
+                    msg = ("Strict unpick tried on unpicked door, e.g. "
+                           f"trial {trial} door {door}.")
+                    bad_trials_raise(invalid_rows, msg, BadPick)
+
+            # convert to an overwrite action of the difference in picks
+            pick_array = self.picks - np.logical_and(pick_array, self.picks, dtype=int)
+            behavior = 'overwrite'
+
+        if behavior in ['add', 'overwrite']:
+            if strict_validate and n_per_row is not None:
+                emessage = f'Some trials have incorrect number of {actionname}s.'
+                check_n_per_row(pick_array, n=n_per_row, etype=BadPick,
+                                emessage=emessage)
+
+        # now that new picks are finalized
+        # check if they are valid in the game
+        valid = self.validate_new_picks(pick_array)
+        invalid_rows = np.any(~valid, axis=1)
+        if not allow_spoiled and np.any(~valid):
+            trial, door = get_index_success(~valid)
+            msg = ("Revealed doors were picked, e.g. "
+                   f"trial {trial} door {door}.")
+            bad_trials_raise(invalid_rows, msg, BadPick)
+
+        # mark spoiled games (only based on invalid picks)
+        self.spoiled[invalid_rows] = 1
+
+        # update sim.picked
+        if behavior == 'add':
+            pick_array = np.logical_or(pick_array, self.picked).astype(int)
+        self.picked = pick_array
+
     def validate_picks(self, picks):
+        return ~ np.logical_and(self.revealed, picks)
+
+    def check_spoiling_picks(self, picks):
         return ~ np.logical_and(self.revealed, picks)
 
     # ---- Door revealing
