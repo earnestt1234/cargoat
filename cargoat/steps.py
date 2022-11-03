@@ -52,12 +52,15 @@ class InitDoorsRandom(MontyHallRule):
 
 class _GenericActionSingleDoor():
     def __init__(self, target, pre_func=None, allowed_func=None,
-                 behavior='overwrite', allow_spoiled=False):
+                 behavior='overwrite', n_per_row=1,
+                 allow_spoiled=False, allow_redundant=True):
         self.target = target
         self.pre_func = pre_func
         self.allowed_func = allowed_func
         self.behavior = behavior
+        self.n_per_row = n_per_row
         self.allow_spoiled = allow_spoiled
+        self.allow_redundant = allow_redundant
 
     def __call__(self, sim):
 
@@ -70,10 +73,12 @@ class _GenericActionSingleDoor():
             allowed = np.ones(sim.shape, dtype=bool)
 
         selections = one_per_row(sim.shape, allowed=allowed, dtype=int)
-        setter = sim._get_setter_func(self.target)
-        setter(selections, n_per_row=1, behavior=self.behavior,
-               allow_spoiled=self.allow_spoiled)
-
+        sim._set_array(target=self.target,
+                       new_array=selections,
+                       behavior=self.behavior,
+                       n_per_row=self.n_per_row,
+                       allow_spoiled=self.allow_spoiled,
+                       allow_redundant=self.allow_redundant)
 
 # ---- Picking Doors
 class PickDoor(MontyHallRule):
@@ -84,15 +89,24 @@ class PickDoor(MontyHallRule):
         self.allow_spoiled = allow_spoiled
         self.add = add
 
+        # construct generic action
+        allowed = lambda sim: ~sim.query_doors_or(picked=self.exclude_current,
+                                                  revealed=self.exclude_revealed)
+        behavior = 'add' if self.add else 'overwrite'
+        self.action = _GenericActionSingleDoor(target='picked',
+                                               pre_func=None,
+                                               allowed_func=allowed,
+                                               behavior=behavior,
+                                               n_per_row=1,
+                                               allow_spoiled=self.allow_spoiled,
+                                               allow_redundant=True)
+
     def __call__(self, sim):
-        pickable = ~sim.query_doors_or(picked=self.exclude_current,
-                                       revealed=self.exclude_revealed)
-        newpicks = one_per_row(sim.shape, allowed=pickable)
-        sim.set_picks(newpicks, add=self.add, n_per_row=1, allow_spoiled=self.allow_spoiled)
+        self.action(sim)
 
 class PickDoors(MontyHallRule):
     def __init__(self, n, exclude_current=True, exclude_revealed=True, add=False,
-                 allow_spoiled=False):
+                  allow_spoiled=False):
         self.n = n
         self.exclude_current = exclude_current
         self.exclude_revealed = exclude_revealed
@@ -101,227 +115,227 @@ class PickDoors(MontyHallRule):
 
     def __call__(self, sim):
         pickable = ~sim.query_doors_or(picked=self.exclude_current,
-                                       revealed=self.exclude_revealed)
+                                        revealed=self.exclude_revealed)
         newpicks = n_per_row(sim.shape, n=self.n, allowed=pickable)
         sim.set_picks(newpicks, add=self.add, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
-class PickDoorWeighted(MontyHallRule):
-    def __init__(self, weights, exclude_revealed=True, exclude_current=True,
-                 allow_spoiled=False, add=False):
-        self.weights = weights
-        self.exclude_revealed = exclude_revealed
-        self.exclude_current = exclude_current
-        self.allow_spoiled = allow_spoiled
-        self.add = add
+# class PickDoorWeighted(MontyHallRule):
+#     def __init__(self, weights, exclude_revealed=True, exclude_current=True,
+#                  allow_spoiled=False, add=False):
+#         self.weights = weights
+#         self.exclude_revealed = exclude_revealed
+#         self.exclude_current = exclude_current
+#         self.allow_spoiled = allow_spoiled
+#         self.add = add
 
-    def __call__(self, sim):
+#     def __call__(self, sim):
 
-        allowed = np.ones(sim.shape, dtype=bool)
-        if self.exclude_revealed:
-            allowed[sim.revealed.astype(bool)] = 0
-        if self.exclude_current:
-            allowed[sim.picked.astype(bool)] = 0
+#         allowed = np.ones(sim.shape, dtype=bool)
+#         if self.exclude_revealed:
+#             allowed[sim.revealed.astype(bool)] = 0
+#         if self.exclude_current:
+#             allowed[sim.picked.astype(bool)] = 0
 
-        picks = one_per_row_weighted(sim.shape, weights=self.weights,
-                                     allowed=allowed)
-        sim.set_picks(picks, allow_spoiled=self.allow_spoiled, add=self.add)
+#         picks = one_per_row_weighted(sim.shape, weights=self.weights,
+#                                      allowed=allowed)
+#         sim.set_picks(picks, allow_spoiled=self.allow_spoiled, add=self.add)
 
-class PickSpecificDoors(MontyHallRule):
-    def __init__(self, doors, add=False, allow_spoiled=False):
-        if not isinstance(doors, Iterable):
-            doors = [doors]
-        self.doors = list(doors)
-        self.add = add
-        self.allow_spoiled = allow_spoiled
+# class PickSpecificDoors(MontyHallRule):
+#     def __init__(self, doors, add=False, allow_spoiled=False):
+#         if not isinstance(doors, Iterable):
+#             doors = [doors]
+#         self.doors = list(doors)
+#         self.add = add
+#         self.allow_spoiled = allow_spoiled
 
-    def __call__(self, sim):
-        newpicks = np.zeros(sim.shape, dtype=int)
-        newpicks[:, self.doors] = 1
-        sim.set_picks(newpicks, add=self.add, allow_spoiled=self.allow_spoiled)
+#     def __call__(self, sim):
+#         newpicks = np.zeros(sim.shape, dtype=int)
+#         newpicks[:, self.doors] = 1
+#         sim.set_picks(newpicks, add=self.add, allow_spoiled=self.allow_spoiled)
 
-class Stay(MontyHallRule):
-    def __call__(self, sim):
-        pass
+# class Stay(MontyHallRule):
+#     def __call__(self, sim):
+#         pass
 
-class Switch(MontyHallRule):
-    def __call__(self, sim):
-        PickDoor()(sim)
+# class Switch(MontyHallRule):
+#     def __call__(self, sim):
+#         PickDoor()(sim)
 
-# ---- Revealing Doors
-class RevealDoor(MontyHallRule):
-    def __init__(self, exclude_current=True, exclude_cars=True,
-                 exclude_picked=True, allow_spoiled=False):
-        self.exclude_current = exclude_current
-        self.exclude_cars = exclude_cars
-        self.exclude_picked=exclude_picked
-        self.allow_spoiled = allow_spoiled
+# # ---- Revealing Doors
+# class RevealDoor(MontyHallRule):
+#     def __init__(self, exclude_current=True, exclude_cars=True,
+#                  exclude_picked=True, allow_spoiled=False):
+#         self.exclude_current = exclude_current
+#         self.exclude_cars = exclude_cars
+#         self.exclude_picked=exclude_picked
+#         self.allow_spoiled = allow_spoiled
 
-    def __call__(self, sim):
-        revealable = ~sim.query_doors_or(cars=self.exclude_cars,
-                                         revealed=self.exclude_current,
-                                         picked=self.exclude_picked)
-        newreveals = one_per_row(sim.shape, allowed=revealable)
-        sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
+#     def __call__(self, sim):
+#         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
+#                                          revealed=self.exclude_current,
+#                                          picked=self.exclude_picked)
+#         newreveals = one_per_row(sim.shape, allowed=revealable)
+#         sim.set_revealed(newreveals, add=True, n_per_row=1, allow_spoiled=self.allow_spoiled)
 
-class RevealDoors(MontyHallRule):
-    def __init__(self, n, exclude_current=True, exclude_cars=True,
-                 exclude_picked=True, allow_spoiled=False):
-        self.n = n
-        self.exclude_current = exclude_current
-        self.exclude_cars = exclude_cars
-        self.exclude_picked=exclude_picked
-        self.allow_spoiled = allow_spoiled
+# class RevealDoors(MontyHallRule):
+#     def __init__(self, n, exclude_current=True, exclude_cars=True,
+#                  exclude_picked=True, allow_spoiled=False):
+#         self.n = n
+#         self.exclude_current = exclude_current
+#         self.exclude_cars = exclude_cars
+#         self.exclude_picked=exclude_picked
+#         self.allow_spoiled = allow_spoiled
 
-    def __call__(self, sim):
-        revealable = ~sim.query_doors_or(cars=self.exclude_cars,
-                                         revealed=self.exclude_current,
-                                         picked=self.exclude_picked)
-        newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
-        sim.set_revealed(newreveals, add=True, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
+#     def __call__(self, sim):
+#         revealable = ~sim.query_doors_or(cars=self.exclude_cars,
+#                                          revealed=self.exclude_current,
+#                                          picked=self.exclude_picked)
+#         newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
+#         sim.set_revealed(newreveals, add=True, n_per_row=self.n, allow_spoiled=self.allow_spoiled)
 
-class RevealSpecificDoors(MontyHallRule):
-    def __init__(self, doors, allow_spoiled=False):
-        if not isinstance(doors, Iterable):
-            doors = [doors]
-        self.doors = list(doors)
-        self.allow_spoiled = allow_spoiled
+# class RevealSpecificDoors(MontyHallRule):
+#     def __init__(self, doors, allow_spoiled=False):
+#         if not isinstance(doors, Iterable):
+#             doors = [doors]
+#         self.doors = list(doors)
+#         self.allow_spoiled = allow_spoiled
 
-    def __call__(self, sim):
-        newreveals = np.zeros(sim.shape, dtype=int)
-        newreveals[:, self.doors] = 1
-        sim.set_revealed(newreveals, allow_spoiled=self.allow_spoiled)
+#     def __call__(self, sim):
+#         newreveals = np.zeros(sim.shape, dtype=int)
+#         newreveals[:, self.doors] = 1
+#         sim.set_revealed(newreveals, allow_spoiled=self.allow_spoiled)
 
-class RevealDoorWeighted(MontyHallRule):
-    def __init__(self, weights, exclude_current=True, exclude_cars=True,
-                 exclude_picked=True, allow_spoiled=False):
-        self.weights = weights
-        self.exclude_current = exclude_current
-        self.exclude_cars = exclude_cars
-        self.exclude_picked=exclude_picked
-        self.allow_spoiled = allow_spoiled
+# class RevealDoorWeighted(MontyHallRule):
+#     def __init__(self, weights, exclude_current=True, exclude_cars=True,
+#                  exclude_picked=True, allow_spoiled=False):
+#         self.weights = weights
+#         self.exclude_current = exclude_current
+#         self.exclude_cars = exclude_cars
+#         self.exclude_picked=exclude_picked
+#         self.allow_spoiled = allow_spoiled
 
-    def __call__(self, sim):
+#     def __call__(self, sim):
 
-        allowed = np.ones(sim.shape, dtype=bool)
-        if self.exclude_current:
-            allowed[sim.revealed.astype(bool)] = 0
-        if self.exclude_cars:
-            allowed[sim.cars.astype(bool)] = 0
-        if self.exclude_picked:
-            allowed[sim.picked.astype(bool)] = 0
+#         allowed = np.ones(sim.shape, dtype=bool)
+#         if self.exclude_current:
+#             allowed[sim.revealed.astype(bool)] = 0
+#         if self.exclude_cars:
+#             allowed[sim.cars.astype(bool)] = 0
+#         if self.exclude_picked:
+#             allowed[sim.picked.astype(bool)] = 0
 
-        reveals = one_per_row_weighted(sim.shape, weights=self.weights, allowed=allowed)
-        sim.set_revealed(reveals, allow_spoiled=self.allow_spoiled)
+#         reveals = one_per_row_weighted(sim.shape, weights=self.weights, allowed=allowed)
+#         sim.set_revealed(reveals, allow_spoiled=self.allow_spoiled)
 
-class RevealGoat(MontyHallRule):
-    def __call__(self, sim):
-        revealable = sim.revealable_doors()
-        badrows = ~np.any(revealable, axis=1)
-        if np.any(badrows):
-            msg = "No goats to reveal."
-            bad_trials_raise(badrows, msg, BadReveal)
+# class RevealGoat(MontyHallRule):
+#     def __call__(self, sim):
+#         revealable = sim.revealable_doors()
+#         badrows = ~np.any(revealable, axis=1)
+#         if np.any(badrows):
+#             msg = "No goats to reveal."
+#             bad_trials_raise(badrows, msg, BadReveal)
 
-        newreveals = one_per_row(sim.shape, allowed=revealable)
-        sim.set_revealed(newreveals, add=True, n_per_row=1)
+#         newreveals = one_per_row(sim.shape, allowed=revealable)
+#         sim.set_revealed(newreveals, add=True, n_per_row=1)
 
-class RevealGoats(MontyHallRule):
-    def __init__(self, n):
-        self.n = n
+# class RevealGoats(MontyHallRule):
+#     def __init__(self, n):
+#         self.n = n
 
-    def __call__(self, sim):
-        revealable = sim.revealable_doors()
-        badrows = revealable.sum(axis=1) < self.n
-        if np.any(badrows):
-            msg = f"Less than {self.n} goats to reveal."
-            bad_trials_raise(badrows, msg, BadReveal)
+#     def __call__(self, sim):
+#         revealable = sim.revealable_doors()
+#         badrows = revealable.sum(axis=1) < self.n
+#         if np.any(badrows):
+#             msg = f"Less than {self.n} goats to reveal."
+#             bad_trials_raise(badrows, msg, BadReveal)
 
-        newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
-        sim.set_revealed(newreveals, add=True, n_per_row=self.n)
+#         newreveals = n_per_row(sim.shape, n=self.n, allowed=revealable)
+#         sim.set_revealed(newreveals, add=True, n_per_row=self.n)
 
-# ---- Closing Doors
+# # ---- Closing Doors
 
-class CloseDoor(MontyHallRule):
-    def __call__(self, sim):
-        closable = sim.revealed.astype(bool)
-        badrows = ~np.any(closable, axis=1)
-        if np.any(badrows):
-            msg = 'No open doors to close.'
-            bad_trials_raise(badrows, msg, BadClose)
+# class CloseDoor(MontyHallRule):
+#     def __call__(self, sim):
+#         closable = sim.revealed.astype(bool)
+#         badrows = ~np.any(closable, axis=1)
+#         if np.any(badrows):
+#             msg = 'No open doors to close.'
+#             bad_trials_raise(badrows, msg, BadClose)
 
-        to_close = one_per_row(sim.shape, allowed=closable, enforce_allowed=True)
-        newreveals = (closable - to_close).astype(int)
-        sim.set_revealed(newreveals, add=False)
+#         to_close = one_per_row(sim.shape, allowed=closable, enforce_allowed=True)
+#         newreveals = (closable - to_close).astype(int)
+#         sim.set_revealed(newreveals, add=False)
 
-class CloseDoors(MontyHallRule):
-    def __init__(self, n):
-        self.n = n
+# class CloseDoors(MontyHallRule):
+#     def __init__(self, n):
+#         self.n = n
 
-    def __call__(self, sim):
-        closable = sim.revealed.astype(bool)
-        badrows = ~np.any(closable, axis=1)
-        if np.any(badrows):
-            msg = f"Less than {self.n} open doors to close."
-            bad_trials_raise(badrows, msg, BadClose)
+#     def __call__(self, sim):
+#         closable = sim.revealed.astype(bool)
+#         badrows = ~np.any(closable, axis=1)
+#         if np.any(badrows):
+#             msg = f"Less than {self.n} open doors to close."
+#             bad_trials_raise(badrows, msg, BadClose)
 
-        to_close = n_per_row(sim.shape, self.n,
-                             allowed=closable, enforce_allowed=True)
-        newreveals = (closable - to_close).astype(int)
-        sim.set_revealed(newreveals, add=False)
+#         to_close = n_per_row(sim.shape, self.n,
+#                              allowed=closable, enforce_allowed=True)
+#         newreveals = (closable - to_close).astype(int)
+#         sim.set_revealed(newreveals, add=False)
 
-class CloseSpecificDoors(MontyHallRule):
-    def __init__(self, doors):
-        if not isinstance(doors, Iterable):
-            doors = [doors]
-        self.doors = list(doors)
+# class CloseSpecificDoors(MontyHallRule):
+#     def __init__(self, doors):
+#         if not isinstance(doors, Iterable):
+#             doors = [doors]
+#         self.doors = list(doors)
 
-    def __call__(self, sim):
-        check_closable = sim.revealed[:, self.doors]
-        badrows = np.any(check_closable != 1, axis=1)
-        if np.any(badrows):
-            msg = f'At least some doors at positions {self.doors} are not open.'
-            bad_trials_raise(badrows, msg, BadClose)
+#     def __call__(self, sim):
+#         check_closable = sim.revealed[:, self.doors]
+#         badrows = np.any(check_closable != 1, axis=1)
+#         if np.any(badrows):
+#             msg = f'At least some doors at positions {self.doors} are not open.'
+#             bad_trials_raise(badrows, msg, BadClose)
 
-        to_close = np.zeros(sim.shape, dtype=int)
-        to_close[:, self.doors] = 1
-        newreveals = (sim.revealed - to_close).astype(int)
-        sim.set_revealed(newreveals, add=False)
+#         to_close = np.zeros(sim.shape, dtype=int)
+#         to_close[:, self.doors] = 1
+#         newreveals = (sim.revealed - to_close).astype(int)
+#         sim.set_revealed(newreveals, add=False)
 
-# ---- Adding & Removing Doors
+# # ---- Adding & Removing Doors
 
-class AddDoors(MontyHallRule):
-    def __init__(self, positions):
-        self.positions = positions
+# class AddDoors(MontyHallRule):
+#     def __init__(self, positions):
+#         self.positions = positions
 
-    def __call__(self, sim):
-        foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
-        sim.apply_func(foo)
+#     def __call__(self, sim):
+#         foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
+#         sim.apply_func(foo)
 
-class RemoveDoors(MontyHallRule):
-    def __init__(self, positions):
-        self.positions = positions
+# class RemoveDoors(MontyHallRule):
+#     def __init__(self, positions):
+#         self.positions = positions
 
-    def __call__(self, sim):
-        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
-        sim.apply_func(foo)
+#     def __call__(self, sim):
+#         foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+#         sim.apply_func(foo)
 
-# ---- Rearranging Doors
+# # ---- Rearranging Doors
 
-class RearrangeDoors(MontyHallRule):
-    def __init__(self, positions):
-        self.positions = positions
+# class RearrangeDoors(MontyHallRule):
+#     def __init__(self, positions):
+#         self.positions = positions
 
-    def __call__(self, sim):
-        col_range = list(range(sim.shape[1]))
-        a = np.all(np.isin(col_range, self.positions))
-        b = len(col_range) == len(self.positions)
-        if not a or not b:
-            raise ValueError("Positions must be a permutation of "
-                             f"the column indices, i.e. {col_range}.")
+#     def __call__(self, sim):
+#         col_range = list(range(sim.shape[1]))
+#         a = np.all(np.isin(col_range, self.positions))
+#         b = len(col_range) == len(self.positions)
+#         if not a or not b:
+#             raise ValueError("Positions must be a permutation of "
+#                              f"the column indices, i.e. {col_range}.")
 
-        foo = lambda a: a.copy()[:, self.positions]
-        sim.apply_func(foo)
+#         foo = lambda a: a.copy()[:, self.positions]
+#         sim.apply_func(foo)
 
-# ---- Other
-class Finish(MontyHallRule):
-    def __call__(self, sim):
-        pprint.pprint(sim.get_results(), sort_dicts=False)
+# # ---- Other
+# class Finish(MontyHallRule):
+#     def __call__(self, sim):
+#         pprint.pprint(sim.get_results(), sort_dicts=False)

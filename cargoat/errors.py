@@ -6,21 +6,28 @@ Custom error types for cargoat.
 
 import numpy as np
 
+from cargoat.arrayops import get_index_success
+
 class MontyHallError(Exception):
     """Custom Exception for general Monty Hall game violations."""
-
-class BadClose(MontyHallError):
-    '''Exception indicating a bad door close request, typically
-    when there are no open doors available to close.'''
 
 class BadPick(MontyHallError):
     """Exception indicating a player's door choice violated the game rules,
     typically that an open door was selected."""
 
+class BadUnpick(MontyHallError):
+    """Exception indicating a player's door choice violated the game rules,
+    typically that an open door was selected."""
+
+class BadClose(MontyHallError):
+    '''Exception indicating a bad door close request, typically
+    when there are no open doors available to close.'''
+
 class BadReveal(MontyHallError):
     """Exception indicating a door reveal violated the game rules, which could
     mean many things (a car was revealed, there were no goats to reveal,
     a picked door was revealed, etc.)"""
+
 
 def bad_trials_raise(badrows, msg, errortype):
     '''Typical cargoat error message, saying what went wrong during
@@ -44,3 +51,32 @@ def check_n_per_row(a, n, etype, emessage=None, include_eg=True):
             emessage += f" E.g. on row {idx}, got {val} but expected {n}."
         bad_trials_raise(wrong_n, emessage, etype)
 
+def check_redundancy_for_setting(old_array, new_array, behavior,
+                                 etype, emessage=None, include_eg=True):
+    if emessage is None:
+        emessage = "Redundant action for some trials."
+
+    if behavior in ['overwrite', 'add']:
+        redundant =  (new_array + old_array) > 1
+    elif behavior == 'remove':
+        redundant = (old_array - new_array) < 0
+    else:
+        raise ValueError('`behavior` must be "overwrite", "add" or "remove"')
+
+    redundant_rows = np.any(redundant, axis=1)
+    if np.any(redundant):
+        trial, door = get_index_success(redundant)
+        bad_trials_raise(redundant_rows, emessage, etype)
+
+def get_errortype_from_behavior(target, behavior):
+
+    options = {
+        ('picked', 'add')         : BadPick,
+        ('picked', 'overwrite')   : BadPick,
+        ('picked', 'remove')      : BadUnpick,
+        ('revealed', 'add')       : BadReveal,
+        ('revealed', 'overwrite') : BadReveal,
+        ('revealed', 'remove')    : BadClose
+               }
+
+    return options[(target, behavior)]
