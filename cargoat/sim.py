@@ -63,18 +63,6 @@ class MontyHallSim:
 
     # ---- Generic setter functions
 
-    def _get_setter_func(self, key):
-
-        if key == 'picks':
-            return self.set_new_picks
-        elif key == 'revealed':
-            return self.set_revealed
-        elif key == 'cars':
-            raise NotImplementedError
-        else:
-            raise ValueError("Key must be one of 'cars', 'picked', or 'revealed' "
-                             f"not '{key}'.")
-
     def _get_validator_func(self, target):
         if target == 'picked':
             return self._validate_picks
