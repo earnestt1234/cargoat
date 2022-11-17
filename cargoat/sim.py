@@ -63,12 +63,12 @@ class MontyHallSim:
 
     # ---- Generic setter functions
 
-    def _get_validator_func(self, target):
+    def _get_spoiling_func(self, target):
         if target == 'picked':
-            return self._validate_picks
+            return self._check_spoiling_picks
 
         elif target == 'revealed':
-            return self._validate_reveals
+            return self._check_spoiling_reveals
 
         else:
             raise NotImplementedError
@@ -78,7 +78,7 @@ class MontyHallSim:
                    allow_redundant=True):
 
         old_array = getattr(self, target)
-        validator_func = self._get_validator_func(target)
+        check_spoiling = self._get_spoiling_func(target)
         etype = get_errortype_from_behavior(target=target, behavior=behavior)
 
         # apply checks if requested
@@ -90,11 +90,11 @@ class MontyHallSim:
                                          behavior=behavior, etype=etype)
 
         # then check for valid action
-        valid = validator_func(new_array, behavior=behavior, allow_spoiled=allow_spoiled)
+        kosher = check_spoiling(new_array, behavior=behavior, allow_spoiled=allow_spoiled)
 
         # mark spoiled games (only based on invalid picks)
-        invalid_rows = np.any(~valid, axis=1)
-        self.spoiled[invalid_rows] = 1
+        spoiling_rows = np.any(~kosher, axis=1)
+        self.spoiled[spoiling_rows] = 1
 
         # update sim.picked
         if behavior == 'add':
@@ -107,7 +107,7 @@ class MontyHallSim:
 
     # ---- Pick setting
 
-    def _validate_picks(self, picks, behavior, allow_spoiled=True):
+    def _check_spoiling_picks(self, picks, behavior, allow_spoiled=True):
         if behavior in ['add', 'overwrite']:
             valid =  ~ np.logical_and(self.revealed, picks)
         elif behavior == 'remove':
@@ -124,12 +124,12 @@ class MontyHallSim:
 
     # ---- Door revealing
 
-    def _validate_reveals(self, reveals, behavior, allow_spoiled=True):
+    def _check_spoiling_reveals(self, reveals, behavior, allow_spoiled=True):
         offlimits = self.query_doors_or(cars=True, picked=True)
         if behavior in ['add', 'overwrite']:
             valid =  ~np.logical_and(offlimits, reveals)
         elif behavior == 'remove':
-            valid = np.full(True, self.shape)
+            valid = np.full(self.shape, True)
 
         if not allow_spoiled and np.any(~valid):
             invalid_rows = np.any(~valid, axis=1)

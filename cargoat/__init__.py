@@ -7,7 +7,7 @@ __version__ = v
 del v
 
 # imports
-from .core import *
-from .errors import *
-from .sim import *
-from .steps import *
+from .core import simulate
+from .steps.close import Close
+from .steps.pick import Pick
+from .steps.reveal import Reveal
