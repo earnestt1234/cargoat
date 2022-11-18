@@ -26,6 +26,50 @@ class MontyHallSim:
         self.revealed = np.empty(0)
         self.spoiled = np.empty(0)
 
+    # ---- Class methods
+
+    @classmethod
+    def from_arrays(cls, picked=None, revealed=None, cars=None,
+                    spoiled=None, default=0, copy=True):
+
+        mainarrays = (cars, picked, revealed)
+
+        if all([i is None for i in mainarrays]):
+            raise ValueError('Must provide at least one of cars, '
+                             'picked, or revealed.')
+
+        base = [a for a in mainarrays if a is not None][0]
+        shape = base.shape
+
+        if picked is None:
+            picked = np.full(shape, default)
+        if revealed is None:
+            revealed = np.full(shape, default)
+        if cars is None:
+            cars = np.full(shape, default)
+
+        shape_set = set(i.shape for i in (cars, picked, revealed))
+
+        if len(shape_set) != 1:
+            raise ValueError('Detected different array shapes for '
+                             'picked, revealed, and cars.')
+
+        n, doors = shape
+        if spoiled is None:
+            spoiled = np.zeros(n, dtype=int)
+        if len(spoiled) != n:
+            raise ValueError('spoiled array does not match')
+
+        copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+        out = cls(n)
+        out.cars = copyfun(cars)
+        out.picked = copyfun(picked)
+        out.revealed = copyfun(revealed)
+        out.spoiled = copyfun(spoiled)
+
+        return out
+
     # ---- Properties
     @property
     def idx(self):
