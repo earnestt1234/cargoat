@@ -6,8 +6,37 @@ from ._version import v
 __version__ = v
 del v
 
+__all__ = [
+    'PlaceCar',
+    'RemoveCar',
+    'Pick',
+    'UnPick',
+    'Reveal',
+    'Close',
+    'InitDoorsFixed',
+    'InitDoorsRandom',
+    'AddDoors',
+    'RemoveDoors',
+    'RearrangeDoors',
+    'Finish',
+    'simulate'
+    ]
+
 # imports
-from .core import simulate
-from .steps.close import Close
-from .steps.pick import Pick
-from .steps.reveal import Reveal
+from cargoat.core import simulate
+from cargoat.steps import (
+    PlaceCar,
+    RemoveCar,
+    Pick,
+    UnPick,
+    Reveal,
+    Close,
+    InitDoorsFixed,
+    InitDoorsRandom,
+    AddDoors,
+    RemoveDoors,
+    RearrangeDoors,
+    Finish
+    )
+
+

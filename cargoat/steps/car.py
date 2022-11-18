@@ -20,3 +20,15 @@ class PlaceCar(GenericAction):
                          exclude_revealed=exclude_revealed,
                          allow_redundant=allow_redundant,
                          allow_spoiled=allow_spoiled)
+
+class RemoveCar(GenericAction):
+    def __init__(self, doors=1, weighted=False, exclude_current=True,
+                 exclude_revealed=True, allow_spoiled=False,
+                 allow_redundant=True):
+        super().__init__(target='revealed',
+                         doors=doors,
+                         weighted=weighted,
+                         behavior='remove',
+                         exclude_carless=exclude_current,
+                         allow_redundant=allow_redundant,
+                         allow_spoiled=allow_spoiled)
