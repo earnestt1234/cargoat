@@ -8,6 +8,10 @@ Created on Sat Dec 10 14:59:27 2022
 
 from cargoat.steps.pick import Pick
 
+class Pass:
+    def __call__(self, sim):
+        pass
+
 class Stay:
     def __call__(self, sim):
         pass

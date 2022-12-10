@@ -157,6 +157,10 @@ class MontyHallSim:
     def revealable_doors(self):
         return ~self.query_doors_or(cars=True, picked=True, revealed=True)
 
+    def count_totals(self, target):
+        arr = getattr(self, target)
+        return arr.sum(axis=1)
+
     # ---- Generic setter functions
 
     def _get_spoiling_func(self, target):
