@@ -48,3 +48,19 @@ class IfElse:
         sim.revealed = new.revealed
         sim.cars = new.cars
         sim.spoiled = new.spoiled
+
+class TryExcept:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def __call__(self, sim):
+        temp = sim.copy()
+        try:
+            self.a(sim)
+        except:
+            self.b(temp)
+            sim.picked=temp.picked
+            sim.cars=temp.cars
+            sim.revealed=temp.revealed
+            sim.spoiled=temp.spoiled

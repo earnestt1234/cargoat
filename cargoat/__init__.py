@@ -23,6 +23,7 @@ __all__ = [
     'Reveal',
     'Stay',
     'Switch',
+    'TryExcept',
     'UnPick',
     'simulate'
     ]
@@ -46,6 +47,7 @@ from cargoat.steps import (
     Reveal,
     Stay,
     Switch,
+    TryExcept,
     UnPick,
     )
 

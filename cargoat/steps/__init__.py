@@ -18,6 +18,7 @@ __all__ = [
     'Reveal',
     'Stay',
     'Switch',
+    'TryExcept',
     'UnPick'
     ]
 
@@ -29,7 +30,7 @@ from cargoat.steps.convenience import Pass, Stay, Switch
 
 from cargoat.steps.initialization import InitDoorsFixed, InitDoorsRandom
 
-from cargoat.steps.logical import ChanceTo, IfElse
+from cargoat.steps.logical import ChanceTo, IfElse, TryExcept
 
 from cargoat.steps.remodeling import AddDoors, RemoveDoors, RearrangeDoors
 

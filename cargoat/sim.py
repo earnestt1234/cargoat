@@ -211,7 +211,7 @@ class MontyHallSim:
         if behavior in ['add', 'overwrite']:
             valid =  ~ np.logical_and(self.revealed, picks)
         elif behavior == 'remove':
-            valid = np.full(True, self.shape)
+            valid = np.full(self.shape, True)
 
         if not allow_spoiled and np.any(~valid):
             invalid_rows = np.any(~valid, axis=1)
@@ -250,6 +250,13 @@ class MontyHallSim:
                 func(a)
             else:
                 setattr(self, attr, func(a))
+
+    def copy(self):
+        return self.from_arrays(picked=self.picked,
+                                revealed=self.revealed,
+                                cars=self.cars,
+                                spoiled=self.spoiled,
+                                copy=True)
 
     # ---- Results
     def get_results(self):
