@@ -7,16 +7,30 @@ Created on Sat Dec 10 14:36:28 2022
 """
 
 from cargoat.sim import combine_sims
+from cargoat.steps import Pass
+
+import numpy as np
+
+class ChanceTo:
+    def __init__(self, p, action):
+        self.p = p
+        self.action = action
+
+    def __call__(self, sim):
+        draws = np.random.rand(len(sim.idx))
+        action = IfElse(draws < self.p, self.action, Pass(), call=False)
+        action(sim)
 
 class IfElse:
-    def __init__(self, condition, a, b):
+    def __init__(self, condition, a, b, call=True):
         self.condition = condition
         self.a = a
         self.b = b
+        self.call = call
 
     def __call__(self, sim):
 
-        bools = self.condition(sim)
+        bools = self.condition(sim) if self.call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
 

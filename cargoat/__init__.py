@@ -8,6 +8,7 @@ del v
 
 __all__ = [
     'AddDoors',
+    'ChanceTo',
     'Close',
     'Finish',
     'IfElse',
@@ -30,6 +31,7 @@ __all__ = [
 from cargoat.core import simulate
 from cargoat.steps import (
     AddDoors,
+    ChanceTo,
     Close,
     Finish,
     IfElse,

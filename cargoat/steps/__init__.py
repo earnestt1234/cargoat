@@ -3,6 +3,7 @@
 
 __all__ = [
     'AddDoors',
+    'ChanceTo',
     'Close',
     'Finish',
     'IfElse',
@@ -28,7 +29,7 @@ from cargoat.steps.convenience import Pass, Stay, Switch
 
 from cargoat.steps.initialization import InitDoorsFixed, InitDoorsRandom
 
-from cargoat.steps.logical import IfElse
+from cargoat.steps.logical import ChanceTo, IfElse
 
 from cargoat.steps.remodeling import AddDoors, RemoveDoors, RearrangeDoors
 
