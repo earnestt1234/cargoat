@@ -38,7 +38,6 @@ def combine_sims(sims, index=None, copy=True):
     spoiled = np.zeros(shape[0], dtype=int)
 
     for i in np.unique(index):
-        print(index == i)
         sim = sims[i]
         cars[index == i, :] = copyfun(sim.cars)
         picked[index == i, :] = copyfun(sim.picked)

@@ -7,36 +7,42 @@ __version__ = v
 del v
 
 __all__ = [
-    'PlaceCar',
-    'RemoveCar',
-    'Pick',
-    'UnPick',
-    'Reveal',
+    'AddDoors',
     'Close',
+    'Finish',
+    'IfElse',
     'InitDoorsFixed',
     'InitDoorsRandom',
-    'AddDoors',
-    'RemoveDoors',
+    'Pick',
+    'PlaceCar',
     'RearrangeDoors',
-    'Finish',
+    'RemoveCar',
+    'RemoveDoors',
+    'Reveal',
+    'Stay',
+    'Switch',
+    'UnPick',
     'simulate'
     ]
 
 # imports
 from cargoat.core import simulate
 from cargoat.steps import (
-    PlaceCar,
-    RemoveCar,
-    Pick,
-    UnPick,
-    Reveal,
+    AddDoors,
     Close,
+    Finish,
+    IfElse,
     InitDoorsFixed,
     InitDoorsRandom,
-    AddDoors,
-    RemoveDoors,
+    Pick,
+    PlaceCar,
     RearrangeDoors,
-    Finish
+    RemoveCar,
+    RemoveDoors,
+    Reveal,
+    Stay,
+    Switch,
+    UnPick,
     )
 
 
