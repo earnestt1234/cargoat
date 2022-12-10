@@ -17,6 +17,40 @@ from cargoat.errors import (
     get_errortype_from_behavior
     )
 
+def combine_sims(sims, index=None, copy=True):
+
+    n = len(sims)
+    rows = [x.shape[0] for x in sims]
+    cols = [x.shape[1] for x in sims]
+    copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+    if len(set(cols)) != 1:
+        raise ValueError('All sims must have the same number of doors (columns).')
+
+    if index is None:
+        index = np.repeat(np.arange(n, dtype=int), rows)
+
+    shape = (len(index), cols[0])
+
+    cars = np.zeros(shape, dtype=int)
+    picked = np.zeros(shape, dtype=int)
+    revealed = np.zeros(shape, dtype=int)
+    spoiled = np.zeros(shape[0], dtype=int)
+
+    for i in np.unique(index):
+        print(index == i)
+        sim = sims[i]
+        cars[index == i, :] = copyfun(sim.cars)
+        picked[index == i, :] = copyfun(sim.picked)
+        revealed[index == i, :] = copyfun(sim.revealed)
+        spoiled[index == i] = sim.spoiled
+
+    return MontyHallSim.from_arrays(picked=picked,
+                                    revealed=revealed,
+                                    cars=cars,
+                                    spoiled=spoiled,
+                                    copy=False)
+
 class MontyHallSim:
     def __init__(self, n):
         self.n = n
@@ -78,6 +112,25 @@ class MontyHallSim:
     @property
     def shape(self):
         return self.cars.shape
+
+    # ---- Indexing
+    def select(self, x=None, y=None, copy=True):
+
+        x = slice(None) if x is None else x
+        y = slice(None) if y is None else y
+        copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+        cars = copyfun(self.cars[x, y])
+        picked = copyfun(self.picked[x, y])
+        revealed = copyfun(self.revealed[x, y])
+        spoiled = copyfun(self.spoiled[x])
+
+        return self.from_arrays(picked=picked,
+                                revealed=revealed,
+                                cars=cars,
+                                spoiled=spoiled,
+                                copy=False)
+
 
     # ---- Status of the sim
     def pickable_doors(self, exclude_current=True):
