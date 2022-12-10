@@ -9,11 +9,14 @@ del v
 __all__ = [
     'AddDoors',
     'ChanceTo',
+    'CheckSpoiled',
     'Close',
     'Finish',
     'IfElse',
     'InitDoorsFixed',
     'InitDoorsRandom',
+    'MarkSpoiled',
+    'MarkUnspoiled',
     'Pass',
     'Pick',
     'PlaceCar',
@@ -24,7 +27,7 @@ __all__ = [
     'Stay',
     'Switch',
     'TryExcept',
-    'UnPick',
+    'Unpick',
     'simulate'
     ]
 
@@ -33,11 +36,14 @@ from cargoat.core import simulate
 from cargoat.steps import (
     AddDoors,
     ChanceTo,
+    CheckSpoiled,
     Close,
     Finish,
     IfElse,
     InitDoorsFixed,
     InitDoorsRandom,
+    MarkSpoiled,
+    MarkUnspoiled,
     Pass,
     Pick,
     PlaceCar,
@@ -48,7 +54,7 @@ from cargoat.steps import (
     Stay,
     Switch,
     TryExcept,
-    UnPick,
+    Unpick,
     )
 
 

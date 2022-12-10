@@ -22,7 +22,7 @@ class Pick(GenericAction):
                          allow_redundant=allow_redundant,
                          allow_spoiled=allow_spoiled)
 
-class UnPick(GenericAction):
+class Unpick(GenericAction):
     def __init__(self, doors=1, weighted=False, exclude_current=True,
                  allow_spoiled=False, allow_redundant=True):
         super().__init__(target='picked',

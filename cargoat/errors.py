@@ -28,7 +28,6 @@ class BadReveal(MontyHallError):
     mean many things (a car was revealed, there were no goats to reveal,
     a picked door was revealed, etc.)"""
 
-
 def bad_trials_raise(badrows, msg, errortype):
     '''Typical cargoat error message, saying what went wrong during
     the simulation, and on which rows.'''

@@ -70,6 +70,7 @@ class GenericAction:
 
     def __call__(self, sim):
         # choice = self.doors
+
         allowed = ~sim.query_doors_or(picked=self.exclude_picked,
                                       revealed=self.exclude_revealed,
                                       cars=self.exclude_cars,
