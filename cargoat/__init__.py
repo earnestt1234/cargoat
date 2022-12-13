@@ -28,11 +28,11 @@ __all__ = [
     'Switch',
     'TryExcept',
     'Unpick',
-    'simulate'
+    'play'
     ]
 
 # imports
-from cargoat.core import simulate
+from cargoat.core import play
 from cargoat.steps import (
     AddDoors,
     ChanceTo,
