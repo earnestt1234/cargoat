@@ -51,7 +51,50 @@ def combine_sims(sims, index=None, copy=True):
                                     copy=False)
 
 class MontyHallSim:
+    '''Class for remembering the status of the game simualtion.'''
+
     def __init__(self, n):
+        '''
+        The MontyHallSim object tracks the game status for repeated Monty Hall
+        games.
+
+        Games are mainly recorded with numpy arrays.  There are three primary
+        arrays, stored as attributes:
+            - `self.picked`: Indicates doors selected by the player
+            - `self.revealed`: Indicates doors that have been opened
+            - `self.cars`: Indicates doors which have a car behind them.
+
+        These are all binary, 2D, integer arrays.  The shape of the arrays
+        during/after a typical simulation will be (trials, doors) - one row
+        constitutes one game.  The initialization argument `n` determines
+        the number of trials.  The number of doors is determined by the particular
+        game being played.
+
+        There is also a `spoiled` attribute, which is a numpy array of
+        shape (trials,).  This simply records whether a trial has broken
+        the rules of the traditional Monty Hall game.
+
+        MontyHallSims are updated by applying rules/steps, i.e. from the
+        `cargoat.steps` subpackage.
+
+        Typically, a user *should not* have to manually define a MontyHallSim
+        object, as `cargoat.core.play` will do this provided a list of steps.
+        *Initialization of a MontyHallSim results in an empty simulation* -
+        i.e. all the array attributes will be empty.  The steps in
+        `cargoat.steps.initialization` are intended for populating the
+        simulation.
+
+
+        Parameters
+        ----------
+        n : int
+            Number of trials to simulate.
+
+        Returns
+        -------
+        None.
+
+        '''
         self.n = n
 
         self.cars = np.empty(0)
@@ -64,6 +107,39 @@ class MontyHallSim:
     @classmethod
     def from_arrays(cls, picked=None, revealed=None, cars=None,
                     spoiled=None, default=0, copy=True):
+        '''
+        Construct a MontyHallSim from existing numpy arrays.
+
+        Parameters
+        ----------
+        picked : 2D numpy array, optional
+            Integer array indicating picked doors. The default is None.
+        revealed : 2D numpy array, optional
+            Integer array indicating revealed doors. The default is None.
+        cars : 2D numpy array, optional
+            Integer array indicating doors containing cars. The default is None.
+        spoiled : 1D numpy array, optional
+            Integer array indicating spoiled trials. The default is None.
+        default : int, optional
+            When only some of `picked`/`revealed`/`cars` are provided, use
+            this value to fill the missing arrays. The default is 0.
+        copy : bool, optional
+            Call an explicit copy on the arrays before binding to the new
+            simulation being created. Intended to prevent multiple simulations
+            pointing to the same arrays.  The default is True.
+
+        Raises
+        ------
+        ValueError
+            - Didn't provide at least one of `cars`, `picked`, or `revealed`
+            - Different array shapes for provided arrays.
+
+        Returns
+        -------
+        out : MontyHallSim
+            New simulation object.
+
+        '''
 
         mainarrays = (cars, picked, revealed)
 
@@ -106,15 +182,42 @@ class MontyHallSim:
     # ---- Properties
     @property
     def idx(self):
+        '''Return a numpy arange of length `self.n`'''
         return np.arange(self.n)
 
     @property
     def shape(self):
-        return self.cars.shape
+        '''Return the dimensions of the simulation (trials, doors).  Throws an error if
+        different array shapes are found.'''
+        shape_set = set([self.cars.shape, self.picked.shape, self.revealed.shape])
+        if len(shape_set) != 1:
+            raise RuntimeError('Found different shapes for simulation arrays!')
+
+        return self.picked.shape
 
     # ---- Indexing
     def select(self, x=None, y=None, copy=True):
+        '''
+        Index the simulation to create a new one.
 
+        Parameters
+        ----------
+        x : int, float, list-like, optional
+            Indexer for trials (rows) of simulation. The default is None,
+            in which case all trials are selected.
+        y : int, float, list-like, optional
+            Indexer for doors (columns) of simulation. The default is None,
+            in which case all doors are selected.
+        copy : bool, optional
+            Create an explicit copy of the arrays before binding to the
+            newly created simulation. The default is True.
+
+        Returns
+        -------
+        MontyHallSimulation
+            New simulation object.
+
+        '''
         x = slice(None) if x is None else x
         y = slice(None) if y is None else y
         copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
@@ -133,10 +236,36 @@ class MontyHallSim:
 
     # ---- Status of the sim
     def pickable_doors(self, exclude_current=True):
+        '''Array of the simulation shape indicating which doors are
+        not revealed (with or without the current picked doors).'''
         return ~self.query_doors_or(picked=exclude_current, revealed=True)
 
     def query_doors_or(self, cars=False, picked=False, revealed=False,
                        not_cars=False, not_picked=False, not_revealed=False):
+        '''
+        Return a boolean array indicating which doors of the simulation
+        meet one or more conditions.
+
+        Parameters
+        ----------
+        cars : bool, optional
+            Signal doors containing cars. The default is False.
+        picked : bool, optional
+            Signal doors that are picked. The default is False.
+        revealed : bool, optional
+            Signal doors that are revealed. The default is False.
+        not_cars : bool, optional
+            Signal doors that do not contain cars. The default is False.
+        not_picked : bool, optional
+            Signal doors that are not picked. The default is False.
+        not_revealed : bool, optional
+            Signal doors that are closed. The default is False.
+
+        Returns
+        -------
+        out : numpy array
+
+        '''
         c = int(cars)
         p = int(picked)
         r = int(revealed)
@@ -155,15 +284,21 @@ class MontyHallSim:
         return out
 
     def revealable_doors(self):
+        '''Array of the simulation shape indicating which doors are
+        not revealed, don't contain cars, and aren't currently picked.'''
         return ~self.query_doors_or(cars=True, picked=True, revealed=True)
 
     def count_totals(self, target):
+        '''Return a count of the number of positives for each trial in the
+        simulation.  Target is `cars`, `picked`, or `revealed`. '''
         arr = getattr(self, target)
         return arr.sum(axis=1)
 
     # ---- Generic setter functions
 
     def _get_spoiling_func(self, target):
+        '''Helper to return the function used to detect spoiled games when
+        applying certain steps.'''
         if target == 'picked':
             return self._check_spoiling_picks
 

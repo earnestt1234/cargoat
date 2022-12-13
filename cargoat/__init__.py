@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''cargoat!'''
+'''Cargoat is a Python package for simulating Monty Hall type games.'''
 
 # load the version (and remove from namespace)
 from ._version import v
