@@ -305,8 +305,8 @@ class MontyHallSim:
         elif target == 'revealed':
             return self._check_spoiling_reveals
 
-        else:
-            raise NotImplementedError
+        elif target == 'cars':
+            return self._check_spoiling_cars
 
     def _set_array(self, target, new_array,
                    behavior='overwrite', n_per_row=None, allow_spoiled=False,
@@ -373,6 +373,14 @@ class MontyHallSim:
                    f"trial {trial} door {door}.")
             bad_trials_raise(invalid_rows, msg, BadReveal)
 
+        return valid
+
+    # ---- Car placing
+    def _check_spoiling_cars(self, cars, behavior, allow_spoiled=True):
+        # car placement/removal is not really mentioned in the
+        # typical game variations
+        # for now, treating changing the car array as unable to spoil
+        valid = np.full(self.shape, True)
         return valid
 
     # ---- Other Helpers
