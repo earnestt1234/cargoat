@@ -9,5 +9,8 @@ Created on Thu Nov 17 12:26:23 2022
 import pprint
 
 class Finish:
+    def __init__(self, spoiled_games = 'omit'):
+        self.spoiled_games = spoiled_games
+
     def __call__(self, sim):
-        pprint.pprint(sim.get_results(), sort_dicts=False)
+        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)

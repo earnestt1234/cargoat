@@ -259,13 +259,24 @@ class MontyHallSim:
                                 copy=True)
 
     # ---- Results
-    def get_results(self):
-        wins = np.sum(np.any(self.picked * self.cars, axis=1))
-        losses = self.n - wins
-        percent_wins = (wins / self.n) * 100
-        percent_losses = (losses / self.n) * 100
+    def get_results(self, spoiled_games='omit'):
+
+        spoiled = self.spoiled == 1
+        if spoiled_games == 'include':
+            sim = self
+        elif spoiled_games == 'omit':
+            sim = self.select(~spoiled)
+        elif spoiled_games == 'only':
+            sim = self.select(spoiled)
+        else:
+            raise ValueError('`spoiled_games` must be "include", "omit", or "only".')
+
+        wins = np.sum(np.any(sim.picked * sim.cars, axis=1))
+        losses = sim.n - wins
+        percent_wins = (wins / sim.n) * 100
+        percent_losses = (losses / sim.n) * 100
         results = {
-            'trials': self.n,
+            'trials': sim.n,
             'wins': wins,
             'losses': losses,
             'percent_wins': percent_wins,
