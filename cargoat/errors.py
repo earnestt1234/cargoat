@@ -15,18 +15,13 @@ class BadPick(MontyHallError):
     """Exception indicating a player's door choice violated the game rules,
     typically that an open door was selected."""
 
-class BadUnpick(MontyHallError):
-    """Exception indicating a player's door choice violated the game rules,
-    typically that an open door was selected."""
-
-class BadClose(MontyHallError):
-    '''Exception indicating a bad door close request, typically
-    when there are no open doors available to close.'''
-
 class BadReveal(MontyHallError):
     """Exception indicating a door reveal violated the game rules, which could
     mean many things (a car was revealed, there were no goats to reveal,
     a picked door was revealed, etc.)"""
+
+class BadCar(MontyHallError):
+    """Exception indicating a car placement/removal violated the game rules."""
 
 def bad_trials_raise(badrows, msg, errortype):
     '''Typical cargoat error message, saying what went wrong during
@@ -66,16 +61,3 @@ def check_redundancy_for_setting(old_array, new_array, behavior,
     if np.any(redundant):
         trial, door = get_index_success(redundant)
         bad_trials_raise(redundant_rows, emessage, etype)
-
-def get_errortype_from_behavior(target, behavior):
-
-    options = {
-        ('picked', 'add')         : BadPick,
-        ('picked', 'overwrite')   : BadPick,
-        ('picked', 'remove')      : BadUnpick,
-        ('revealed', 'add')       : BadReveal,
-        ('revealed', 'overwrite') : BadReveal,
-        ('revealed', 'remove')    : BadClose
-               }
-
-    return options[(target, behavior)]

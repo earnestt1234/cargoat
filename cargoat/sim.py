@@ -9,12 +9,12 @@ import numpy as np
 
 from cargoat.arrayops import get_index_success
 from cargoat.errors import (
+    BadCar,
     BadPick,
     BadReveal,
     bad_trials_raise,
     check_n_per_row,
-    check_redundancy_for_setting,
-    get_errortype_from_behavior
+    check_redundancy_for_setting
     )
 
 def combine_sims(sims, index=None, copy=True):
@@ -443,7 +443,9 @@ class MontyHallSim:
 
         old_array = getattr(self, target)
         check_spoiling = self._get_spoiling_func(target)
-        etype = get_errortype_from_behavior(target=target, behavior=behavior)
+        etype = {'cars': BadCar,
+                 'revealed': BadReveal,
+                 'picked': BadPick}[target]
 
         # apply checks if requested
         if n_per_row is not None:
