@@ -15,7 +15,7 @@ class Reveal(GenericAction):
                  allow_spoiled=False, allow_redundant=True):
         '''
         Class to model the host revealing one or more doors.
-        Revealed doors are signnificant for directing what information
+        Revealed doors are significant for directing what information
         the player knows, and which further actions are acceptable.
 
         Parameters
