@@ -18,6 +18,88 @@ from cargoat.errors import (
     )
 
 def combine_sims(sims, index=None, copy=True):
+    '''
+    Merge two or more simulations together, by stacking their
+    trials together.
+
+    Parameters
+    ----------
+    sims : list-like
+        Collection of MontyHallSims.
+    index : list-like, optional
+        Indexer used to direct the merging of simulations. The default is None,
+        in which case the simulation trials are concatenated in the order
+        passed.
+
+        `index` can be used to determine the order of rows for stitching
+        together simulations.  The values of `index` should be integers
+        in `range(len(sims))`, and each value *i* should appear as many times
+        as the number of rows in the *ith* simulation.  Thus the length of
+        `index` should be equal to the total number of trials across
+        all simulations passed.
+
+        See examples below.
+
+    copy : bool, optional
+        Explicityl copy the arrays of the simulation before creating the
+        new simulation. The default is True.
+
+    Raises
+    ------
+    ValueError
+        Different number of doors between simulations.
+
+    Returns
+    -------
+    MontyHallSim
+        New merged simulation object.
+
+    Examples
+    -------
+
+    ```python
+    >>> import cargoat as cg
+    >>> game = [cg.InitDoorsRandom(cars=1, goats=2), cg.Pick(3)]
+    >>> a = cg.play(game, n=3)
+    >>> b = cg.play(game[:1], n=3)
+
+    >>> a.picked
+    array([[1, 1, 1],
+           [1, 1, 1],
+           [1, 1, 1]])
+
+    >>> b.picked
+    array([[0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0]])
+
+    # simple concatenation
+    >>> c = cg.combine_sims([a, b])
+    >>> type(c)
+    cargoat.sim.MontyHallSim
+
+    >>> c.picked
+    array([[1, 1, 1],
+           [1, 1, 1],
+           [1, 1, 1],
+           [0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0]])
+
+    # using index to interleave
+    >>> index = [0, 1, 0, 1, 0, 1]
+    >>> d = cg.combine_sims([a, b], index=index)
+    >>> d.picked
+    array([[1, 1, 1],
+           [0, 0, 0],
+           [1, 1, 1],
+           [0, 0, 0],
+           [1, 1, 1],
+           [0, 0, 0]])
+
+    ```
+
+    '''
 
     n = len(sims)
     rows = [x.shape[0] for x in sims]
@@ -311,6 +393,53 @@ class MontyHallSim:
     def _set_array(self, target, new_array,
                    behavior='overwrite', n_per_row=None, allow_spoiled=False,
                    allow_redundant=True):
+        '''
+        Main function for altering the cars, picked, and revealed arrays
+        of the simulation when applying a step in the game.
+
+        A new array is passed, along with a behavior defining how to
+        treat the new array.  This information is used to determine
+        how to update the simulation.
+
+        Some optional checks can be applied to verify the settings
+        are behaving as expected and that the traditional game rules
+        are more/less followed.
+
+        Parameters
+        ----------
+        target : 'cars', 'picked', or 'revealed'
+            Simulation array to set.
+        new_array : numpy array
+            New array to use to update the simulation
+        behavior : 'overwrite', 'add', or 'remove', optional
+            How to treat the `new_array`. The default is 'overwrite'.
+            - overwrite: `new_array` should simply replace the current target array.
+            - add: any 1s in `new_array` should be added to any 1s in the current target
+            array (essentially an "or" operation)
+            - remove: any 1s in `new_array` should indicate places to remove 1s
+            in the current array.
+        n_per_row : int, optional
+            Enforce that a certain number of 1s are present per row in `new_array`.
+            The default is None, in which case there is no enforcement. An
+            error is raised if the condition is not met.  See
+            `cargoat.errors.check_n_per_row()`.
+        allow_spoiled : bool, optional
+            Allow entries in the new array that "spoil" the game; i.e. break
+            the rules of the game. The specific checks are dependent on
+            the `target` and the `behavior`.  The default is False.
+            If False, spoiled games will raise an error.  If True,
+            spoiled games will be marked in the `self.spoiled` attribute.
+        allow_redundant : bool, optional
+            Allow entries in the new array that are redundant with the
+            current simulation, e.g. closing an already closed door or picking
+            an already picked door.  The default is True.  If False,
+            redundant actions will raise an error.
+
+        Returns
+        -------
+        None.
+
+        '''
 
         old_array = getattr(self, target)
         check_spoiling = self._get_spoiling_func(target)
@@ -343,6 +472,11 @@ class MontyHallSim:
     # ---- Pick setting
 
     def _check_spoiling_picks(self, picks, behavior, allow_spoiled=True):
+        '''
+        Checks if new picks spoil the game. Violations are when
+        revealed doors are picked.  Removals (unpicking) do
+        not trigger spoiling.
+        '''
         if behavior in ['add', 'overwrite']:
             valid =  ~ np.logical_and(self.revealed, picks)
         elif behavior == 'remove':
@@ -360,6 +494,11 @@ class MontyHallSim:
     # ---- Door revealing
 
     def _check_spoiling_reveals(self, reveals, behavior, allow_spoiled=True):
+        '''
+        Checks if new reveals spoil the game. Violations are when
+        cars or picked foors are revealed.  Removals (closing) do
+        not trigger spoiling.
+        '''
         offlimits = self.query_doors_or(cars=True, picked=True)
         if behavior in ['add', 'overwrite']:
             valid =  ~np.logical_and(offlimits, reveals)
@@ -377,14 +516,38 @@ class MontyHallSim:
 
     # ---- Car placing
     def _check_spoiling_cars(self, cars, behavior, allow_spoiled=True):
-        # car placement/removal is not really mentioned in the
-        # typical game variations
-        # for now, treating changing the car array as unable to spoil
+        '''
+        Checks if new car placements spoil the game. Car placement/removal
+        is not really mentioned in the typical game variations.  For now
+        altering the car array does not result in spoiled games.
+        '''
         valid = np.full(self.shape, True)
         return valid
 
     # ---- Other Helpers
     def apply_func(self, func, inplace=False, cars=True, picked=True, revealed=True):
+        '''
+        Apply a function to one or more of the cars, picked, and revealed
+        arrays.
+
+        Parameters
+        ----------
+        func : callable
+            Function to apply.
+        inplace : bool, optional
+            The function will modify the arrays in place. The default is False.
+        cars : bool, optional
+            Apply to the car array. The default is True.
+        picked : bool, optional
+            Apply to the picked array. The default is True.
+        revealed : bool, optional
+            Apply to the revealed array. The default is True.
+
+        Returns
+        -------
+        None.
+
+        '''
         apply_to = [x for i, x in enumerate(['cars', 'picked', 'revealed'])
                     if [cars, picked, revealed][i]]
         for attr in apply_to:
@@ -395,6 +558,14 @@ class MontyHallSim:
                 setattr(self, attr, func(a))
 
     def copy(self):
+        '''
+        Create a copy of the current simulation.
+
+        Returns
+        -------
+        MontyHallSim
+
+        '''
         return self.from_arrays(picked=self.picked,
                                 revealed=self.revealed,
                                 cars=self.cars,
@@ -403,6 +574,31 @@ class MontyHallSim:
 
     # ---- Results
     def get_results(self, spoiled_games='omit'):
+        '''
+        Return a dictionary containing the game results,
+        e.g. number of wins and losses.  Trials are counted
+        as wins when at least one pick and car overlap, i.e.
+        both have 1s in the same position.
+
+        Parameters
+        ----------
+        spoiled_games : str, optional
+            Behavior for dealing with spoiled games. The default is 'omit'.
+            - 'omit': discard spoiled games
+            - 'include': include spoiled games in the results
+            - 'only': only show the results for spoiled games
+
+        Raises
+        ------
+        ValueError
+            Unrecognized value for `spoiled_games`.
+
+        Returns
+        -------
+        results : dict
+            Dictionary of results.
+
+        '''
 
         spoiled = self.spoiled == 1
         if spoiled_games == 'include':
