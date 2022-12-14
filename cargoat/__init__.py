@@ -17,6 +17,7 @@ __all__ = [
     'InitDoorsRandom',
     'MarkSpoiled',
     'MarkUnspoiled',
+    'MontyHallSim',
     'Pass',
     'Pick',
     'PlaceCar',
@@ -28,6 +29,7 @@ __all__ = [
     'Switch',
     'TryExcept',
     'Unpick',
+    'combine_sims',
     'play'
     ]
 
