@@ -24,7 +24,7 @@ class Pick(GenericAction):
             Argument for specifying how many/which doors to pick. The default is 1.
             Possible options are as follows:
             - a single integer is interpreted as the number of doors to
-            select
+            select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
             specific doors to pick, e.g. `[0, 2]` selects the doors at
             index 0 and index 2.
@@ -92,7 +92,7 @@ class Unpick(GenericAction):
             Argument for specifying how many/which doors to unpick. The default is 1.
             Possible options are as follows:
             - a single integer is interpreted as the number of doors to
-            select
+            select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
             specific doors to pick, e.g. `[0, 2]` selects the doors at
             index 0 and index 2.
