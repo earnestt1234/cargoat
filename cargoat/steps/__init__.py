@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-'''cargoat!'''
+
+'''This subpackage defines classes for Monty Hall game actions,
+such as picking doors, revealing doors, etc.  The classes should be
+instantiated when defining games passed to `cargoat.core.play()`.'''
 
 __all__ = [
     'AddDoors',
