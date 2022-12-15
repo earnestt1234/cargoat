@@ -11,6 +11,7 @@ __all__ = [
     'Close',
     'Finish',
     'IfElse',
+    'InitDoorsEmpty',
     'InitDoorsFixed',
     'InitDoorsRandom',
     'MarkSpoiled',
@@ -34,7 +35,9 @@ from cargoat.steps.reveal import Reveal, Close
 
 from cargoat.steps.convenience import Pass, Stay, Switch
 
-from cargoat.steps.initialization import InitDoorsFixed, InitDoorsRandom
+from cargoat.steps.initialization import (InitDoorsEmpty,
+                                          InitDoorsFixed,
+                                          InitDoorsRandom)
 
 from cargoat.steps.logical import ChanceTo, IfElse, TryExcept
 

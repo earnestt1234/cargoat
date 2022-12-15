@@ -8,6 +8,17 @@ Created on Thu Nov 17 12:17:34 2022
 
 import numpy as np
 
+class InitDoorsEmpty:
+    def __init__(self, doors):
+        self.doors = doors
+
+    def __call__(self, sim):
+        shape = (sim.n, self.doors)
+        sim.cars = np.zeros(shape, dtype=int)
+        sim.picked = np.zeros(shape, dtype=int)
+        sim.revealed = np.zeros(shape, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=int)
+
 class InitDoorsFixed:
     def __init__(self, placement=[0, 0, 1]):
         self.placement = np.array(placement).astype(int)
