@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov 17 12:24:20 2022
-
-@author: earnestt1234
+Actions for changing the number or arrangement of doors.
 """
 
 import numpy as np
@@ -12,6 +10,20 @@ from cargoat.actions.base import MontyHallAction
 
 class AddDoors(MontyHallAction):
     def __init__(self, positions):
+        '''
+        Add additional doors at desired positions within the simulation.
+        Doors will be unpicked, closed, and containing goats.
+
+        Parameters
+        ----------
+        positions : list-like
+            Positions to add doors.  See `np.insert` for more details.
+
+        Returns
+        -------
+        None.
+
+        '''
         self.positions = positions
 
     def __call__(self, sim):
@@ -20,6 +32,19 @@ class AddDoors(MontyHallAction):
 
 class RemoveDoors(MontyHallAction):
     def __init__(self, positions):
+        '''
+        Remove selected doors from the simulation, based on index.
+
+        Parameters
+        ----------
+        positions : list-like
+            Doors to remove.  See `np.remove` for more details.
+
+        Returns
+        -------
+        None.
+
+        '''
         self.positions = positions
 
     def __call__(self, sim):
@@ -28,6 +53,21 @@ class RemoveDoors(MontyHallAction):
 
 class RearrangeDoors(MontyHallAction):
     def __init__(self, positions):
+        '''
+        Swap the positions of doors.  Note that the contents, picked-status,
+        and revealed-status all stick with the door.
+
+        Parameters
+        ----------
+        positions : list-like
+            Permutation of the range of the number of doors, dictating
+            the new position of each door.
+
+        Returns
+        -------
+        None.
+
+        '''
         self.positions = positions
 
     def __call__(self, sim):
