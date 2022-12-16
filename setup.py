@@ -20,7 +20,7 @@ with open(path.join(this_directory, 'cargoat', '_version.py'), encoding='utf-8')
     version = f.read().split('=')[1].strip('\'"')
 
 setup(name='cargoat',
-      version='0.2.0',
+      version=version,
       python_requires='>=3.8',
       description='Custom Monty Hall problem simulations in Python.',
       url='https://github.com/earnestt1234/cargoat',
