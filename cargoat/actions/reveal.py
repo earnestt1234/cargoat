@@ -6,7 +6,7 @@ Created on Wed Nov 16 20:37:53 2022
 @author: earnestt1234
 """
 
-from cargoat.steps.generic import GenericAction
+from cargoat.actions.generic import GenericAction
 
 class Reveal(GenericAction):
     '''Class to model the host opening a door.'''

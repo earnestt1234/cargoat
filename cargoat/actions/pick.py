@@ -6,7 +6,7 @@ Created on Fri Nov  4 08:52:01 2022
 @author: earnestt1234
 """
 
-from cargoat.steps.generic import GenericAction
+from cargoat.actions.generic import GenericAction
 
 class Pick(GenericAction):
     '''Class modeling the contestant picking a door.'''

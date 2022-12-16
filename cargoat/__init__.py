@@ -37,7 +37,7 @@ __all__ = [
 # imports
 from cargoat.core import play
 from cargoat.sim import MontyHallSim, combine_sims
-from cargoat.steps import (
+from cargoat.actions import (
     AddDoors,
     ChanceTo,
     CheckSpoiled,

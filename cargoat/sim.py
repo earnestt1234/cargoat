@@ -156,14 +156,14 @@ class MontyHallSim:
         shape (trials,).  This simply records whether a trial has broken
         the rules of the traditional Monty Hall game.
 
-        MontyHallSims are updated by applying rules/steps, i.e. from the
-        `cargoat.steps` subpackage.
+        MontyHallSims are updated by applying rules/actions, i.e. from the
+        `cargoat.actions` subpackage.
 
         Typically, a user *should not* have to manually define a MontyHallSim
-        object, as `cargoat.core.play` will do this provided a list of steps.
+        object, as `cargoat.core.play` will do this provided a list of actions.
         *Initialization of a MontyHallSim results in an empty simulation* -
-        i.e. all the array attributes will be empty.  The steps in
-        `cargoat.steps.initialization` are intended for populating the
+        i.e. all the array attributes will be empty.  The actions in
+        `cargoat.actions.initialization` are intended for populating the
         simulation.
 
 
@@ -380,7 +380,7 @@ class MontyHallSim:
 
     def _get_spoiling_func(self, target):
         '''Helper to return the function used to detect spoiled games when
-        applying certain steps.'''
+        applying certain actions.'''
         if target == 'picked':
             return self._check_spoiling_picks
 
@@ -395,7 +395,7 @@ class MontyHallSim:
                    allow_redundant=True):
         '''
         Main function for altering the cars, picked, and revealed arrays
-        of the simulation when applying a step in the game.
+        of the simulation when applying a action in the game.
 
         A new array is passed, along with a behavior defining how to
         treat the new array.  This information is used to determine

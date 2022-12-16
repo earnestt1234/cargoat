@@ -14,7 +14,7 @@ def play(game, n=100):
     Parameters
     ----------
     game : list-like
-        A list of objects from the `cargoat.steps` subpackage.
+        A list of objects from the `cargoat.actions` subpackage.
     n : int, optional
         Number of games to simulate. The default is 100.
 
@@ -30,11 +30,11 @@ def play(game, n=100):
 
     '''
     sim = MontyHallSim(n=n)
-    for i, step in enumerate(game):
+    for i, action in enumerate(game):
         try:
-            step(sim)
+            action(sim)
         except Exception as error:
-            msg = f'Error for step {i}: {repr(step)}'
+            msg = f'Error for step {i}: {repr(action)}'
             raise MontyHallError(msg) from error
 
     return sim

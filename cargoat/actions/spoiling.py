@@ -6,6 +6,7 @@ Created on Sat Dec 10 16:10:27 2022
 @author: earnestt1234
 """
 
+from cargoat.actions.base import MontyHallAction
 from cargoat.arrayops import get_index_success
 from cargoat.errors import MontyHallError, bad_trials_raise
 
@@ -39,7 +40,7 @@ def _verify_all_good_1D(sim, good_array, fail_message, action='raise'):
     elif action != 'nothing':
         raise ValueError('action must be one of "raise", "spoil", or "nothing".')
 
-class CheckSpoiled:
+class CheckSpoiled(MontyHallAction):
     def __init__(self, action='raise', revealed_picks=True,
                  revealed_cars=True, no_cars=True, multiple_picks=True):
         self.action = action
@@ -68,10 +69,10 @@ class CheckSpoiled:
             _verify_all_good_1D(sim, good, fail_message='Found trials with multiple picked doors',
                                 action=self.action)
 
-class MarkSpoiled:
+class MarkSpoiled(MontyHallAction):
     def __call__(self, sim):
         sim.spoiled[True] = 1
 
-class MarkUnspoiled:
+class MarkUnspoiled(MontyHallAction):
     def __call__(self, sim):
         sim.spoiled[True] = 0

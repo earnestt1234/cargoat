@@ -6,12 +6,13 @@ Created on Sat Dec 10 14:36:28 2022
 @author: earnestt1234
 """
 
+from cargoat.actions.convenience import Pass
+from cargoat.actions.base import MontyHallAction
 from cargoat.sim import combine_sims
-from cargoat.steps import Pass
 
 import numpy as np
 
-class ChanceTo:
+class ChanceTo(MontyHallAction):
     def __init__(self, p, action):
         self.p = p
         self.action = action
@@ -21,7 +22,7 @@ class ChanceTo:
         action = IfElse(draws < self.p, self.action, Pass(), call=False)
         action(sim)
 
-class IfElse:
+class IfElse(MontyHallAction):
     def __init__(self, condition, a, b, call=True):
         self.condition = condition
         self.a = a
@@ -49,7 +50,7 @@ class IfElse:
         sim.cars = new.cars
         sim.spoiled = new.spoiled
 
-class TryExcept:
+class TryExcept(MontyHallAction):
     def __init__(self, a, b):
         self.a = a
         self.b = b

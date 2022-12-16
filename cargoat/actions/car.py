@@ -6,7 +6,7 @@ Created on Wed Nov 16 22:10:52 2022
 @author: earnestt1234
 """
 
-from cargoat.steps.generic import GenericAction
+from cargoat.actions.generic import GenericAction
 
 class PlaceCar(GenericAction):
     def __init__(self, doors=1, weighted=False, exclude_current=True,

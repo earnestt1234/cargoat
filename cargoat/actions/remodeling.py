@@ -8,7 +8,9 @@ Created on Thu Nov 17 12:24:20 2022
 
 import numpy as np
 
-class AddDoors:
+from cargoat.actions.base import MontyHallAction
+
+class AddDoors(MontyHallAction):
     def __init__(self, positions):
         self.positions = positions
 
@@ -16,7 +18,7 @@ class AddDoors:
         foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
         sim.apply_func(foo)
 
-class RemoveDoors:
+class RemoveDoors(MontyHallAction):
     def __init__(self, positions):
         self.positions = positions
 
@@ -24,7 +26,7 @@ class RemoveDoors:
         foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
         sim.apply_func(foo)
 
-class RearrangeDoors:
+class RearrangeDoors(MontyHallAction):
     def __init__(self, positions):
         self.positions = positions
 

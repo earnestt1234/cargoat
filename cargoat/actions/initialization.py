@@ -8,7 +8,9 @@ Created on Thu Nov 17 12:17:34 2022
 
 import numpy as np
 
-class InitDoorsEmpty:
+from cargoat.actions.base import MontyHallAction
+
+class InitDoorsEmpty(MontyHallAction):
     def __init__(self, doors):
         '''
         Initialize the simulation with a given number
@@ -33,7 +35,7 @@ class InitDoorsEmpty:
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
-class InitDoorsFixed:
+class InitDoorsFixed(MontyHallAction):
     def __init__(self, placement=(1, 0, 0)):
         '''
         Initialize the simulation with a known, constant
@@ -61,7 +63,7 @@ class InitDoorsFixed:
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
-class InitDoorsRandom:
+class InitDoorsRandom(MontyHallAction):
     def __init__(self, cars=1, goats=2):
         '''
         Initialize the doors with a given number of cars

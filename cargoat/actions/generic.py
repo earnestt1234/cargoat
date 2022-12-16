@@ -9,11 +9,12 @@ from collections.abc import Iterable
 
 import numpy as np
 
+from cargoat.actions.base import MontyHallAction
 from cargoat.arrayops import (n_per_row,
                               one_per_row,
                               one_per_row_weighted)
 
-class GenericAction:
+class GenericAction(MontyHallAction):
     def __init__(self, target, doors=1, weighted=False, behavior='overwrite',
                  exclude_picked=False, exclude_revealed=False, exclude_cars=False,
                  exclude_unpicked=False,exclude_closed=False, exclude_carless=False,
@@ -32,8 +33,8 @@ class GenericAction:
         This class is intended to cover picking, revealing, and placing cars,
         as well as the negation of those actions.  Subclasses of this class
         tailor/mask some of the options from GenericAction where appropriate.
-        See `cargoat.steps.pick`, `cargoat.steps.reveal`, and
-        `cargoat.steps.car` for more information.
+        See `cargoat.actions.pick`, `cargoat.actions.reveal`, and
+        `cargoat.actions.car` for more information.
 
         Parameters
         ----------

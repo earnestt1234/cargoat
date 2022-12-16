@@ -8,7 +8,9 @@ Created on Thu Nov 17 12:26:23 2022
 
 import pprint
 
-class Finish:
+from cargoat.actions.base import MontyHallAction
+
+class Finish(MontyHallAction):
     def __init__(self, spoiled_games = 'omit'):
         self.spoiled_games = spoiled_games
 
