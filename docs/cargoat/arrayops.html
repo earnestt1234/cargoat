@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>cargoat.arrayops API documentation</title>
+<meta name="description" content="General operaions on numpy arrays used for cargoat …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cargoat.arrayops</code></h1>
+</header>
+<section id="section-intro">
+<p>General operaions on numpy arrays used for cargoat.</p>
+<p>@author: earnestt1234</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+&#34;&#34;&#34;
+General operaions on numpy arrays used for cargoat.
+
+@author: earnestt1234
+&#34;&#34;&#34;
+
+from collections.abc import Iterable
+
+import numpy as np
+
+def get_index_success(boolarray2D, i=0):
+    &#39;&#39;&#39;Get the coordinate index (x,y) of the *ith* `True` in a
+    2D boolean array.&#39;&#39;&#39;
+    return np.asarray(np.where(boolarray2D)).T[i]
+
+def n_per_row(shape2D, n, allowed=None, dtype=int, enforce_allowed=True):
+    &#39;&#39;&#39;Generate binary array with n &#34;True&#34; values per row.  Similar to
+    `one_per_row()`, but generalized to multiple selections.
+
+    Use `allowed` to mask some cells as being non-selectable.  `enforce_allowed`
+    ensures none of the disallowed selections are selected, but can return
+    rows with less than `n` selections.
+
+    The implementation is relatively slow compared to `one_per_row()`.  It
+    generates random values of size `shape2D`, then uses a double argsort
+    to find the indices of the smallest `n` values.  The double argsort
+    scales poorly compared to other options, but seems to give comprable
+    or better performance for (approximately) less than 1,000,000 rows.&#39;&#39;&#39;
+
+    if allowed is None:
+        allowed = np.ones(shape2D, dtype=int)
+
+    output = np.zeros(shape2D, dtype=int)
+    weights = np.random.rand(*shape2D) * allowed
+    indices = (-weights).argsort(1).argsort(1)
+    output[indices &lt; n] = 1
+
+    if enforce_allowed:
+        output[~allowed.astype(bool)] = 0
+
+    return output.astype(dtype)
+
+def one_per_row(shape2D, allowed=None, dtype=int, enforce_allowed=True):
+    &#39;&#39;&#39;Generate binary array with one &#34;True&#34; value per row.
+
+    Use `allowed` to mask some cells as being non-selectable.  `enforce_allowed`
+    ensures none of the disallowed selections are selected, but can return
+    rows with no selections.&#39;&#39;&#39;
+
+    if allowed is None:
+        allowed = np.ones(shape2D, dtype=int)
+
+    output = np.zeros(shape2D, dtype=int)
+    weights = np.random.rand(*shape2D) * allowed
+    chosen = weights.argmax(1)
+    output[np.arange(shape2D[0]), chosen] = 1
+
+    if enforce_allowed:
+        output[~allowed.astype(bool)] = 0
+
+    return output.astype(dtype)
+
+def one_per_row_weighted(shape2D, weights, allowed=None, dtype=int):
+    &#39;&#39;&#39;Generate a binary/boolean array with one True per row, where
+    the probabilities for each column are weighted.  Similar to
+    `one_per_row()`, but allows for custom weighting.
+
+    Weights must either be the same length as the number of columns,
+    or the same length as there are &#34;allowed&#34; cells for each row.
+
+    Use `allowed` to mask some cells as being non-selectable.  Having no
+    allowed cells for a given row or all 0 weights will throw an error.&#39;&#39;&#39;
+
+    w = weights
+    n, d = shape2D
+
+    # init empty weights
+    wmat = np.full(shape2D, np.nan)
+
+    # unweight if desired
+    if allowed is None:
+        allowed = np.ones(shape2D, dtype=bool)
+    wmat[~allowed] = 0
+
+    # fill in provided weights
+    if isinstance(w, Iterable) and len(w) == d:
+        wmat = np.where(np.isnan(wmat),
+                        np.tile(w, (n, 1)),
+                        wmat)
+    elif isinstance(w, Iterable):
+        lw = len(w)
+        spots = np.sum(np.isnan(wmat), axis=1)
+        if ~ np.all(spots == lw):
+            raise ValueError(f&#34;Number of weights ({lw}) does not match number of open spots &#34;
+                             f&#34;for some rows.&#34;)
+        wmat[np.isnan(wmat)] = np.tile(w, n)
+
+    wsum = np.sum(wmat, axis=1)
+    if np.any(wsum == 0):
+        raise ValueError(&#34;Weights sum to zero.&#34;)
+
+    # convert to probabilities
+    pmat = wmat / wsum[:, np.newaxis]
+
+    cum_p = np.cumsum(pmat, axis=1)
+    draws = np.random.rand(n, 1)
+    lt = (cum_p &lt; draws)
+    chosen = lt.sum(axis=1)
+
+    output = np.zeros(shape2D, dtype=int)
+    output[np.arange(n), chosen] = 1
+    return output</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="cargoat.arrayops.get_index_success"><code class="name flex">
+<span>def <span class="ident">get_index_success</span></span>(<span>boolarray2D, i=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the coordinate index (x,y) of the <em>ith</em> <code>True</code> in a
+2D boolean array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_index_success(boolarray2D, i=0):
+    &#39;&#39;&#39;Get the coordinate index (x,y) of the *ith* `True` in a
+    2D boolean array.&#39;&#39;&#39;
+    return np.asarray(np.where(boolarray2D)).T[i]</code></pre>
+</details>
+</dd>
+<dt id="cargoat.arrayops.n_per_row"><code class="name flex">
+<span>def <span class="ident">n_per_row</span></span>(<span>shape2D, n, allowed=None, dtype=builtins.int, enforce_allowed=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate binary array with n "True" values per row.
+Similar to
+<code><a title="cargoat.arrayops.one_per_row" href="#cargoat.arrayops.one_per_row">one_per_row()</a></code>, but generalized to multiple selections.</p>
+<p>Use <code>allowed</code> to mask some cells as being non-selectable.
+<code>enforce_allowed</code>
+ensures none of the disallowed selections are selected, but can return
+rows with less than <code>n</code> selections.</p>
+<p>The implementation is relatively slow compared to <code><a title="cargoat.arrayops.one_per_row" href="#cargoat.arrayops.one_per_row">one_per_row()</a></code>.
+It
+generates random values of size <code>shape2D</code>, then uses a double argsort
+to find the indices of the smallest <code>n</code> values.
+The double argsort
+scales poorly compared to other options, but seems to give comprable
+or better performance for (approximately) less than 1,000,000 rows.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def n_per_row(shape2D, n, allowed=None, dtype=int, enforce_allowed=True):
+    &#39;&#39;&#39;Generate binary array with n &#34;True&#34; values per row.  Similar to
+    `one_per_row()`, but generalized to multiple selections.
+
+    Use `allowed` to mask some cells as being non-selectable.  `enforce_allowed`
+    ensures none of the disallowed selections are selected, but can return
+    rows with less than `n` selections.
+
+    The implementation is relatively slow compared to `one_per_row()`.  It
+    generates random values of size `shape2D`, then uses a double argsort
+    to find the indices of the smallest `n` values.  The double argsort
+    scales poorly compared to other options, but seems to give comprable
+    or better performance for (approximately) less than 1,000,000 rows.&#39;&#39;&#39;
+
+    if allowed is None:
+        allowed = np.ones(shape2D, dtype=int)
+
+    output = np.zeros(shape2D, dtype=int)
+    weights = np.random.rand(*shape2D) * allowed
+    indices = (-weights).argsort(1).argsort(1)
+    output[indices &lt; n] = 1
+
+    if enforce_allowed:
+        output[~allowed.astype(bool)] = 0
+
+    return output.astype(dtype)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.arrayops.one_per_row"><code class="name flex">
+<span>def <span class="ident">one_per_row</span></span>(<span>shape2D, allowed=None, dtype=builtins.int, enforce_allowed=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate binary array with one "True" value per row.</p>
+<p>Use <code>allowed</code> to mask some cells as being non-selectable.
+<code>enforce_allowed</code>
+ensures none of the disallowed selections are selected, but can return
+rows with no selections.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def one_per_row(shape2D, allowed=None, dtype=int, enforce_allowed=True):
+    &#39;&#39;&#39;Generate binary array with one &#34;True&#34; value per row.
+
+    Use `allowed` to mask some cells as being non-selectable.  `enforce_allowed`
+    ensures none of the disallowed selections are selected, but can return
+    rows with no selections.&#39;&#39;&#39;
+
+    if allowed is None:
+        allowed = np.ones(shape2D, dtype=int)
+
+    output = np.zeros(shape2D, dtype=int)
+    weights = np.random.rand(*shape2D) * allowed
+    chosen = weights.argmax(1)
+    output[np.arange(shape2D[0]), chosen] = 1
+
+    if enforce_allowed:
+        output[~allowed.astype(bool)] = 0
+
+    return output.astype(dtype)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.arrayops.one_per_row_weighted"><code class="name flex">
+<span>def <span class="ident">one_per_row_weighted</span></span>(<span>shape2D, weights, allowed=None, dtype=builtins.int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a binary/boolean array with one True per row, where
+the probabilities for each column are weighted.
+Similar to
+<code><a title="cargoat.arrayops.one_per_row" href="#cargoat.arrayops.one_per_row">one_per_row()</a></code>, but allows for custom weighting.</p>
+<p>Weights must either be the same length as the number of columns,
+or the same length as there are "allowed" cells for each row.</p>
+<p>Use <code>allowed</code> to mask some cells as being non-selectable.
+Having no
+allowed cells for a given row or all 0 weights will throw an error.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def one_per_row_weighted(shape2D, weights, allowed=None, dtype=int):
+    &#39;&#39;&#39;Generate a binary/boolean array with one True per row, where
+    the probabilities for each column are weighted.  Similar to
+    `one_per_row()`, but allows for custom weighting.
+
+    Weights must either be the same length as the number of columns,
+    or the same length as there are &#34;allowed&#34; cells for each row.
+
+    Use `allowed` to mask some cells as being non-selectable.  Having no
+    allowed cells for a given row or all 0 weights will throw an error.&#39;&#39;&#39;
+
+    w = weights
+    n, d = shape2D
+
+    # init empty weights
+    wmat = np.full(shape2D, np.nan)
+
+    # unweight if desired
+    if allowed is None:
+        allowed = np.ones(shape2D, dtype=bool)
+    wmat[~allowed] = 0
+
+    # fill in provided weights
+    if isinstance(w, Iterable) and len(w) == d:
+        wmat = np.where(np.isnan(wmat),
+                        np.tile(w, (n, 1)),
+                        wmat)
+    elif isinstance(w, Iterable):
+        lw = len(w)
+        spots = np.sum(np.isnan(wmat), axis=1)
+        if ~ np.all(spots == lw):
+            raise ValueError(f&#34;Number of weights ({lw}) does not match number of open spots &#34;
+                             f&#34;for some rows.&#34;)
+        wmat[np.isnan(wmat)] = np.tile(w, n)
+
+    wsum = np.sum(wmat, axis=1)
+    if np.any(wsum == 0):
+        raise ValueError(&#34;Weights sum to zero.&#34;)
+
+    # convert to probabilities
+    pmat = wmat / wsum[:, np.newaxis]
+
+    cum_p = np.cumsum(pmat, axis=1)
+    draws = np.random.rand(n, 1)
+    lt = (cum_p &lt; draws)
+    chosen = lt.sum(axis=1)
+
+    output = np.zeros(shape2D, dtype=int)
+    output[np.arange(n), chosen] = 1
+    return output</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cargoat" href="index.html">cargoat</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="cargoat.arrayops.get_index_success" href="#cargoat.arrayops.get_index_success">get_index_success</a></code></li>
+<li><code><a title="cargoat.arrayops.n_per_row" href="#cargoat.arrayops.n_per_row">n_per_row</a></code></li>
+<li><code><a title="cargoat.arrayops.one_per_row" href="#cargoat.arrayops.one_per_row">one_per_row</a></code></li>
+<li><code><a title="cargoat.arrayops.one_per_row_weighted" href="#cargoat.arrayops.one_per_row_weighted">one_per_row_weighted</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,3065 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>cargoat API documentation</title>
+<meta name="description" content="Cargoat is a Python package for simulating Monty Hall type games." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>cargoat</code></h1>
+</header>
+<section id="section-intro">
+<p>Cargoat is a Python package for simulating Monty Hall type games.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># -*- coding: utf-8 -*-
+&#39;&#39;&#39;Cargoat is a Python package for simulating Monty Hall type games.&#39;&#39;&#39;
+
+# load the version (and remove from namespace)
+from ._version import v
+__version__ = v
+del v
+
+__all__ = [
+    &#39;AddDoors&#39;,
+    &#39;ChanceTo&#39;,
+    &#39;CheckSpoiled&#39;,
+    &#39;Close&#39;,
+    &#39;Finish&#39;,
+    &#39;IfElse&#39;,
+    &#39;InitDoorsEmpty&#39;,
+    &#39;InitDoorsFixed&#39;,
+    &#39;InitDoorsRandom&#39;,
+    &#39;MarkSpoiled&#39;,
+    &#39;MarkUnspoiled&#39;,
+    &#39;MontyHallSim&#39;,
+    &#39;Pass&#39;,
+    &#39;Pick&#39;,
+    &#39;PlaceCar&#39;,
+    &#39;RearrangeDoors&#39;,
+    &#39;RemoveCar&#39;,
+    &#39;RemoveDoors&#39;,
+    &#39;Reveal&#39;,
+    &#39;Stay&#39;,
+    &#39;Switch&#39;,
+    &#39;TryExcept&#39;,
+    &#39;Unpick&#39;,
+    &#39;combine_sims&#39;,
+    &#39;play&#39;
+    ]
+
+# imports
+from cargoat.core import play
+from cargoat.sim import MontyHallSim, combine_sims
+from cargoat.actions import (
+    AddDoors,
+    ChanceTo,
+    CheckSpoiled,
+    Close,
+    Finish,
+    IfElse,
+    InitDoorsEmpty,
+    InitDoorsFixed,
+    InitDoorsRandom,
+    MarkSpoiled,
+    MarkUnspoiled,
+    Pass,
+    Pick,
+    PlaceCar,
+    RearrangeDoors,
+    RemoveCar,
+    RemoveDoors,
+    Reveal,
+    Stay,
+    Switch,
+    TryExcept,
+    Unpick,
+    )</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="cargoat.actions" href="actions/index.html">cargoat.actions</a></code></dt>
+<dd>
+<div class="desc"><p>This subpackage defines classes for Monty Hall game actions,
+such as picking doors, revealing doors, etc.
+The classes should be
+instantiated when …</p></div>
+</dd>
+<dt><code class="name"><a title="cargoat.arrayops" href="arrayops.html">cargoat.arrayops</a></code></dt>
+<dd>
+<div class="desc"><p>General operaions on numpy arrays used for cargoat …</p></div>
+</dd>
+<dt><code class="name"><a title="cargoat.core" href="core.html">cargoat.core</a></code></dt>
+<dd>
+<div class="desc"><p>Core functions for doing things in cargoat.</p></div>
+</dd>
+<dt><code class="name"><a title="cargoat.errors" href="errors.html">cargoat.errors</a></code></dt>
+<dd>
+<div class="desc"><p>Custom error types for cargoat.</p></div>
+</dd>
+<dt><code class="name"><a title="cargoat.sim" href="sim.html">cargoat.sim</a></code></dt>
+<dd>
+<div class="desc"><p>Module for the cargoat <code>MontyHallSimulation</code> class, which is used for
+running a given Monty Hall experiment many times.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="cargoat.combine_sims"><code class="name flex">
+<span>def <span class="ident">combine_sims</span></span>(<span>sims, index=None, copy=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Merge two or more simulations together, by stacking their
+trials together.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>sims</code></strong> :&ensp;<code>list-like</code></dt>
+<dd>Collection of MontyHallSims.</dd>
+<dt><strong><code>index</code></strong> :&ensp;<code>list-like</code>, optional</dt>
+<dd>
+<p>Indexer used to direct the merging of simulations. The default is None,
+in which case the simulation trials are concatenated in the order
+passed.</p>
+<p><code>index</code> can be used to determine the order of rows for stitching
+together simulations.
+The values of <code>index</code> should be integers
+in <code>range(len(sims))</code>, and each value <em>i</em> should appear as many times
+as the number of rows in the <em>ith</em> simulation.
+Thus the length of
+<code>index</code> should be equal to the total number of trials across
+all simulations passed.</p>
+<p>See examples below.</p>
+</dd>
+<dt><strong><code>copy</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Explicityl copy the arrays of the simulation before creating the
+new simulation. The default is True.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>Different number of doors between simulations.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="cargoat.MontyHallSim" href="#cargoat.MontyHallSim">MontyHallSim</a></code></dt>
+<dd>New merged simulation object.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="python">&gt;&gt;&gt; import cargoat as cg
+&gt;&gt;&gt; game = [cg.InitDoorsRandom(cars=1, goats=2), cg.Pick(3)]
+&gt;&gt;&gt; a = cg.play(game, n=3)
+&gt;&gt;&gt; b = cg.play(game[:1], n=3)
+
+&gt;&gt;&gt; a.picked
+array([[1, 1, 1],
+       [1, 1, 1],
+       [1, 1, 1]])
+
+&gt;&gt;&gt; b.picked
+array([[0, 0, 0],
+       [0, 0, 0],
+       [0, 0, 0]])
+
+# simple concatenation
+&gt;&gt;&gt; c = cg.combine_sims([a, b])
+&gt;&gt;&gt; type(c)
+cargoat.sim.MontyHallSim
+
+&gt;&gt;&gt; c.picked
+array([[1, 1, 1],
+       [1, 1, 1],
+       [1, 1, 1],
+       [0, 0, 0],
+       [0, 0, 0],
+       [0, 0, 0]])
+
+# using index to interleave
+&gt;&gt;&gt; index = [0, 1, 0, 1, 0, 1]
+&gt;&gt;&gt; d = cg.combine_sims([a, b], index=index)
+&gt;&gt;&gt; d.picked
+array([[1, 1, 1],
+       [0, 0, 0],
+       [1, 1, 1],
+       [0, 0, 0],
+       [1, 1, 1],
+       [0, 0, 0]])
+
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def combine_sims(sims, index=None, copy=True):
+    &#39;&#39;&#39;
+    Merge two or more simulations together, by stacking their
+    trials together.
+
+    Parameters
+    ----------
+    sims : list-like
+        Collection of MontyHallSims.
+    index : list-like, optional
+        Indexer used to direct the merging of simulations. The default is None,
+        in which case the simulation trials are concatenated in the order
+        passed.
+
+        `index` can be used to determine the order of rows for stitching
+        together simulations.  The values of `index` should be integers
+        in `range(len(sims))`, and each value *i* should appear as many times
+        as the number of rows in the *ith* simulation.  Thus the length of
+        `index` should be equal to the total number of trials across
+        all simulations passed.
+
+        See examples below.
+
+    copy : bool, optional
+        Explicityl copy the arrays of the simulation before creating the
+        new simulation. The default is True.
+
+    Raises
+    ------
+    ValueError
+        Different number of doors between simulations.
+
+    Returns
+    -------
+    MontyHallSim
+        New merged simulation object.
+
+    Examples
+    -------
+
+    ```python
+    &gt;&gt;&gt; import cargoat as cg
+    &gt;&gt;&gt; game = [cg.InitDoorsRandom(cars=1, goats=2), cg.Pick(3)]
+    &gt;&gt;&gt; a = cg.play(game, n=3)
+    &gt;&gt;&gt; b = cg.play(game[:1], n=3)
+
+    &gt;&gt;&gt; a.picked
+    array([[1, 1, 1],
+           [1, 1, 1],
+           [1, 1, 1]])
+
+    &gt;&gt;&gt; b.picked
+    array([[0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0]])
+
+    # simple concatenation
+    &gt;&gt;&gt; c = cg.combine_sims([a, b])
+    &gt;&gt;&gt; type(c)
+    cargoat.sim.MontyHallSim
+
+    &gt;&gt;&gt; c.picked
+    array([[1, 1, 1],
+           [1, 1, 1],
+           [1, 1, 1],
+           [0, 0, 0],
+           [0, 0, 0],
+           [0, 0, 0]])
+
+    # using index to interleave
+    &gt;&gt;&gt; index = [0, 1, 0, 1, 0, 1]
+    &gt;&gt;&gt; d = cg.combine_sims([a, b], index=index)
+    &gt;&gt;&gt; d.picked
+    array([[1, 1, 1],
+           [0, 0, 0],
+           [1, 1, 1],
+           [0, 0, 0],
+           [1, 1, 1],
+           [0, 0, 0]])
+
+    ```
+
+    &#39;&#39;&#39;
+
+    n = len(sims)
+    rows = [x.shape[0] for x in sims]
+    cols = [x.shape[1] for x in sims]
+    copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+    if len(set(cols)) != 1:
+        raise ValueError(&#39;All sims must have the same number of doors (columns).&#39;)
+
+    if index is None:
+        index = np.repeat(np.arange(n, dtype=int), rows)
+
+    shape = (len(index), cols[0])
+
+    cars = np.zeros(shape, dtype=int)
+    picked = np.zeros(shape, dtype=int)
+    revealed = np.zeros(shape, dtype=int)
+    spoiled = np.zeros(shape[0], dtype=int)
+
+    for i in np.unique(index):
+        sim = sims[i]
+        cars[index == i, :] = copyfun(sim.cars)
+        picked[index == i, :] = copyfun(sim.picked)
+        revealed[index == i, :] = copyfun(sim.revealed)
+        spoiled[index == i] = sim.spoiled
+
+    return MontyHallSim.from_arrays(picked=picked,
+                                    revealed=revealed,
+                                    cars=cars,
+                                    spoiled=spoiled,
+                                    copy=False)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.play"><code class="name flex">
+<span>def <span class="ident">play</span></span>(<span>game, n=100)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Run a MontyHall simulation.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>game</code></strong> :&ensp;<code>list-like</code></dt>
+<dd>A list of objects from the <code><a title="cargoat.actions" href="actions/index.html">cargoat.actions</a></code> subpackage.</dd>
+<dt><strong><code>n</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of games to simulate. The default is 100.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>MontyHallError</code></dt>
+<dd>Problem with completing the game.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>sim</code></strong> :&ensp;<code><a title="cargoat.MontyHallSim" href="#cargoat.MontyHallSim">MontyHallSim</a></code></dt>
+<dd>Simulation object, recording the trials and results.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def play(game, n=100):
+    &#39;&#39;&#39;
+    Run a MontyHall simulation.
+
+    Parameters
+    ----------
+    game : list-like
+        A list of objects from the `cargoat.actions` subpackage.
+    n : int, optional
+        Number of games to simulate. The default is 100.
+
+    Raises
+    ------
+    MontyHallError
+        Problem with completing the game.
+
+    Returns
+    -------
+    sim : MontyHallSim
+        Simulation object, recording the trials and results.
+
+    &#39;&#39;&#39;
+    sim = MontyHallSim(n=n)
+    for i, action in enumerate(game):
+        try:
+            action(sim)
+        except Exception as error:
+            msg = f&#39;Error for step {i}: {repr(action)}&#39;
+            raise MontyHallError(msg) from error
+
+    return sim</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="cargoat.AddDoors"><code class="flex name class">
+<span>class <span class="ident">AddDoors</span></span>
+<span>(</span><span>positions)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add additional doors at desired positions within the simulation.
+Doors will be unpicked, closed, and containing goats.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>positions</code></strong> :&ensp;<code>list-like</code></dt>
+<dd>Positions to add doors.
+See <code>np.insert</code> for more details.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AddDoors(MontyHallAction):
+    def __init__(self, positions):
+        &#39;&#39;&#39;
+        Add additional doors at desired positions within the simulation.
+        Doors will be unpicked, closed, and containing goats.
+
+        Parameters
+        ----------
+        positions : list-like
+            Positions to add doors.  See `np.insert` for more details.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.positions = positions
+
+    def __call__(self, sim):
+        foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
+        sim.apply_func(foo)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.ChanceTo"><code class="flex name class">
+<span>class <span class="ident">ChanceTo</span></span>
+<span>(</span><span>p, action)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class for doing a certain action with a given probability.
+A random number is used to decide what proportion of trials in
+the simulation will have the action applied.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>p</code></strong> :&ensp;<code>float</code></dt>
+<dd>Probability of applying the action.</dd>
+<dt><strong><code>action</code></strong> :&ensp;<code><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></code></dt>
+<dd>Monty Hall game action.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChanceTo(MontyHallAction):
+    def __init__(self, p, action):
+        &#39;&#39;&#39;
+        Class for doing a certain action with a given probability.
+        A random number is used to decide what proportion of trials in
+        the simulation will have the action applied.
+
+        Parameters
+        ----------
+        p : float
+            Probability of applying the action.
+        action : cargoat.actions.base.MontyHallAction
+            Monty Hall game action.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.p = p
+        self.action = action
+
+    def __call__(self, sim):
+        draws = np.random.rand(len(sim.idx))
+        action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
+        action(sim)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.CheckSpoiled"><code class="flex name class">
+<span>class <span class="ident">CheckSpoiled</span></span>
+<span>(</span><span>behavior='raise', revealed_picks=True, revealed_cars=True, no_cars=False, multiple_picks=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Manually check if any of the games are spoiled.</p>
+<p>By default, this only checks if there are revealed cars or picked
+doors that are revealed.
+If all actions are applied with
+<code>allow_spoiled=False</code>, then no games should be spoiled.
+If some
+steps are applied with <code>allow_spoiled=True</code>, this can manually
+check and alert to that.</p>
+<p>This can also check for other game states with may be considered
+spoiled (no cars present, or multiple doors picked.)</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>action</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Protocol when spoiled games are detected. The default is 'raise',
+which raises an Error.
+Other options are 'spoil' (mark the
+problem trials as spoiled, but don't stop the simulation) or
+'nothing' (do nothing).</dd>
+<dt><strong><code>revealed_picks</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Detect trials with revealed picked doors. The default is True.</dd>
+<dt><strong><code>revealed_cars</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Detect trials with revealed cars. The default is True.</dd>
+<dt><strong><code>no_cars</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Detect trials with no cars. The default is False.</dd>
+<dt><strong><code>multiple_picks</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Detect trials with multiple picked doors. The default is False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CheckSpoiled(MontyHallAction):
+    def __init__(self, behavior=&#39;raise&#39;, revealed_picks=True,
+                 revealed_cars=True, no_cars=False, multiple_picks=False):
+        &#39;&#39;&#39;
+        Manually check if any of the games are spoiled.
+
+        By default, this only checks if there are revealed cars or picked
+        doors that are revealed.  If all actions are applied with
+        `allow_spoiled=False`, then no games should be spoiled.  If some
+        steps are applied with `allow_spoiled=True`, this can manually
+        check and alert to that.
+
+        This can also check for other game states with may be considered
+        spoiled (no cars present, or multiple doors picked.)
+
+        Parameters
+        ----------
+        action : str, optional
+            Protocol when spoiled games are detected. The default is &#39;raise&#39;,
+            which raises an Error.  Other options are &#39;spoil&#39; (mark the
+            problem trials as spoiled, but don&#39;t stop the simulation) or
+            &#39;nothing&#39; (do nothing).
+        revealed_picks : bool, optional
+            Detect trials with revealed picked doors. The default is True.
+        revealed_cars : bool, optional
+            Detect trials with revealed cars. The default is True.
+        no_cars : bool, optional
+            Detect trials with no cars. The default is False.
+        multiple_picks : bool, optional
+            Detect trials with multiple picked doors. The default is False.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.behavior = behavior
+        self.revealed_picks = revealed_picks
+        self.revealed_cars = revealed_cars
+        self.no_cars = no_cars
+        self.multiple_picks = multiple_picks
+
+    def __call__(self, sim):
+
+        if self.revealed_picks:
+            good = ~np.logical_and(sim.picked, sim.revealed)
+            _verify_all_good_2D(sim, good, fail_message=&#39;Found revealed &amp; picked doors&#39;,
+                                behavior=self.behavior)
+        if self.revealed_cars:
+            good = ~ np.logical_and(sim.cars, sim.revealed)
+            _verify_all_good_2D(sim, good, fail_message=&#39;Found revealed cars&#39;,
+                                behavior=self.behavior)
+        if self.no_cars:
+            good = sim.count_totals(&#39;cars&#39;) &gt; 0
+            _verify_all_good_1D(sim, good, fail_message=&#39;Found trials with no cars&#39;,
+                                behavior=self.behavior)
+
+        if self.multiple_picks:
+            good = sim.count_totals(&#39;picked&#39;) &lt;= 1
+            _verify_all_good_1D(sim, good, fail_message=&#39;Found trials with multiple picked doors&#39;,
+                                behavior=self.behavior)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.Close"><code class="flex name class">
+<span>class <span class="ident">Close</span></span>
+<span>(</span><span>doors=1, weighted=False, exclude_current=True, allow_spoiled=False, allow_redundant=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class to model the host closing previously revealed doors.</p>
+<p>Class to model the host closing one or more revealed doors.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
+<dd>Argument for specifying how many/which doors to close. The default is 1.
+Possible options are as follows:
+- a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)
+- a list of integers with <code>weighted=False</code> is interpeted as
+specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
+index 0 and index 2.
+- a list of integers with <code>weighted=True</code> is interpreted as
+probabilities/weights for selecting a single door.
+The length
+of the weights can be either a) the same as the number of doors
+or b) less than the number of doors.
+In the latter case, the
+number of weights must align with the number of selectable
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+<dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat the first argument as weights (see docs above).
+The default is False.</dd>
+<dt><strong><code>exclude_current</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow closing of doors that are already closed. The default
+is True. This is a "redundant" action, which will throw an error
+if <code>allow_redundant=False</code> is specified.</dd>
+<dt><strong><code>allow_spoiled</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error of the game is spoiled. The default is False.
+Spoiled games are recorded in the <code>spoiled</code> attribute of the
+simulation.</dd>
+<dt><strong><code>allow_redundant</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error if currently closed doors are selected.
+The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Close(GenericAction):
+    &#39;&#39;&#39;Class to model the host closing previously revealed doors.&#39;&#39;&#39;
+    def __init__(self, doors=1, weighted=False, exclude_current=True,
+                 allow_spoiled=False, allow_redundant=True):
+        &#39;&#39;&#39;
+        Class to model the host closing one or more revealed doors.
+
+        Parameters
+        ----------
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to close. The default is 1.
+            Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        exclude_current : bool, optional
+            Don&#39;t allow closing of doors that are already closed. The default
+            is True. This is a &#34;redundant&#34; action, which will throw an error
+            if `allow_redundant=False` is specified.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if currently closed doors are selected.
+            The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        super().__init__(target=&#39;revealed&#39;,
+                         doors=doors,
+                         weighted=weighted,
+                         behavior=&#39;remove&#39;,
+                         exclude_closed=exclude_current,
+                         allow_redundant=allow_redundant,
+                         allow_spoiled=allow_spoiled)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.generic.GenericAction" href="actions/generic.html#cargoat.actions.generic.GenericAction">GenericAction</a></li>
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.Finish"><code class="flex name class">
+<span>class <span class="ident">Finish</span></span>
+<span>(</span><span>spoiled_games='omit')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Print the number of wins and losses.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Behavior for dealing with spoiled games. The default is 'omit'.
+- 'omit': discard spoiled games
+- 'include': include spoiled games in the results
+- 'only': only show the results for spoiled games</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Finish(MontyHallAction):
+    def __init__(self, spoiled_games=&#39;omit&#39;):
+        &#39;&#39;&#39;
+        Print the number of wins and losses.
+
+        Parameters
+        ----------
+        spoiled_games : str, optional
+            Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
+            - &#39;omit&#39;: discard spoiled games
+            - &#39;include&#39;: include spoiled games in the results
+            - &#39;only&#39;: only show the results for spoiled games
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.spoiled_games = spoiled_games
+
+    def __call__(self, sim):
+        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.IfElse"><code class="flex name class">
+<span>class <span class="ident">IfElse</span></span>
+<span>(</span><span>condition, a, b, call=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Do an if-else comparison to decide which of two actions
+to apply.
+A condition is tested on all rows of the simulation
+(or otherwise a precomputed condition is provided); rows corresponding
+to <code>True</code> have one action applied, those corresponding to <code>False</code>
+have a different action applied.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>condition</code></strong> :&ensp;<code> callable</code> or <code>list-like</code></dt>
+<dd>
+<p>Evaluation condition.
+By default, this is expected to be
+a callable.
+The callable is passed the current simulation,
+and is expected to return a boolean 1D array which dictates
+the rows to apply action <code>a</code> to.</p>
+<p>A pre-computed condition can be applied by passing <code>call=False</code> -
+in this case, <code>condition</code> will not be called, it will simply
+be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
+</dd>
+<dt><strong><code>a</code></strong> :&ensp;<code><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></code></dt>
+<dd>Action to apply if True.</dd>
+<dt><strong><code>b</code></strong> :&ensp;<code><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></code></dt>
+<dd>Action to apply if False.</dd>
+<dt><strong><code>call</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat <code>condition</code> as a callable. The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IfElse(MontyHallAction):
+    def __init__(self, condition, a, b, call=True):
+        &#39;&#39;&#39;
+        Do an if-else comparison to decide which of two actions
+        to apply.  A condition is tested on all rows of the simulation
+        (or otherwise a precomputed condition is provided); rows corresponding
+        to `True` have one action applied, those corresponding to `False`
+        have a different action applied.
+
+        Parameters
+        ----------
+        condition :  callable or list-like
+            Evaluation condition.  By default, this is expected to be
+            a callable.  The callable is passed the current simulation,
+            and is expected to return a boolean 1D array which dictates
+            the rows to apply action `a` to.
+
+            A pre-computed condition can be applied by passing `call=False` -
+            in this case, `condition` will not be called, it will simply
+            be used to decide how to apply actions `a` and `b`.
+        a : cargoat.actions.base.MontyHallAction
+            Action to apply if True.
+        b : cargoat.actions.base.MontyHallAction
+            Action to apply if False.
+        call : bool, optional
+            Treat `condition` as a callable. The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.condition = condition
+        self.a = a
+        self.b = b
+        self.call = call
+
+    def __call__(self, sim):
+
+        bools = self.condition(sim) if self.call else self.condition
+        sim_true = sim.select(x=bools)
+        sim_false = sim.select(x=~bools)
+
+        self.a(sim_true)
+        self.b(sim_false)
+
+        index = (~bools).astype(int)
+        new = combine_sims([sim_true, sim_false], index=index)
+
+        sim.picked = new.picked
+        sim.revealed = new.revealed
+        sim.cars = new.cars
+        sim.spoiled = new.spoiled</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.InitDoorsEmpty"><code class="flex name class">
+<span>class <span class="ident">InitDoorsEmpty</span></span>
+<span>(</span><span>doors)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialize the simulation with a given number
+of doors.
+All doors will contain goats.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of doors in simulation.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InitDoorsEmpty(MontyHallAction):
+    def __init__(self, doors):
+        &#39;&#39;&#39;
+        Initialize the simulation with a given number
+        of doors.  All doors will contain goats.
+
+        Parameters
+        ----------
+        doors : int
+            Number of doors in simulation.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.doors = doors
+
+    def __call__(self, sim):
+        shape = (sim.n, self.doors)
+        sim.cars = np.zeros(shape, dtype=int)
+        sim.picked = np.zeros(shape, dtype=int)
+        sim.revealed = np.zeros(shape, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.InitDoorsFixed"><code class="flex name class">
+<span>class <span class="ident">InitDoorsFixed</span></span>
+<span>(</span><span>placement=(1, 0, 0))</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialize the simulation with a known, constant
+arrangement of cars and goats.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>placement</code></strong> :&ensp;<code>list-like</code>, optional</dt>
+<dd>Placement of cars &amp; goats within each trial.
+Zeros signify goats while 1s signify cars.
+The default is (1, 0, 0), creating a three-door
+simulation, all with placement goat-goat-car.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InitDoorsFixed(MontyHallAction):
+    def __init__(self, placement=(1, 0, 0)):
+        &#39;&#39;&#39;
+        Initialize the simulation with a known, constant
+        arrangement of cars and goats.
+
+        Parameters
+        ----------
+        placement : list-like, optional
+            Placement of cars &amp; goats within each trial.
+            Zeros signify goats while 1s signify cars.
+            The default is (1, 0, 0), creating a three-door
+            simulation, all with placement goat-goat-car.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.placement = np.array(placement).astype(int)
+
+    def __call__(self, sim):
+        shape = (sim.n, len(self.placement))
+        sim.cars = np.tile(self.placement, (sim.n, 1))
+        sim.picked = np.zeros(shape, dtype=int)
+        sim.revealed = np.zeros(shape, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.InitDoorsRandom"><code class="flex name class">
+<span>class <span class="ident">InitDoorsRandom</span></span>
+<span>(</span><span>cars=1, goats=2)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Initialize the doors with a given number of cars
+and goats - the placement itself is random.
+This
+is closest to the original Monty Hall game.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>cars</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of cars per trial. The default is 1.</dd>
+<dt><strong><code>goats</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of goats per trial. The default is 2.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InitDoorsRandom(MontyHallAction):
+    def __init__(self, cars=1, goats=2):
+        &#39;&#39;&#39;
+        Initialize the doors with a given number of cars
+        and goats - the placement itself is random.  This
+        is closest to the original Monty Hall game.
+
+        Parameters
+        ----------
+        cars : int, optional
+            Number of cars per trial. The default is 1.
+        goats : int, optional
+            Number of goats per trial. The default is 2.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.cars = cars
+        self.goats = goats
+
+    def __call__(self, sim):
+        shape = (sim.n, self.cars + self.goats)
+        sim.cars = np.zeros(shape, dtype=int)
+        sim.picked = np.zeros(shape, dtype=int)
+        sim.revealed = np.zeros(shape, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=int)
+
+        p = np.random.rand(shape[0], shape[1]).argsort(1)
+        sim.cars[p &lt; self.cars] = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.MarkSpoiled"><code class="flex name class">
+<span>class <span class="ident">MarkSpoiled</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Manually mark all trials as spoiled.
+Can be combined with
+<code><a title="cargoat.actions.logical.IfElse" href="actions/logical.html#cargoat.actions.logical.IfElse">IfElse</a></code> for conditional marking.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MarkSpoiled(MontyHallAction):
+    &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
+    `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
+    def __call__(self, sim):
+        sim.spoiled[True] = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.MarkUnspoiled"><code class="flex name class">
+<span>class <span class="ident">MarkUnspoiled</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Manually mark all trials as unspoiled.
+Can be combined with
+<code><a title="cargoat.actions.logical.IfElse" href="actions/logical.html#cargoat.actions.logical.IfElse">IfElse</a></code> for conditional marking.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MarkUnspoiled(MontyHallAction):
+    &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
+    `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
+    def __call__(self, sim):
+        sim.spoiled[True] = 0</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.MontyHallSim"><code class="flex name class">
+<span>class <span class="ident">MontyHallSim</span></span>
+<span>(</span><span>n)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class for remembering the status of the game simualtion.</p>
+<p>The MontyHallSim object tracks the game status for repeated Monty Hall
+games.</p>
+<p>Games are mainly recorded with numpy arrays.
+There are three primary
+arrays, stored as attributes:
+- <code>self.picked</code>: Indicates doors selected by the player
+- <code>self.revealed</code>: Indicates doors that have been opened
+- <code>self.cars</code>: Indicates doors which have a car behind them.</p>
+<p>These are all binary, 2D, integer arrays.
+The shape of the arrays
+during/after a typical simulation will be (trials, doors) - one row
+constitutes one game.
+The initialization argument <code>n</code> determines
+the number of trials.
+The number of doors is determined by the particular
+game being played.</p>
+<p>There is also a <code>spoiled</code> attribute, which is a numpy array of
+shape (trials,).
+This simply records whether a trial has broken
+the rules of the traditional Monty Hall game.</p>
+<p>MontyHallSims are updated by applying rules/actions, i.e. from the
+<code><a title="cargoat.actions" href="actions/index.html">cargoat.actions</a></code> subpackage.</p>
+<p>Typically, a user <em>should not</em> have to manually define a MontyHallSim
+object, as <code><a title="cargoat.core.play" href="core.html#cargoat.core.play">play()</a></code> will do this provided a list of actions.
+<em>Initialization of a MontyHallSim results in an empty simulation</em> -
+i.e. all the array attributes will be empty.
+The actions in
+<code><a title="cargoat.actions.initialization" href="actions/initialization.html">cargoat.actions.initialization</a></code> are intended for populating the
+simulation.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of trials to simulate.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MontyHallSim:
+    &#39;&#39;&#39;Class for remembering the status of the game simualtion.&#39;&#39;&#39;
+
+    def __init__(self, n):
+        &#39;&#39;&#39;
+        The MontyHallSim object tracks the game status for repeated Monty Hall
+        games.
+
+        Games are mainly recorded with numpy arrays.  There are three primary
+        arrays, stored as attributes:
+            - `self.picked`: Indicates doors selected by the player
+            - `self.revealed`: Indicates doors that have been opened
+            - `self.cars`: Indicates doors which have a car behind them.
+
+        These are all binary, 2D, integer arrays.  The shape of the arrays
+        during/after a typical simulation will be (trials, doors) - one row
+        constitutes one game.  The initialization argument `n` determines
+        the number of trials.  The number of doors is determined by the particular
+        game being played.
+
+        There is also a `spoiled` attribute, which is a numpy array of
+        shape (trials,).  This simply records whether a trial has broken
+        the rules of the traditional Monty Hall game.
+
+        MontyHallSims are updated by applying rules/actions, i.e. from the
+        `cargoat.actions` subpackage.
+
+        Typically, a user *should not* have to manually define a MontyHallSim
+        object, as `cargoat.core.play` will do this provided a list of actions.
+        *Initialization of a MontyHallSim results in an empty simulation* -
+        i.e. all the array attributes will be empty.  The actions in
+        `cargoat.actions.initialization` are intended for populating the
+        simulation.
+
+
+        Parameters
+        ----------
+        n : int
+            Number of trials to simulate.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.n = n
+
+        self.cars = np.empty(0)
+        self.picked = np.empty(0)
+        self.revealed = np.empty(0)
+        self.spoiled = np.empty(0)
+
+    # ---- Class methods
+
+    @classmethod
+    def from_arrays(cls, picked=None, revealed=None, cars=None,
+                    spoiled=None, default=0, copy=True):
+        &#39;&#39;&#39;
+        Construct a MontyHallSim from existing numpy arrays.
+
+        Parameters
+        ----------
+        picked : 2D numpy array, optional
+            Integer array indicating picked doors. The default is None.
+        revealed : 2D numpy array, optional
+            Integer array indicating revealed doors. The default is None.
+        cars : 2D numpy array, optional
+            Integer array indicating doors containing cars. The default is None.
+        spoiled : 1D numpy array, optional
+            Integer array indicating spoiled trials. The default is None.
+        default : int, optional
+            When only some of `picked`/`revealed`/`cars` are provided, use
+            this value to fill the missing arrays. The default is 0.
+        copy : bool, optional
+            Call an explicit copy on the arrays before binding to the new
+            simulation being created. Intended to prevent multiple simulations
+            pointing to the same arrays.  The default is True.
+
+        Raises
+        ------
+        ValueError
+            - Didn&#39;t provide at least one of `cars`, `picked`, or `revealed`
+            - Different array shapes for provided arrays.
+
+        Returns
+        -------
+        out : MontyHallSim
+            New simulation object.
+
+        &#39;&#39;&#39;
+
+        mainarrays = (cars, picked, revealed)
+
+        if all([i is None for i in mainarrays]):
+            raise ValueError(&#39;Must provide at least one of cars, &#39;
+                             &#39;picked, or revealed.&#39;)
+
+        base = [a for a in mainarrays if a is not None][0]
+        shape = base.shape
+
+        if picked is None:
+            picked = np.full(shape, default)
+        if revealed is None:
+            revealed = np.full(shape, default)
+        if cars is None:
+            cars = np.full(shape, default)
+
+        shape_set = set(i.shape for i in (cars, picked, revealed))
+
+        if len(shape_set) != 1:
+            raise ValueError(&#39;Detected different array shapes for &#39;
+                             &#39;picked, revealed, and cars.&#39;)
+
+        n, doors = shape
+        if spoiled is None:
+            spoiled = np.zeros(n, dtype=int)
+        if len(spoiled) != n:
+            raise ValueError(&#39;spoiled array does not match&#39;)
+
+        copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+        out = cls(n)
+        out.cars = copyfun(cars)
+        out.picked = copyfun(picked)
+        out.revealed = copyfun(revealed)
+        out.spoiled = copyfun(spoiled)
+
+        return out
+
+    # ---- Properties
+    @property
+    def idx(self):
+        &#39;&#39;&#39;Return a numpy arange of length `self.n`&#39;&#39;&#39;
+        return np.arange(self.n)
+
+    @property
+    def shape(self):
+        &#39;&#39;&#39;Return the dimensions of the simulation (trials, doors).  Throws an error if
+        different array shapes are found.&#39;&#39;&#39;
+        shape_set = set([self.cars.shape, self.picked.shape, self.revealed.shape])
+        if len(shape_set) != 1:
+            raise RuntimeError(&#39;Found different shapes for simulation arrays!&#39;)
+
+        return self.picked.shape
+
+    # ---- Indexing
+    def select(self, x=None, y=None, copy=True):
+        &#39;&#39;&#39;
+        Index the simulation to create a new one.
+
+        Parameters
+        ----------
+        x : int, float, list-like, optional
+            Indexer for trials (rows) of simulation. The default is None,
+            in which case all trials are selected.
+        y : int, float, list-like, optional
+            Indexer for doors (columns) of simulation. The default is None,
+            in which case all doors are selected.
+        copy : bool, optional
+            Create an explicit copy of the arrays before binding to the
+            newly created simulation. The default is True.
+
+        Returns
+        -------
+        MontyHallSimulation
+            New simulation object.
+
+        &#39;&#39;&#39;
+        x = slice(None) if x is None else x
+        y = slice(None) if y is None else y
+        copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+        cars = copyfun(self.cars[x, y])
+        picked = copyfun(self.picked[x, y])
+        revealed = copyfun(self.revealed[x, y])
+        spoiled = copyfun(self.spoiled[x])
+
+        return self.from_arrays(picked=picked,
+                                revealed=revealed,
+                                cars=cars,
+                                spoiled=spoiled,
+                                copy=False)
+
+
+    # ---- Status of the sim
+    def pickable_doors(self, exclude_current=True):
+        &#39;&#39;&#39;Array of the simulation shape indicating which doors are
+        not revealed (with or without the current picked doors).&#39;&#39;&#39;
+        return ~self.query_doors_or(picked=exclude_current, revealed=True)
+
+    def query_doors_or(self, cars=False, picked=False, revealed=False,
+                       not_cars=False, not_picked=False, not_revealed=False):
+        &#39;&#39;&#39;
+        Return a boolean array indicating which doors of the simulation
+        meet one or more conditions.
+
+        Parameters
+        ----------
+        cars : bool, optional
+            Signal doors containing cars. The default is False.
+        picked : bool, optional
+            Signal doors that are picked. The default is False.
+        revealed : bool, optional
+            Signal doors that are revealed. The default is False.
+        not_cars : bool, optional
+            Signal doors that do not contain cars. The default is False.
+        not_picked : bool, optional
+            Signal doors that are not picked. The default is False.
+        not_revealed : bool, optional
+            Signal doors that are closed. The default is False.
+
+        Returns
+        -------
+        out : numpy array
+
+        &#39;&#39;&#39;
+        c = int(cars)
+        p = int(picked)
+        r = int(revealed)
+        notc = int(not_cars)
+        notp = int(not_picked)
+        notr = int(not_revealed)
+
+        out = np.logical_or.reduce([
+            c * self.cars,
+            p * self.picked,
+            r * self.revealed,
+            notc * (1 - self.cars),
+            notp * (1 - self.picked),
+            notr * (1 - self.revealed)
+            ])
+        return out
+
+    def revealable_doors(self):
+        &#39;&#39;&#39;Array of the simulation shape indicating which doors are
+        not revealed, don&#39;t contain cars, and aren&#39;t currently picked.&#39;&#39;&#39;
+        return ~self.query_doors_or(cars=True, picked=True, revealed=True)
+
+    def count_totals(self, target):
+        &#39;&#39;&#39;Return a count of the number of positives for each trial in the
+        simulation.  Target is `cars`, `picked`, or `revealed`. &#39;&#39;&#39;
+        arr = getattr(self, target)
+        return arr.sum(axis=1)
+
+    # ---- Generic setter functions
+
+    def _get_spoiling_func(self, target):
+        &#39;&#39;&#39;Helper to return the function used to detect spoiled games when
+        applying certain actions.&#39;&#39;&#39;
+        if target == &#39;picked&#39;:
+            return self._check_spoiling_picks
+
+        elif target == &#39;revealed&#39;:
+            return self._check_spoiling_reveals
+
+        elif target == &#39;cars&#39;:
+            return self._check_spoiling_cars
+
+    def _set_array(self, target, new_array,
+                   behavior=&#39;overwrite&#39;, n_per_row=None, allow_spoiled=False,
+                   allow_redundant=True):
+        &#39;&#39;&#39;
+        Main function for altering the cars, picked, and revealed arrays
+        of the simulation when applying a action in the game.
+
+        A new array is passed, along with a behavior defining how to
+        treat the new array.  This information is used to determine
+        how to update the simulation.
+
+        Some optional checks can be applied to verify the settings
+        are behaving as expected and that the traditional game rules
+        are more/less followed.
+
+        Parameters
+        ----------
+        target : &#39;cars&#39;, &#39;picked&#39;, or &#39;revealed&#39;
+            Simulation array to set.
+        new_array : numpy array
+            New array to use to update the simulation
+        behavior : &#39;overwrite&#39;, &#39;add&#39;, or &#39;remove&#39;, optional
+            How to treat the `new_array`. The default is &#39;overwrite&#39;.
+            - overwrite: `new_array` should simply replace the current target array.
+            - add: any 1s in `new_array` should be added to any 1s in the current target
+            array (essentially an &#34;or&#34; operation)
+            - remove: any 1s in `new_array` should indicate places to remove 1s
+            in the current array.
+        n_per_row : int, optional
+            Enforce that a certain number of 1s are present per row in `new_array`.
+            The default is None, in which case there is no enforcement. An
+            error is raised if the condition is not met.  See
+            `cargoat.errors.check_n_per_row()`.
+        allow_spoiled : bool, optional
+            Allow entries in the new array that &#34;spoil&#34; the game; i.e. break
+            the rules of the game. The specific checks are dependent on
+            the `target` and the `behavior`.  The default is False.
+            If False, spoiled games will raise an error.  If True,
+            spoiled games will be marked in the `self.spoiled` attribute.
+        allow_redundant : bool, optional
+            Allow entries in the new array that are redundant with the
+            current simulation, e.g. closing an already closed door or picking
+            an already picked door.  The default is True.  If False,
+            redundant actions will raise an error.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+
+        old_array = getattr(self, target)
+        check_spoiling = self._get_spoiling_func(target)
+        etype = {&#39;cars&#39;: BadCar,
+                 &#39;revealed&#39;: BadReveal,
+                 &#39;picked&#39;: BadPick}[target]
+
+        # apply checks if requested
+        if n_per_row is not None:
+            check_n_per_row(a=new_array, n=n_per_row, etype=etype)
+
+        if not allow_redundant:
+            check_redundancy_for_setting(old_array=old_array, new_array=new_array,
+                                         behavior=behavior, etype=etype)
+
+        # then check for valid action
+        kosher = check_spoiling(new_array, behavior=behavior, allow_spoiled=allow_spoiled)
+
+        # mark spoiled games (only based on invalid picks)
+        spoiling_rows = np.any(~kosher, axis=1)
+        self.spoiled[spoiling_rows] = 1
+
+        # update sim.picked
+        if behavior == &#39;add&#39;:
+            new_array = np.logical_or(new_array, old_array).astype(int)
+        elif behavior == &#39;remove&#39;:
+            new_array = old_array - np.logical_and(new_array, old_array, dtype=int)
+            new_array[new_array &lt; 0] = 0
+
+        setattr(self, target, new_array)
+
+    # ---- Pick setting
+
+    def _check_spoiling_picks(self, picks, behavior, allow_spoiled=True):
+        &#39;&#39;&#39;
+        Checks if new picks spoil the game. Violations are when
+        revealed doors are picked.  Removals (unpicking) do
+        not trigger spoiling.
+        &#39;&#39;&#39;
+        if behavior in [&#39;add&#39;, &#39;overwrite&#39;]:
+            valid =  ~ np.logical_and(self.revealed, picks)
+        elif behavior == &#39;remove&#39;:
+            valid = np.full(self.shape, True)
+
+        if not allow_spoiled and np.any(~valid):
+            invalid_rows = np.any(~valid, axis=1)
+            trial, door = get_index_success(~valid)
+            msg = (&#34;Revealed doors were picked, e.g. &#34;
+                   f&#34;trial {trial} door {door}.&#34;)
+            bad_trials_raise(invalid_rows, msg, BadPick)
+
+        return valid
+
+    # ---- Door revealing
+
+    def _check_spoiling_reveals(self, reveals, behavior, allow_spoiled=True):
+        &#39;&#39;&#39;
+        Checks if new reveals spoil the game. Violations are when
+        cars or picked foors are revealed.  Removals (closing) do
+        not trigger spoiling.
+        &#39;&#39;&#39;
+        offlimits = self.query_doors_or(cars=True, picked=True)
+        if behavior in [&#39;add&#39;, &#39;overwrite&#39;]:
+            valid =  ~np.logical_and(offlimits, reveals)
+        elif behavior == &#39;remove&#39;:
+            valid = np.full(self.shape, True)
+
+        if not allow_spoiled and np.any(~valid):
+            invalid_rows = np.any(~valid, axis=1)
+            trial, door = get_index_success(~valid)
+            msg = (&#34;Cars or picked doors were revealed, e.g. &#34;
+                   f&#34;trial {trial} door {door}.&#34;)
+            bad_trials_raise(invalid_rows, msg, BadReveal)
+
+        return valid
+
+    # ---- Car placing
+    def _check_spoiling_cars(self, cars, behavior, allow_spoiled=True):
+        &#39;&#39;&#39;
+        Checks if new car placements spoil the game. Car placement/removal
+        is not really mentioned in the typical game variations.  For now
+        altering the car array does not result in spoiled games.
+        &#39;&#39;&#39;
+        valid = np.full(self.shape, True)
+        return valid
+
+    # ---- Other Helpers
+    def apply_func(self, func, inplace=False, cars=True, picked=True, revealed=True):
+        &#39;&#39;&#39;
+        Apply a function to one or more of the cars, picked, and revealed
+        arrays.
+
+        Parameters
+        ----------
+        func : callable
+            Function to apply.
+        inplace : bool, optional
+            The function will modify the arrays in place. The default is False.
+        cars : bool, optional
+            Apply to the car array. The default is True.
+        picked : bool, optional
+            Apply to the picked array. The default is True.
+        revealed : bool, optional
+            Apply to the revealed array. The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        apply_to = [x for i, x in enumerate([&#39;cars&#39;, &#39;picked&#39;, &#39;revealed&#39;])
+                    if [cars, picked, revealed][i]]
+        for attr in apply_to:
+            a = getattr(self, attr)
+            if inplace:
+                func(a)
+            else:
+                setattr(self, attr, func(a))
+
+    def copy(self):
+        &#39;&#39;&#39;
+        Create a copy of the current simulation.
+
+        Returns
+        -------
+        MontyHallSim
+
+        &#39;&#39;&#39;
+        return self.from_arrays(picked=self.picked,
+                                revealed=self.revealed,
+                                cars=self.cars,
+                                spoiled=self.spoiled,
+                                copy=True)
+
+    # ---- Results
+    def get_results(self, spoiled_games=&#39;omit&#39;):
+        &#39;&#39;&#39;
+        Return a dictionary containing the game results,
+        e.g. number of wins and losses.  Trials are counted
+        as wins when at least one pick and car overlap, i.e.
+        both have 1s in the same position.
+
+        Parameters
+        ----------
+        spoiled_games : str, optional
+            Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
+            - &#39;omit&#39;: discard spoiled games
+            - &#39;include&#39;: include spoiled games in the results
+            - &#39;only&#39;: only show the results for spoiled games
+
+        Raises
+        ------
+        ValueError
+            Unrecognized value for `spoiled_games`.
+
+        Returns
+        -------
+        results : dict
+            Dictionary of results.
+
+        &#39;&#39;&#39;
+
+        spoiled = self.spoiled == 1
+        if spoiled_games == &#39;include&#39;:
+            sim = self
+        elif spoiled_games == &#39;omit&#39;:
+            sim = self.select(~spoiled)
+        elif spoiled_games == &#39;only&#39;:
+            sim = self.select(spoiled)
+        else:
+            raise ValueError(&#39;`spoiled_games` must be &#34;include&#34;, &#34;omit&#34;, or &#34;only&#34;.&#39;)
+
+        wins = np.sum(np.any(sim.picked * sim.cars, axis=1))
+        losses = sim.n - wins
+        percent_wins = (wins / sim.n) * 100
+        percent_losses = (losses / sim.n) * 100
+        results = {
+            &#39;trials&#39;: sim.n,
+            &#39;wins&#39;: wins,
+            &#39;losses&#39;: losses,
+            &#39;percent_wins&#39;: percent_wins,
+            &#39;percent_losses&#39;: percent_losses
+            }
+
+        return results</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="cargoat.MontyHallSim.from_arrays"><code class="name flex">
+<span>def <span class="ident">from_arrays</span></span>(<span>picked=None, revealed=None, cars=None, spoiled=None, default=0, copy=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Construct a MontyHallSim from existing numpy arrays.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>picked</code></strong> :&ensp;<code>2D numpy array</code>, optional</dt>
+<dd>Integer array indicating picked doors. The default is None.</dd>
+<dt><strong><code>revealed</code></strong> :&ensp;<code>2D numpy array</code>, optional</dt>
+<dd>Integer array indicating revealed doors. The default is None.</dd>
+<dt><strong><code>cars</code></strong> :&ensp;<code>2D numpy array</code>, optional</dt>
+<dd>Integer array indicating doors containing cars. The default is None.</dd>
+<dt><strong><code>spoiled</code></strong> :&ensp;<code>1D numpy array</code>, optional</dt>
+<dd>Integer array indicating spoiled trials. The default is None.</dd>
+<dt><strong><code>default</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>When only some of <code>picked</code>/<code>revealed</code>/<code>cars</code> are provided, use
+this value to fill the missing arrays. The default is 0.</dd>
+<dt><strong><code>copy</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Call an explicit copy on the arrays before binding to the new
+simulation being created. Intended to prevent multiple simulations
+pointing to the same arrays.
+The default is True.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>
+<ul>
+<li>Didn't provide at least one of <code>cars</code>, <code>picked</code>, or <code>revealed</code></li>
+<li>Different array shapes for provided arrays.</li>
+</ul>
+</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code><a title="cargoat.MontyHallSim" href="#cargoat.MontyHallSim">MontyHallSim</a></code></dt>
+<dd>New simulation object.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_arrays(cls, picked=None, revealed=None, cars=None,
+                spoiled=None, default=0, copy=True):
+    &#39;&#39;&#39;
+    Construct a MontyHallSim from existing numpy arrays.
+
+    Parameters
+    ----------
+    picked : 2D numpy array, optional
+        Integer array indicating picked doors. The default is None.
+    revealed : 2D numpy array, optional
+        Integer array indicating revealed doors. The default is None.
+    cars : 2D numpy array, optional
+        Integer array indicating doors containing cars. The default is None.
+    spoiled : 1D numpy array, optional
+        Integer array indicating spoiled trials. The default is None.
+    default : int, optional
+        When only some of `picked`/`revealed`/`cars` are provided, use
+        this value to fill the missing arrays. The default is 0.
+    copy : bool, optional
+        Call an explicit copy on the arrays before binding to the new
+        simulation being created. Intended to prevent multiple simulations
+        pointing to the same arrays.  The default is True.
+
+    Raises
+    ------
+    ValueError
+        - Didn&#39;t provide at least one of `cars`, `picked`, or `revealed`
+        - Different array shapes for provided arrays.
+
+    Returns
+    -------
+    out : MontyHallSim
+        New simulation object.
+
+    &#39;&#39;&#39;
+
+    mainarrays = (cars, picked, revealed)
+
+    if all([i is None for i in mainarrays]):
+        raise ValueError(&#39;Must provide at least one of cars, &#39;
+                         &#39;picked, or revealed.&#39;)
+
+    base = [a for a in mainarrays if a is not None][0]
+    shape = base.shape
+
+    if picked is None:
+        picked = np.full(shape, default)
+    if revealed is None:
+        revealed = np.full(shape, default)
+    if cars is None:
+        cars = np.full(shape, default)
+
+    shape_set = set(i.shape for i in (cars, picked, revealed))
+
+    if len(shape_set) != 1:
+        raise ValueError(&#39;Detected different array shapes for &#39;
+                         &#39;picked, revealed, and cars.&#39;)
+
+    n, doors = shape
+    if spoiled is None:
+        spoiled = np.zeros(n, dtype=int)
+    if len(spoiled) != n:
+        raise ValueError(&#39;spoiled array does not match&#39;)
+
+    copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+    out = cls(n)
+    out.cars = copyfun(cars)
+    out.picked = copyfun(picked)
+    out.revealed = copyfun(revealed)
+    out.spoiled = copyfun(spoiled)
+
+    return out</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cargoat.MontyHallSim.idx"><code class="name">var <span class="ident">idx</span></code></dt>
+<dd>
+<div class="desc"><p>Return a numpy arange of length <code>self.n</code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def idx(self):
+    &#39;&#39;&#39;Return a numpy arange of length `self.n`&#39;&#39;&#39;
+    return np.arange(self.n)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.shape"><code class="name">var <span class="ident">shape</span></code></dt>
+<dd>
+<div class="desc"><p>Return the dimensions of the simulation (trials, doors).
+Throws an error if
+different array shapes are found.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def shape(self):
+    &#39;&#39;&#39;Return the dimensions of the simulation (trials, doors).  Throws an error if
+    different array shapes are found.&#39;&#39;&#39;
+    shape_set = set([self.cars.shape, self.picked.shape, self.revealed.shape])
+    if len(shape_set) != 1:
+        raise RuntimeError(&#39;Found different shapes for simulation arrays!&#39;)
+
+    return self.picked.shape</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="cargoat.MontyHallSim.apply_func"><code class="name flex">
+<span>def <span class="ident">apply_func</span></span>(<span>self, func, inplace=False, cars=True, picked=True, revealed=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Apply a function to one or more of the cars, picked, and revealed
+arrays.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>func</code></strong> :&ensp;<code>callable</code></dt>
+<dd>Function to apply.</dd>
+<dt><strong><code>inplace</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>The function will modify the arrays in place. The default is False.</dd>
+<dt><strong><code>cars</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Apply to the car array. The default is True.</dd>
+<dt><strong><code>picked</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Apply to the picked array. The default is True.</dd>
+<dt><strong><code>revealed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Apply to the revealed array. The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_func(self, func, inplace=False, cars=True, picked=True, revealed=True):
+    &#39;&#39;&#39;
+    Apply a function to one or more of the cars, picked, and revealed
+    arrays.
+
+    Parameters
+    ----------
+    func : callable
+        Function to apply.
+    inplace : bool, optional
+        The function will modify the arrays in place. The default is False.
+    cars : bool, optional
+        Apply to the car array. The default is True.
+    picked : bool, optional
+        Apply to the picked array. The default is True.
+    revealed : bool, optional
+        Apply to the revealed array. The default is True.
+
+    Returns
+    -------
+    None.
+
+    &#39;&#39;&#39;
+    apply_to = [x for i, x in enumerate([&#39;cars&#39;, &#39;picked&#39;, &#39;revealed&#39;])
+                if [cars, picked, revealed][i]]
+    for attr in apply_to:
+        a = getattr(self, attr)
+        if inplace:
+            func(a)
+        else:
+            setattr(self, attr, func(a))</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.copy"><code class="name flex">
+<span>def <span class="ident">copy</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a copy of the current simulation.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="cargoat.MontyHallSim" href="#cargoat.MontyHallSim">MontyHallSim</a></code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def copy(self):
+    &#39;&#39;&#39;
+    Create a copy of the current simulation.
+
+    Returns
+    -------
+    MontyHallSim
+
+    &#39;&#39;&#39;
+    return self.from_arrays(picked=self.picked,
+                            revealed=self.revealed,
+                            cars=self.cars,
+                            spoiled=self.spoiled,
+                            copy=True)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.count_totals"><code class="name flex">
+<span>def <span class="ident">count_totals</span></span>(<span>self, target)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a count of the number of positives for each trial in the
+simulation.
+Target is <code>cars</code>, <code>picked</code>, or <code>revealed</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def count_totals(self, target):
+    &#39;&#39;&#39;Return a count of the number of positives for each trial in the
+    simulation.  Target is `cars`, `picked`, or `revealed`. &#39;&#39;&#39;
+    arr = getattr(self, target)
+    return arr.sum(axis=1)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.get_results"><code class="name flex">
+<span>def <span class="ident">get_results</span></span>(<span>self, spoiled_games='omit')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a dictionary containing the game results,
+e.g. number of wins and losses.
+Trials are counted
+as wins when at least one pick and car overlap, i.e.
+both have 1s in the same position.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Behavior for dealing with spoiled games. The default is 'omit'.
+- 'omit': discard spoiled games
+- 'include': include spoiled games in the results
+- 'only': only show the results for spoiled games</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>Unrecognized value for <code>spoiled_games</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>results</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Dictionary of results.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_results(self, spoiled_games=&#39;omit&#39;):
+    &#39;&#39;&#39;
+    Return a dictionary containing the game results,
+    e.g. number of wins and losses.  Trials are counted
+    as wins when at least one pick and car overlap, i.e.
+    both have 1s in the same position.
+
+    Parameters
+    ----------
+    spoiled_games : str, optional
+        Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
+        - &#39;omit&#39;: discard spoiled games
+        - &#39;include&#39;: include spoiled games in the results
+        - &#39;only&#39;: only show the results for spoiled games
+
+    Raises
+    ------
+    ValueError
+        Unrecognized value for `spoiled_games`.
+
+    Returns
+    -------
+    results : dict
+        Dictionary of results.
+
+    &#39;&#39;&#39;
+
+    spoiled = self.spoiled == 1
+    if spoiled_games == &#39;include&#39;:
+        sim = self
+    elif spoiled_games == &#39;omit&#39;:
+        sim = self.select(~spoiled)
+    elif spoiled_games == &#39;only&#39;:
+        sim = self.select(spoiled)
+    else:
+        raise ValueError(&#39;`spoiled_games` must be &#34;include&#34;, &#34;omit&#34;, or &#34;only&#34;.&#39;)
+
+    wins = np.sum(np.any(sim.picked * sim.cars, axis=1))
+    losses = sim.n - wins
+    percent_wins = (wins / sim.n) * 100
+    percent_losses = (losses / sim.n) * 100
+    results = {
+        &#39;trials&#39;: sim.n,
+        &#39;wins&#39;: wins,
+        &#39;losses&#39;: losses,
+        &#39;percent_wins&#39;: percent_wins,
+        &#39;percent_losses&#39;: percent_losses
+        }
+
+    return results</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.pickable_doors"><code class="name flex">
+<span>def <span class="ident">pickable_doors</span></span>(<span>self, exclude_current=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Array of the simulation shape indicating which doors are
+not revealed (with or without the current picked doors).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pickable_doors(self, exclude_current=True):
+    &#39;&#39;&#39;Array of the simulation shape indicating which doors are
+    not revealed (with or without the current picked doors).&#39;&#39;&#39;
+    return ~self.query_doors_or(picked=exclude_current, revealed=True)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.query_doors_or"><code class="name flex">
+<span>def <span class="ident">query_doors_or</span></span>(<span>self, cars=False, picked=False, revealed=False, not_cars=False, not_picked=False, not_revealed=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a boolean array indicating which doors of the simulation
+meet one or more conditions.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>cars</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Signal doors containing cars. The default is False.</dd>
+<dt><strong><code>picked</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Signal doors that are picked. The default is False.</dd>
+<dt><strong><code>revealed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Signal doors that are revealed. The default is False.</dd>
+<dt><strong><code>not_cars</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Signal doors that do not contain cars. The default is False.</dd>
+<dt><strong><code>not_picked</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Signal doors that are not picked. The default is False.</dd>
+<dt><strong><code>not_revealed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Signal doors that are closed. The default is False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>out</code></strong> :&ensp;<code>numpy array</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def query_doors_or(self, cars=False, picked=False, revealed=False,
+                   not_cars=False, not_picked=False, not_revealed=False):
+    &#39;&#39;&#39;
+    Return a boolean array indicating which doors of the simulation
+    meet one or more conditions.
+
+    Parameters
+    ----------
+    cars : bool, optional
+        Signal doors containing cars. The default is False.
+    picked : bool, optional
+        Signal doors that are picked. The default is False.
+    revealed : bool, optional
+        Signal doors that are revealed. The default is False.
+    not_cars : bool, optional
+        Signal doors that do not contain cars. The default is False.
+    not_picked : bool, optional
+        Signal doors that are not picked. The default is False.
+    not_revealed : bool, optional
+        Signal doors that are closed. The default is False.
+
+    Returns
+    -------
+    out : numpy array
+
+    &#39;&#39;&#39;
+    c = int(cars)
+    p = int(picked)
+    r = int(revealed)
+    notc = int(not_cars)
+    notp = int(not_picked)
+    notr = int(not_revealed)
+
+    out = np.logical_or.reduce([
+        c * self.cars,
+        p * self.picked,
+        r * self.revealed,
+        notc * (1 - self.cars),
+        notp * (1 - self.picked),
+        notr * (1 - self.revealed)
+        ])
+    return out</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.revealable_doors"><code class="name flex">
+<span>def <span class="ident">revealable_doors</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Array of the simulation shape indicating which doors are
+not revealed, don't contain cars, and aren't currently picked.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def revealable_doors(self):
+    &#39;&#39;&#39;Array of the simulation shape indicating which doors are
+    not revealed, don&#39;t contain cars, and aren&#39;t currently picked.&#39;&#39;&#39;
+    return ~self.query_doors_or(cars=True, picked=True, revealed=True)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.select"><code class="name flex">
+<span>def <span class="ident">select</span></span>(<span>self, x=None, y=None, copy=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Index the simulation to create a new one.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>int, float, list-like</code>, optional</dt>
+<dd>Indexer for trials (rows) of simulation. The default is None,
+in which case all trials are selected.</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>int, float, list-like</code>, optional</dt>
+<dd>Indexer for doors (columns) of simulation. The default is None,
+in which case all doors are selected.</dd>
+<dt><strong><code>copy</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Create an explicit copy of the arrays before binding to the
+newly created simulation. The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>MontyHallSimulation</code></dt>
+<dd>New simulation object.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def select(self, x=None, y=None, copy=True):
+    &#39;&#39;&#39;
+    Index the simulation to create a new one.
+
+    Parameters
+    ----------
+    x : int, float, list-like, optional
+        Indexer for trials (rows) of simulation. The default is None,
+        in which case all trials are selected.
+    y : int, float, list-like, optional
+        Indexer for doors (columns) of simulation. The default is None,
+        in which case all doors are selected.
+    copy : bool, optional
+        Create an explicit copy of the arrays before binding to the
+        newly created simulation. The default is True.
+
+    Returns
+    -------
+    MontyHallSimulation
+        New simulation object.
+
+    &#39;&#39;&#39;
+    x = slice(None) if x is None else x
+    y = slice(None) if y is None else y
+    copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
+
+    cars = copyfun(self.cars[x, y])
+    picked = copyfun(self.picked[x, y])
+    revealed = copyfun(self.revealed[x, y])
+    spoiled = copyfun(self.spoiled[x])
+
+    return self.from_arrays(picked=picked,
+                            revealed=revealed,
+                            cars=cars,
+                            spoiled=spoiled,
+                            copy=False)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="cargoat.Pass"><code class="flex name class">
+<span>class <span class="ident">Pass</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Action for doing nothing.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Pass(MontyHallAction):
+    &#39;&#39;&#39;Action for doing nothing.&#39;&#39;&#39;
+    def __call__(self, sim):
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.Pick"><code class="flex name class">
+<span>class <span class="ident">Pick</span></span>
+<span>(</span><span>doors=1, weighted=False, exclude_current=True, exclude_revealed=True, add=False, allow_spoiled=False, allow_redundant=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class modeling the contestant picking a door.</p>
+<p>Class to model the contestant picking one or more doors.
+Picks are significant for determining the winners of games -
+trials where doors containing cars are picked are considered wins.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
+<dd>Argument for specifying how many/which doors to pick. The default is 1.
+Possible options are as follows:
+- a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)
+- a list of integers with <code>weighted=False</code> is interpeted as
+specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
+index 0 and index 2.
+- a list of integers with <code>weighted=True</code> is interpreted as
+probabilities/weights for selecting a single door.
+The length
+of the weights can be either a) the same as the number of doors
+or b) less than the number of doors.
+In the latter case, the
+number of weights must align with the number of selectable
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+<dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat the first argument as weights (see docs above).
+The default is False.</dd>
+<dt><strong><code>exclude_current</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow re-selection of doors that are already picked. The default
+is True. This is a "redundant" action, which will throw an error
+if <code>allow_redundant=False</code> is specified.</dd>
+<dt><strong><code>exclude_revealed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow revealed/open doors to be picked. The default is True.
+This is a spoiling action, which will throw an error if <code>allow_spoiled=False</code>
+is specified.</dd>
+<dt><strong><code>add</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Add picks generated by this action to existing picks.
+The default is False, in which case the old picks are replaced
+by the current action.</dd>
+<dt><strong><code>allow_spoiled</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error of the game is spoiled. The default is False.
+Spoiled games are recorded in the <code>spoiled</code> attribute of the
+simulation.</dd>
+<dt><strong><code>allow_redundant</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error if currently picked doors are repicked.
+The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Pick(GenericAction):
+    &#39;&#39;&#39;Class modeling the contestant picking a door.&#39;&#39;&#39;
+    def __init__(self, doors=1, weighted=False, exclude_current=True,
+                 exclude_revealed=True, add=False, allow_spoiled=False,
+                 allow_redundant=True):
+        &#39;&#39;&#39;
+        Class to model the contestant picking one or more doors.
+        Picks are significant for determining the winners of games -
+        trials where doors containing cars are picked are considered wins.
+
+        Parameters
+        ----------
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to pick. The default is 1.
+            Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        exclude_current : bool, optional
+            Don&#39;t allow re-selection of doors that are already picked. The default
+            is True. This is a &#34;redundant&#34; action, which will throw an error
+            if `allow_redundant=False` is specified.
+        exclude_revealed : bool, optional
+            Don&#39;t allow revealed/open doors to be picked. The default is True.
+            This is a spoiling action, which will throw an error if `allow_spoiled=False`
+            is specified.
+        add : bool, optional
+            Add picks generated by this action to existing picks.
+            The default is False, in which case the old picks are replaced
+            by the current action.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if currently picked doors are repicked.
+            The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        behavior = &#39;add&#39; if add else &#39;overwrite&#39;
+        super().__init__(target=&#39;picked&#39;,
+                         doors=doors,
+                         weighted=weighted,
+                         behavior=behavior,
+                         exclude_picked=exclude_current,
+                         exclude_revealed=exclude_revealed,
+                         allow_redundant=allow_redundant,
+                         allow_spoiled=allow_spoiled)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.generic.GenericAction" href="actions/generic.html#cargoat.actions.generic.GenericAction">GenericAction</a></li>
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.PlaceCar"><code class="flex name class">
+<span>class <span class="ident">PlaceCar</span></span>
+<span>(</span><span>doors=1, weighted=False, exclude_current=True, exclude_revealed=True, allow_spoiled=False, allow_redundant=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class to model the host adding additional cars to one or more
+doors.
+Cars are significant for determining wins and losses:
+trials where doors containing cars are also selected are
+considered wins.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
+<dd>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:
+- a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)
+- a list of integers with <code>weighted=False</code> is interpeted as
+specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
+index 0 and index 2.
+- a list of integers with <code>weighted=True</code> is interpreted as
+probabilities/weights for selecting a single door.
+The length
+of the weights can be either a) the same as the number of doors
+or b) less than the number of doors.
+In the latter case, the
+number of weights must align with the number of selectable
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+<dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat the first argument as weights (see docs above).
+The default is False.</dd>
+<dt><strong><code>exclude_current</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow placing cars in doors already containing cars. The default
+is True. This is a "redundant" action, which will throw an error
+if <code>allow_redundant=False</code> is specified.</dd>
+<dt><strong><code>exclude_revealed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow cars to be placed in revealed doors. The default is True.
+This action does not spoil the game.</dd>
+<dt><strong><code>allow_spoiled</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error of the game is spoiled. The default is False.
+Spoiled games are recorded in the <code>spoiled</code> attribute of the
+simulation.</dd>
+<dt><strong><code>allow_redundant</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error if doors already containing cars are selected.
+The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PlaceCar(GenericAction):
+    def __init__(self, doors=1, weighted=False, exclude_current=True,
+                 exclude_revealed=True, allow_spoiled=False,
+                 allow_redundant=True):
+        &#39;&#39;&#39;
+        Class to model the host adding additional cars to one or more
+        doors.  Cars are significant for determining wins and losses:
+        trials where doors containing cars are also selected are
+        considered wins.
+
+        Parameters
+        ----------
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        exclude_current : bool, optional
+            Don&#39;t allow placing cars in doors already containing cars. The default
+            is True. This is a &#34;redundant&#34; action, which will throw an error
+            if `allow_redundant=False` is specified.
+        exclude_revealed : bool, optional
+            Don&#39;t allow cars to be placed in revealed doors. The default is True.
+            This action does not spoil the game.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if doors already containing cars are selected.
+            The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        super().__init__(target=&#39;cars&#39;,
+                         doors=doors,
+                         weighted=weighted,
+                         behavior=&#39;add&#39;,
+                         exclude_cars=exclude_current,
+                         exclude_revealed=exclude_revealed,
+                         allow_redundant=allow_redundant,
+                         allow_spoiled=allow_spoiled)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.generic.GenericAction" href="actions/generic.html#cargoat.actions.generic.GenericAction">GenericAction</a></li>
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.RearrangeDoors"><code class="flex name class">
+<span>class <span class="ident">RearrangeDoors</span></span>
+<span>(</span><span>positions)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Swap the positions of doors.
+Note that the contents, picked-status,
+and revealed-status all stick with the door.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>positions</code></strong> :&ensp;<code>list-like</code></dt>
+<dd>Permutation of the range of the number of doors, dictating
+the new position of each door.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RearrangeDoors(MontyHallAction):
+    def __init__(self, positions):
+        &#39;&#39;&#39;
+        Swap the positions of doors.  Note that the contents, picked-status,
+        and revealed-status all stick with the door.
+
+        Parameters
+        ----------
+        positions : list-like
+            Permutation of the range of the number of doors, dictating
+            the new position of each door.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.positions = positions
+
+    def __call__(self, sim):
+        col_range = list(range(sim.shape[1]))
+        a = np.all(np.isin(col_range, self.positions))
+        b = len(col_range) == len(self.positions)
+        if not a or not b:
+            raise ValueError(&#34;Positions must be a permutation of &#34;
+                              f&#34;the column indices, i.e. {col_range}.&#34;)
+
+        foo = lambda a: a.copy()[:, self.positions]
+        sim.apply_func(foo)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.RemoveCar"><code class="flex name class">
+<span>class <span class="ident">RemoveCar</span></span>
+<span>(</span><span>doors=1, weighted=False, exclude_current=True, exclude_revealed=True, allow_spoiled=False, allow_redundant=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class to model the host removing cars placed behind one or more
+doors.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
+<dd>Argument for specifying how many/which doors to remove cars from.
+The default is 1. Possible options are as follows:
+- a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)
+- a list of integers with <code>weighted=False</code> is interpeted as
+specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
+index 0 and index 2.
+- a list of integers with <code>weighted=True</code> is interpreted as
+probabilities/weights for selecting a single door.
+The length
+of the weights can be either a) the same as the number of doors
+or b) less than the number of doors.
+In the latter case, the
+number of weights must align with the number of selectable
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+<dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat the first argument as weights (see docs above).
+The default is False.</dd>
+<dt><strong><code>exclude_current</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow removing cars in doors already containing goats. The default
+is True. This is a "redundant" action, which will throw an error
+if <code>allow_redundant=False</code> is specified.</dd>
+<dt><strong><code>exclude_revealed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow cars to be removed from revealed doors. The default is True.
+This action does not spoil the game, though revealed cars
+should only occur in spoiled gmes.</dd>
+<dt><strong><code>allow_spoiled</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error of the game is spoiled. The default is False.
+Spoiled games are recorded in the <code>spoiled</code> attribute of the
+simulation.</dd>
+<dt><strong><code>allow_redundant</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error if doors already containing goats are selected.
+The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RemoveCar(GenericAction):
+    def __init__(self, doors=1, weighted=False, exclude_current=True,
+                 exclude_revealed=True, allow_spoiled=False,
+                 allow_redundant=True):
+        &#39;&#39;&#39;
+        Class to model the host removing cars placed behind one or more
+        doors.
+
+        Parameters
+        ----------
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to remove cars from.
+            The default is 1. Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        exclude_current : bool, optional
+            Don&#39;t allow removing cars in doors already containing goats. The default
+            is True. This is a &#34;redundant&#34; action, which will throw an error
+            if `allow_redundant=False` is specified.
+        exclude_revealed : bool, optional
+            Don&#39;t allow cars to be removed from revealed doors. The default is True.
+            This action does not spoil the game, though revealed cars
+            should only occur in spoiled gmes.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if doors already containing goats are selected.
+            The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        super().__init__(target=&#39;revealed&#39;,
+                         doors=doors,
+                         weighted=weighted,
+                         behavior=&#39;remove&#39;,
+                         exclude_carless=exclude_current,
+                         allow_redundant=allow_redundant,
+                         allow_spoiled=allow_spoiled)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.generic.GenericAction" href="actions/generic.html#cargoat.actions.generic.GenericAction">GenericAction</a></li>
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.RemoveDoors"><code class="flex name class">
+<span>class <span class="ident">RemoveDoors</span></span>
+<span>(</span><span>positions)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove selected doors from the simulation, based on index.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>positions</code></strong> :&ensp;<code>list-like</code></dt>
+<dd>Doors to remove.
+See <code>np.remove</code> for more details.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RemoveDoors(MontyHallAction):
+    def __init__(self, positions):
+        &#39;&#39;&#39;
+        Remove selected doors from the simulation, based on index.
+
+        Parameters
+        ----------
+        positions : list-like
+            Doors to remove.  See `np.remove` for more details.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.positions = positions
+
+    def __call__(self, sim):
+        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+        sim.apply_func(foo)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.Reveal"><code class="flex name class">
+<span>class <span class="ident">Reveal</span></span>
+<span>(</span><span>doors=1, weighted=False, exclude_current=True, exclude_cars=True, exclude_picked=True, allow_spoiled=False, allow_redundant=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class to model the host opening a door.</p>
+<p>Class to model the host revealing one or more doors.
+Revealed doors are significant for directing what information
+the player knows, and which further actions are acceptable.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
+<dd>Argument for specifying how many/which doors to reveal. The default is 1.
+Possible options are as follows:
+- a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)
+- a list of integers with <code>weighted=False</code> is interpeted as
+specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
+index 0 and index 2.
+- a list of integers with <code>weighted=True</code> is interpreted as
+probabilities/weights for selecting a single door.
+The length
+of the weights can be either a) the same as the number of doors
+or b) less than the number of doors.
+In the latter case, the
+number of weights must align with the number of selectable
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+<dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat the first argument as weights (see docs above).
+The default is False.</dd>
+<dt><strong><code>exclude_current</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow re-revealing of doors that are already revealed. The default
+is True. This is a "redundant" action, which will throw an error
+if <code>allow_redundant=False</code> is specified.</dd>
+<dt><strong><code>exclude_cars</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow doors containing cars to be revealed. The default is True.
+This is a spoiling action, which will throw an error if <code>allow_spoiled=False</code>
+is specified.</dd>
+<dt><strong><code>exclude_picked</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow picked doors to be revealed. The default is True.
+This is a spoiling action, which will throw an error if
+<code>allow_spoiled=False</code> is specified.</dd>
+<dt><strong><code>allow_spoiled</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error of the game is spoiled. The default is False.
+Spoiled games are recorded in the <code>spoiled</code> attribute of the
+simulation.</dd>
+<dt><strong><code>allow_redundant</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error if currently revealed doors are selected.
+The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Reveal(GenericAction):
+    &#39;&#39;&#39;Class to model the host opening a door.&#39;&#39;&#39;
+    def __init__(self, doors=1, weighted=False, exclude_current=True,
+                 exclude_cars=True, exclude_picked=True,
+                 allow_spoiled=False, allow_redundant=True):
+        &#39;&#39;&#39;
+        Class to model the host revealing one or more doors.
+        Revealed doors are significant for directing what information
+        the player knows, and which further actions are acceptable.
+
+        Parameters
+        ----------
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to reveal. The default is 1.
+            Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        exclude_current : bool, optional
+            Don&#39;t allow re-revealing of doors that are already revealed. The default
+            is True. This is a &#34;redundant&#34; action, which will throw an error
+            if `allow_redundant=False` is specified.
+        exclude_cars : bool, optional
+            Don&#39;t allow doors containing cars to be revealed. The default is True.
+            This is a spoiling action, which will throw an error if `allow_spoiled=False`
+            is specified.
+        exclude_picked : bool, optional
+            Don&#39;t allow picked doors to be revealed. The default is True.
+            This is a spoiling action, which will throw an error if
+            `allow_spoiled=False` is specified.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if currently revealed doors are selected.
+            The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        super().__init__(target=&#39;revealed&#39;,
+                         doors=doors,
+                         weighted=weighted,
+                         behavior=&#39;add&#39;,
+                         exclude_picked=exclude_picked,
+                         exclude_revealed=exclude_current,
+                         exclude_cars=exclude_cars,
+                         allow_redundant=allow_redundant,
+                         allow_spoiled=allow_spoiled)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.generic.GenericAction" href="actions/generic.html#cargoat.actions.generic.GenericAction">GenericAction</a></li>
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.Stay"><code class="flex name class">
+<span>class <span class="ident">Stay</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Model the action of keeping the same door in the Monty
+Hall game, as opposed to switching.
+Action is equivalent
+to <code><a title="cargoat.Pass" href="#cargoat.Pass">Pass</a></code>, aka doing nothing.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Stay(MontyHallAction):
+    &#39;&#39;&#39;Model the action of keeping the same door in the Monty
+    Hall game, as opposed to switching.  Action is equivalent
+    to `Pass`, aka doing nothing.&#39;&#39;&#39;
+    def __call__(self, sim):
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.Switch"><code class="flex name class">
+<span>class <span class="ident">Switch</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Model the action of switching doors in the Monty Hall game
+(traditionally, after one goat has been revealed).
+This
+is equivalent to picking a new door, implement with
+<code>cg.actions.pick.Pick</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Switch(MontyHallAction):
+    &#39;&#39;&#39;Model the action of switching doors in the Monty Hall game
+    (traditionally, after one goat has been revealed).  This
+    is equivalent to picking a new door, implement with
+    `cg.actions.pick.Pick`.&#39;&#39;&#39;
+    def __init__(self):
+        self.action = Pick()
+
+    def __call__(self, sim):
+        self.action(sim)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.TryExcept"><code class="flex name class">
+<span>class <span class="ident">TryExcept</span></span>
+<span>(</span><span>a, b)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Try to apply one action; if that produces errors, apply a different
+action.</p>
+<p><strong>Note that this is a try/except for all rows of the simulation -
+the error handling is not tested rowwise</strong>.
+So if action <code>a</code> fails
+for <em>any</em> trial, action <code>b</code> will be instead applied to <em>all</em> trials.
+A temporary copy simulation is created to save the state prior to
+applying action <code>a</code>.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>a</code></strong> :&ensp;<code><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></code></dt>
+<dd>Action to try.</dd>
+<dt><strong><code>b</code></strong> :&ensp;<code><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></code></dt>
+<dd>Action to apply if <code>a</code> raises an error.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TryExcept(MontyHallAction):
+    def __init__(self, a, b):
+        &#39;&#39;&#39;
+        Try to apply one action; if that produces errors, apply a different
+        action.
+
+        **Note that this is a try/except for all rows of the simulation -
+        the error handling is not tested rowwise**.  So if action `a` fails
+        for *any* trial, action `b` will be instead applied to *all* trials.
+        A temporary copy simulation is created to save the state prior to
+        applying action `a`.
+
+        Parameters
+        ----------
+        a : cargoat.actions.base.MontyHallAction
+            Action to try.
+        b : cargoat.actions.base.MontyHallAction
+            Action to apply if `a` raises an error.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.a = a
+        self.b = b
+
+    def __call__(self, sim):
+        temp = sim.copy()
+        try:
+            self.a(sim)
+        except:
+            self.b(temp)
+            sim.picked=temp.picked
+            sim.cars=temp.cars
+            sim.revealed=temp.revealed
+            sim.spoiled=temp.spoiled</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+<dt id="cargoat.Unpick"><code class="flex name class">
+<span>class <span class="ident">Unpick</span></span>
+<span>(</span><span>doors=1, weighted=False, exclude_current=True, allow_spoiled=False, allow_redundant=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class modeling the contestant deselecting a door.</p>
+<p>Class to model the contestant deselecting ("unpicking") one or more
+doors.</p>
+<p>Note that this action does not need to be explicitly called switching
+picks from one door to another, for example when switching doors in the
+traditional Monty Hall game.
+Rather, it is for removing a previously
+picked door without assiging a new pick.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
+<dd>Argument for specifying how many/which doors to unpick. The default is 1.
+Possible options are as follows:
+- a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)
+- a list of integers with <code>weighted=False</code> is interpeted as
+specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
+index 0 and index 2.
+- a list of integers with <code>weighted=True</code> is interpreted as
+probabilities/weights for selecting a single door.
+The length
+of the weights can be either a) the same as the number of doors
+or b) less than the number of doors.
+In the latter case, the
+number of weights must align with the number of selectable
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+<dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat the first argument as weights (see docs above).
+The default is False.</dd>
+<dt><strong><code>exclude_current</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Don't allow unpicking of doors that aren't picked. The default is True.
+This is a "redundant" action, which will throw an error
+if <code>allow_redundant=False</code> is specified.</dd>
+<dt><strong><code>allow_spoiled</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error of the game is spoiled. The default is False.
+Spoiled games are recorded in the <code>spoiled</code> attribute of the
+simulation.</dd>
+<dt><strong><code>allow_redundant</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error if currently unpicked doors are unpicked.
+The default is True.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Unpick(GenericAction):
+    &#39;&#39;&#39;Class modeling the contestant deselecting a door.&#39;&#39;&#39;
+
+    def __init__(self, doors=1, weighted=False, exclude_current=True,
+                 allow_spoiled=False, allow_redundant=True):
+        &#39;&#39;&#39;
+        Class to model the contestant deselecting (&#34;unpicking&#34;) one or more
+        doors.
+
+        Note that this action does not need to be explicitly called switching
+        picks from one door to another, for example when switching doors in the
+        traditional Monty Hall game.  Rather, it is for removing a previously
+        picked door without assiging a new pick.
+
+        Parameters
+        ----------
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to unpick. The default is 1.
+            Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        exclude_current : bool, optional
+            Don&#39;t allow unpicking of doors that aren&#39;t picked. The default is True.
+            This is a &#34;redundant&#34; action, which will throw an error
+            if `allow_redundant=False` is specified.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if currently unpicked doors are unpicked.
+            The default is True.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        super().__init__(target=&#39;picked&#39;,
+                         doors=doors,
+                         weighted=weighted,
+                         behavior=&#39;remove&#39;,
+                         exclude_unpicked=exclude_current,
+                         allow_redundant=allow_redundant,
+                         allow_spoiled=allow_spoiled)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.generic.GenericAction" href="actions/generic.html#cargoat.actions.generic.GenericAction">GenericAction</a></li>
+<li><a title="cargoat.actions.base.MontyHallAction" href="actions/base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="cargoat.actions" href="actions/index.html">cargoat.actions</a></code></li>
+<li><code><a title="cargoat.arrayops" href="arrayops.html">cargoat.arrayops</a></code></li>
+<li><code><a title="cargoat.core" href="core.html">cargoat.core</a></code></li>
+<li><code><a title="cargoat.errors" href="errors.html">cargoat.errors</a></code></li>
+<li><code><a title="cargoat.sim" href="sim.html">cargoat.sim</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="cargoat.combine_sims" href="#cargoat.combine_sims">combine_sims</a></code></li>
+<li><code><a title="cargoat.play" href="#cargoat.play">play</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="cargoat.AddDoors" href="#cargoat.AddDoors">AddDoors</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.ChanceTo" href="#cargoat.ChanceTo">ChanceTo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.CheckSpoiled" href="#cargoat.CheckSpoiled">CheckSpoiled</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.Close" href="#cargoat.Close">Close</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.Finish" href="#cargoat.Finish">Finish</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.IfElse" href="#cargoat.IfElse">IfElse</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.InitDoorsEmpty" href="#cargoat.InitDoorsEmpty">InitDoorsEmpty</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.InitDoorsFixed" href="#cargoat.InitDoorsFixed">InitDoorsFixed</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.InitDoorsRandom" href="#cargoat.InitDoorsRandom">InitDoorsRandom</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.MarkSpoiled" href="#cargoat.MarkSpoiled">MarkSpoiled</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.MarkUnspoiled" href="#cargoat.MarkUnspoiled">MarkUnspoiled</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.MontyHallSim" href="#cargoat.MontyHallSim">MontyHallSim</a></code></h4>
+<ul class="two-column">
+<li><code><a title="cargoat.MontyHallSim.apply_func" href="#cargoat.MontyHallSim.apply_func">apply_func</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.copy" href="#cargoat.MontyHallSim.copy">copy</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.count_totals" href="#cargoat.MontyHallSim.count_totals">count_totals</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.from_arrays" href="#cargoat.MontyHallSim.from_arrays">from_arrays</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.get_results" href="#cargoat.MontyHallSim.get_results">get_results</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.idx" href="#cargoat.MontyHallSim.idx">idx</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.pickable_doors" href="#cargoat.MontyHallSim.pickable_doors">pickable_doors</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.query_doors_or" href="#cargoat.MontyHallSim.query_doors_or">query_doors_or</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.revealable_doors" href="#cargoat.MontyHallSim.revealable_doors">revealable_doors</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.select" href="#cargoat.MontyHallSim.select">select</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.shape" href="#cargoat.MontyHallSim.shape">shape</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cargoat.Pass" href="#cargoat.Pass">Pass</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.Pick" href="#cargoat.Pick">Pick</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.PlaceCar" href="#cargoat.PlaceCar">PlaceCar</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.RearrangeDoors" href="#cargoat.RearrangeDoors">RearrangeDoors</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.RemoveCar" href="#cargoat.RemoveCar">RemoveCar</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.RemoveDoors" href="#cargoat.RemoveDoors">RemoveDoors</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.Reveal" href="#cargoat.Reveal">Reveal</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.Stay" href="#cargoat.Stay">Stay</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.Switch" href="#cargoat.Switch">Switch</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.TryExcept" href="#cargoat.TryExcept">TryExcept</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.Unpick" href="#cargoat.Unpick">Unpick</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>cargoat.actions.generic API documentation</title>
+<meta name="description" content="Generic class to capture picking/unpicking, revealing/closing, and
+placing/removing cars." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cargoat.actions.generic</code></h1>
+</header>
+<section id="section-intro">
+<p>Generic class to capture picking/unpicking, revealing/closing, and
+placing/removing cars.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+&#34;&#34;&#34;
+Generic class to capture picking/unpicking, revealing/closing, and
+placing/removing cars.
+&#34;&#34;&#34;
+
+from collections.abc import Iterable
+
+import numpy as np
+
+from cargoat.actions.base import MontyHallAction
+from cargoat.arrayops import (n_per_row,
+                              one_per_row,
+                              one_per_row_weighted)
+
+class GenericAction(MontyHallAction):
+    def __init__(self, target, doors=1, weighted=False, behavior=&#39;overwrite&#39;,
+                 exclude_picked=False, exclude_revealed=False, exclude_cars=False,
+                 exclude_unpicked=False,exclude_closed=False, exclude_carless=False,
+                 allow_spoiled=False, allow_redundant=True):
+        &#39;&#39;&#39;
+        Generic class for covering many actions in the Monty Hall game.
+
+        Most boil down to altering the cars, picked, or revealed array
+        of the MontyHallSim.  This class abstracts the specific array being
+        targeted,  allowing the same selection operations to be applied.
+
+        This action covers selecting 1 or more doors with uniform probability,
+        selecting 1 or more doors by index, or selecting one door with
+        weighted probabilities for each door.
+
+        This class is intended to cover picking, revealing, and placing cars,
+        as well as the negation of those actions.  Subclasses of this class
+        tailor/mask some of the options from GenericAction where appropriate.
+        See `cargoat.actions.pick`, `cargoat.actions.reveal`, and
+        `cargoat.actions.car` for more information.
+
+        Parameters
+        ----------
+        target : &#39;cars&#39;, &#39;picked&#39;, or &#39;revealed&#39;
+            Attribute array of `cargoat.sim.MontyHallSim` to target.
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to select. The default is 1.
+            Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        behavior : &#39;add&#39;, &#39;overwrite&#39;, or &#39;remove&#39;, optional
+            How to treat the the new selections when applying them to the
+            simulation. The default is &#39;overwrite&#39;.
+            - overwrite: new selections should simply replace the current target array.
+            - add: any 1s in the new selections should be added to any 1s in
+            the current target array (essentially an &#34;or&#34; operation)
+            - remove: any 1s in the new selection should indicate places to remove 1s
+            in the current array.
+        exclude_picked : bool, optional
+            Disallow selection of picked doors. The default is False.
+        exclude_revealed : bool, optional
+            Disallow selection of revealed doors. The default is False.
+        exclude_cars : bool, optional
+            Disallow selection of doors with cars. The default is False.
+        exclude_unpicked : bool, optional
+            Disallow selection of unpicked doors. The default is False.
+        exclude_closed : bool, optional
+            Disallow selection of closed doors. The default is False.
+        exclude_carless : bool, optional
+            Disallow selection of doors with goats. The default is False.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if doors that are already set/unset are
+            selected to be redundantly set/unset (respectively).
+            The default is True.
+
+        Raises
+        ------
+        ValueError
+            `target` or `behavior` not in acceptable options, or problem
+            interpreting `doors` as weights when `weights=True`.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+
+        if target not in (&#39;picked&#39;, &#39;revealed&#39;, &#39;cars&#39;):
+            raise ValueError(&#39;Target must be &#34;picked&#34;, &#34;revealed&#34;, &#39;
+                             f&#39;or &#34;cars&#34;, not {target}.&#39;)
+        if behavior not in (&#34;overwrite&#34;, &#34;add&#34;, &#34;remove&#34;):
+            raise ValueError(&#39;`behavior` must be &#34;overwrite&#34;, &#34;add&#34; or &#34;remove&#34;&#39;)
+
+        self.target = target
+        self.doors = doors
+        self.weighted = weighted
+        self.behavior = behavior
+        self.exclude_picked = exclude_picked
+        self.exclude_revealed = exclude_revealed
+        self.exclude_cars = exclude_cars
+        self.exclude_unpicked = exclude_unpicked
+        self.exclude_closed = exclude_closed
+        self.exclude_carless = exclude_carless
+        self.allow_spoiled = allow_spoiled
+        self.allow_redundant = allow_redundant
+
+    def __call__(self, sim):
+        # choice = self.doors
+
+        allowed = ~sim.query_doors_or(picked=self.exclude_picked,
+                                      revealed=self.exclude_revealed,
+                                      cars=self.exclude_cars,
+                                      not_picked=self.exclude_unpicked,
+                                      not_revealed=self.exclude_closed,
+                                      not_cars=self.exclude_carless)
+
+        if self.doors == 1:
+            new_array = one_per_row(sim.shape, allowed=allowed)
+            n = 1
+        elif isinstance(self.doors , int):
+            new_array = n_per_row(sim.shape, n=self.doors, allowed=allowed)
+            n = self.doors
+        elif isinstance(self.doors, Iterable) and not self.weighted:
+            new_array = np.zeros(sim.shape, dtype=int)
+            new_array[:, self.doors] = 1
+            n = len(self.doors)
+        elif isinstance(self.doors, Iterable) and self.weighted:
+            new_array = one_per_row_weighted(sim.shape, weights=self.doors,
+                                             allowed=allowed)
+            n = 1
+        else:
+            raise ValueError(&#39;Cannot interpret `doors` as an integer, &#39;
+                             &#39;choice array, or weighted choice array. &#39;
+                             &#39;Please see documentation.&#39;)
+
+        sim._set_array(target=self.target,
+                       new_array=new_array,
+                       behavior=self.behavior,
+                       n_per_row=n,
+                       allow_spoiled=self.allow_spoiled,
+                       allow_redundant=self.allow_redundant)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="cargoat.actions.generic.GenericAction"><code class="flex name class">
+<span>class <span class="ident">GenericAction</span></span>
+<span>(</span><span>target, doors=1, weighted=False, behavior='overwrite', exclude_picked=False, exclude_revealed=False, exclude_cars=False, exclude_unpicked=False, exclude_closed=False, exclude_carless=False, allow_spoiled=False, allow_redundant=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generic class for covering many actions in the Monty Hall game.</p>
+<p>Most boil down to altering the cars, picked, or revealed array
+of the MontyHallSim.
+This class abstracts the specific array being
+targeted,
+allowing the same selection operations to be applied.</p>
+<p>This action covers selecting 1 or more doors with uniform probability,
+selecting 1 or more doors by index, or selecting one door with
+weighted probabilities for each door.</p>
+<p>This class is intended to cover picking, revealing, and placing cars,
+as well as the negation of those actions.
+Subclasses of this class
+tailor/mask some of the options from GenericAction where appropriate.
+See <code><a title="cargoat.actions.pick" href="pick.html">cargoat.actions.pick</a></code>, <code><a title="cargoat.actions.reveal" href="reveal.html">cargoat.actions.reveal</a></code>, and
+<code><a title="cargoat.actions.car" href="car.html">cargoat.actions.car</a></code> for more information.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>target</code></strong> :&ensp;<code>'cars', 'picked',</code> or <code>'revealed'</code></dt>
+<dd>Attribute array of <code><a title="cargoat.sim.MontyHallSim" href="../sim.html#cargoat.sim.MontyHallSim">MontyHallSim</a></code> to target.</dd>
+<dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
+<dd>Argument for specifying how many/which doors to select. The default is 1.
+Possible options are as follows:
+- a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)
+- a list of integers with <code>weighted=False</code> is interpeted as
+specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
+index 0 and index 2.
+- a list of integers with <code>weighted=True</code> is interpreted as
+probabilities/weights for selecting a single door.
+The length
+of the weights can be either a) the same as the number of doors
+or b) less than the number of doors.
+In the latter case, the
+number of weights must align with the number of selectable
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+<dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat the first argument as weights (see docs above).
+The default is False.</dd>
+<dt><strong><code>behavior</code></strong> :&ensp;<code>'add', 'overwrite',</code> or <code>'remove'</code>, optional</dt>
+<dd>How to treat the the new selections when applying them to the
+simulation. The default is 'overwrite'.
+- overwrite: new selections should simply replace the current target array.
+- add: any 1s in the new selections should be added to any 1s in
+the current target array (essentially an "or" operation)
+- remove: any 1s in the new selection should indicate places to remove 1s
+in the current array.</dd>
+<dt><strong><code>exclude_picked</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Disallow selection of picked doors. The default is False.</dd>
+<dt><strong><code>exclude_revealed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Disallow selection of revealed doors. The default is False.</dd>
+<dt><strong><code>exclude_cars</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Disallow selection of doors with cars. The default is False.</dd>
+<dt><strong><code>exclude_unpicked</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Disallow selection of unpicked doors. The default is False.</dd>
+<dt><strong><code>exclude_closed</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Disallow selection of closed doors. The default is False.</dd>
+<dt><strong><code>exclude_carless</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Disallow selection of doors with goats. The default is False.</dd>
+<dt><strong><code>allow_spoiled</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error of the game is spoiled. The default is False.
+Spoiled games are recorded in the <code>spoiled</code> attribute of the
+simulation.</dd>
+<dt><strong><code>allow_redundant</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Do not throw an error if doors that are already set/unset are
+selected to be redundantly set/unset (respectively).
+The default is True.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd><code>target</code> or <code>behavior</code> not in acceptable options, or problem
+interpreting <code>doors</code> as weights when <code>weights=True</code>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenericAction(MontyHallAction):
+    def __init__(self, target, doors=1, weighted=False, behavior=&#39;overwrite&#39;,
+                 exclude_picked=False, exclude_revealed=False, exclude_cars=False,
+                 exclude_unpicked=False,exclude_closed=False, exclude_carless=False,
+                 allow_spoiled=False, allow_redundant=True):
+        &#39;&#39;&#39;
+        Generic class for covering many actions in the Monty Hall game.
+
+        Most boil down to altering the cars, picked, or revealed array
+        of the MontyHallSim.  This class abstracts the specific array being
+        targeted,  allowing the same selection operations to be applied.
+
+        This action covers selecting 1 or more doors with uniform probability,
+        selecting 1 or more doors by index, or selecting one door with
+        weighted probabilities for each door.
+
+        This class is intended to cover picking, revealing, and placing cars,
+        as well as the negation of those actions.  Subclasses of this class
+        tailor/mask some of the options from GenericAction where appropriate.
+        See `cargoat.actions.pick`, `cargoat.actions.reveal`, and
+        `cargoat.actions.car` for more information.
+
+        Parameters
+        ----------
+        target : &#39;cars&#39;, &#39;picked&#39;, or &#39;revealed&#39;
+            Attribute array of `cargoat.sim.MontyHallSim` to target.
+        doors : int or list-like, optional
+            Argument for specifying how many/which doors to select. The default is 1.
+            Possible options are as follows:
+            - a single integer is interpreted as the number of doors to
+            select (randomly, with equal probability)
+            - a list of integers with `weighted=False` is interpeted as
+            specific doors to pick, e.g. `[0, 2]` selects the doors at
+            index 0 and index 2.
+            - a list of integers with `weighted=True` is interpreted as
+            probabilities/weights for selecting a single door.  The length
+            of the weights can be either a) the same as the number of doors
+            or b) less than the number of doors.  In the latter case, the
+            number of weights must align with the number of selectable
+            doors per row, based on the `exclude_...` arguments below.
+        weighted : bool, optional
+            Treat the first argument as weights (see docs above).
+            The default is False.
+        behavior : &#39;add&#39;, &#39;overwrite&#39;, or &#39;remove&#39;, optional
+            How to treat the the new selections when applying them to the
+            simulation. The default is &#39;overwrite&#39;.
+            - overwrite: new selections should simply replace the current target array.
+            - add: any 1s in the new selections should be added to any 1s in
+            the current target array (essentially an &#34;or&#34; operation)
+            - remove: any 1s in the new selection should indicate places to remove 1s
+            in the current array.
+        exclude_picked : bool, optional
+            Disallow selection of picked doors. The default is False.
+        exclude_revealed : bool, optional
+            Disallow selection of revealed doors. The default is False.
+        exclude_cars : bool, optional
+            Disallow selection of doors with cars. The default is False.
+        exclude_unpicked : bool, optional
+            Disallow selection of unpicked doors. The default is False.
+        exclude_closed : bool, optional
+            Disallow selection of closed doors. The default is False.
+        exclude_carless : bool, optional
+            Disallow selection of doors with goats. The default is False.
+        allow_spoiled : bool, optional
+            Do not throw an error of the game is spoiled. The default is False.
+            Spoiled games are recorded in the `spoiled` attribute of the
+            simulation.
+        allow_redundant : bool, optional
+            Do not throw an error if doors that are already set/unset are
+            selected to be redundantly set/unset (respectively).
+            The default is True.
+
+        Raises
+        ------
+        ValueError
+            `target` or `behavior` not in acceptable options, or problem
+            interpreting `doors` as weights when `weights=True`.
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+
+        if target not in (&#39;picked&#39;, &#39;revealed&#39;, &#39;cars&#39;):
+            raise ValueError(&#39;Target must be &#34;picked&#34;, &#34;revealed&#34;, &#39;
+                             f&#39;or &#34;cars&#34;, not {target}.&#39;)
+        if behavior not in (&#34;overwrite&#34;, &#34;add&#34;, &#34;remove&#34;):
+            raise ValueError(&#39;`behavior` must be &#34;overwrite&#34;, &#34;add&#34; or &#34;remove&#34;&#39;)
+
+        self.target = target
+        self.doors = doors
+        self.weighted = weighted
+        self.behavior = behavior
+        self.exclude_picked = exclude_picked
+        self.exclude_revealed = exclude_revealed
+        self.exclude_cars = exclude_cars
+        self.exclude_unpicked = exclude_unpicked
+        self.exclude_closed = exclude_closed
+        self.exclude_carless = exclude_carless
+        self.allow_spoiled = allow_spoiled
+        self.allow_redundant = allow_redundant
+
+    def __call__(self, sim):
+        # choice = self.doors
+
+        allowed = ~sim.query_doors_or(picked=self.exclude_picked,
+                                      revealed=self.exclude_revealed,
+                                      cars=self.exclude_cars,
+                                      not_picked=self.exclude_unpicked,
+                                      not_revealed=self.exclude_closed,
+                                      not_cars=self.exclude_carless)
+
+        if self.doors == 1:
+            new_array = one_per_row(sim.shape, allowed=allowed)
+            n = 1
+        elif isinstance(self.doors , int):
+            new_array = n_per_row(sim.shape, n=self.doors, allowed=allowed)
+            n = self.doors
+        elif isinstance(self.doors, Iterable) and not self.weighted:
+            new_array = np.zeros(sim.shape, dtype=int)
+            new_array[:, self.doors] = 1
+            n = len(self.doors)
+        elif isinstance(self.doors, Iterable) and self.weighted:
+            new_array = one_per_row_weighted(sim.shape, weights=self.doors,
+                                             allowed=allowed)
+            n = 1
+        else:
+            raise ValueError(&#39;Cannot interpret `doors` as an integer, &#39;
+                             &#39;choice array, or weighted choice array. &#39;
+                             &#39;Please see documentation.&#39;)
+
+        sim._set_array(target=self.target,
+                       new_array=new_array,
+                       behavior=self.behavior,
+                       n_per_row=n,
+                       allow_spoiled=self.allow_spoiled,
+                       allow_redundant=self.allow_redundant)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.car.PlaceCar" href="car.html#cargoat.actions.car.PlaceCar">PlaceCar</a></li>
+<li><a title="cargoat.actions.car.RemoveCar" href="car.html#cargoat.actions.car.RemoveCar">RemoveCar</a></li>
+<li><a title="cargoat.actions.pick.Pick" href="pick.html#cargoat.actions.pick.Pick">Pick</a></li>
+<li><a title="cargoat.actions.pick.Unpick" href="pick.html#cargoat.actions.pick.Unpick">Unpick</a></li>
+<li><a title="cargoat.actions.reveal.Close" href="reveal.html#cargoat.actions.reveal.Close">Close</a></li>
+<li><a title="cargoat.actions.reveal.Reveal" href="reveal.html#cargoat.actions.reveal.Reveal">Reveal</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cargoat.actions" href="index.html">cargoat.actions</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="cargoat.actions.generic.GenericAction" href="#cargoat.actions.generic.GenericAction">GenericAction</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
