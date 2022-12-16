@@ -3,7 +3,7 @@ Cargoat is a package for creating custom [Monty Hall game](https://en.wikipedia.
 
 ![](https://raw.githubusercontent.com/earnestt1234/cargoat/main/img/goat_in_a_car.jpg)
 
-[Wikimedia](https://commons.wikimedia.org/wiki/File:Goat_in_a_car.jpg)
+Source: [Wikimedia](https://commons.wikimedia.org/wiki/File:Goat_in_a_car.jpg)
 
 ## About
 
