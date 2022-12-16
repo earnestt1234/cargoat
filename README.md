@@ -7,10 +7,10 @@ Source: [Wikimedia](https://commons.wikimedia.org/wiki/File:Goat_in_a_car.jpg)
 
 ## About
 
-I started working on cargoat after Monty-Hall-related-confusion induced by a recent statistics class.  My main goals were to:
+I started working on cargoat after Monty-Hall-related-confusion induced by a recent statistics class.  My main goals were to create a simulation framework that:
 
-- Allow for arbitrary combination of actions by player & host.
-- Implement the repeated simulations and actions with array operations, rather than for loops.
+- allows for arbitrary combination of actions by player & host.
+- implements the repeated simulations and actions with numpy array operations, rather than for loops.
 
 If you are (like me) curious about the Monty Hall problem and all its variations, hopefully you will enjoy tinkering with this library.  Though if you are new to learning about Python or Monty Hall, creating your own implementation will likely be far more valuable!
 
