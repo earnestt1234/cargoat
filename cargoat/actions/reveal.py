@@ -9,7 +9,6 @@ Created on Wed Nov 16 20:37:53 2022
 from cargoat.actions.generic import GenericAction
 
 class Reveal(GenericAction):
-    '''Class to model the host opening a door.'''
     def __init__(self, doors=1, weighted=False, exclude_current=True,
                  exclude_cars=True, exclude_picked=True,
                  allow_spoiled=False, allow_redundant=True):
@@ -21,8 +20,9 @@ class Reveal(GenericAction):
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to reveal. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -34,6 +34,7 @@ class Reveal(GenericAction):
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -73,7 +74,6 @@ class Reveal(GenericAction):
                          allow_spoiled=allow_spoiled)
 
 class Close(GenericAction):
-    '''Class to model the host closing previously revealed doors.'''
     def __init__(self, doors=1, weighted=False, exclude_current=True,
                  allow_spoiled=False, allow_redundant=True):
         '''
@@ -82,8 +82,9 @@ class Close(GenericAction):
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to close. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -95,6 +96,7 @@ class Close(GenericAction):
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.

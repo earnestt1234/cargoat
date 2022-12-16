@@ -72,8 +72,9 @@ class GenericAction(MontyHallAction):
         target : &#39;cars&#39;, &#39;picked&#39;, or &#39;revealed&#39;
             Attribute array of `cargoat.sim.MontyHallSim` to target.
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to select. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -85,6 +86,7 @@ class GenericAction(MontyHallAction):
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -219,21 +221,25 @@ See <code><a title="cargoat.actions.pick" href="pick.html">cargoat.actions.pick<
 <dt><strong><code>target</code></strong> :&ensp;<code>'cars', 'picked',</code> or <code>'revealed'</code></dt>
 <dd>Attribute array of <code><a title="cargoat.sim.MontyHallSim" href="../sim.html#cargoat.sim.MontyHallSim">MontyHallSim</a></code> to target.</dd>
 <dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
-<dd>Argument for specifying how many/which doors to select. The default is 1.
-Possible options are as follows:
-- a single integer is interpreted as the number of doors to
-select (randomly, with equal probability)
-- a list of integers with <code>weighted=False</code> is interpeted as
+<dd>
+<p>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:</p>
+<ul>
+<li>a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)</li>
+<li>a list of integers with <code>weighted=False</code> is interpeted as
 specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
-index 0 and index 2.
-- a list of integers with <code>weighted=True</code> is interpreted as
+index 0 and index 2.</li>
+<li>a list of integers with <code>weighted=True</code> is interpreted as
 probabilities/weights for selecting a single door.
 The length
 of the weights can be either a) the same as the number of doors
 or b) less than the number of doors.
 In the latter case, the
 number of weights must align with the number of selectable
-doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</li>
+</ul>
+</dd>
 <dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat the first argument as weights (see docs above).
 The default is False.</dd>
@@ -305,8 +311,9 @@ interpreting <code>doors</code> as weights when <code>weights=True</code>.</dd>
         target : &#39;cars&#39;, &#39;picked&#39;, or &#39;revealed&#39;
             Attribute array of `cargoat.sim.MontyHallSim` to target.
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to select. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -318,6 +325,7 @@ interpreting <code>doors</code> as weights when <code>weights=True</code>.</dd>
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.

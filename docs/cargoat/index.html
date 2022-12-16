@@ -599,26 +599,29 @@ problem trials as spoiled, but don't stop the simulation) or
 <span>(</span><span>doors=1, weighted=False, exclude_current=True, allow_spoiled=False, allow_redundant=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Class to model the host closing previously revealed doors.</p>
-<p>Class to model the host closing one or more revealed doors.</p>
+<div class="desc"><p>Class to model the host closing one or more revealed doors.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
-<dd>Argument for specifying how many/which doors to close. The default is 1.
-Possible options are as follows:
-- a single integer is interpreted as the number of doors to
-select (randomly, with equal probability)
-- a list of integers with <code>weighted=False</code> is interpeted as
+<dd>
+<p>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:</p>
+<ul>
+<li>a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)</li>
+<li>a list of integers with <code>weighted=False</code> is interpeted as
 specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
-index 0 and index 2.
-- a list of integers with <code>weighted=True</code> is interpreted as
+index 0 and index 2.</li>
+<li>a list of integers with <code>weighted=True</code> is interpreted as
 probabilities/weights for selecting a single door.
 The length
 of the weights can be either a) the same as the number of doors
 or b) less than the number of doors.
 In the latter case, the
 number of weights must align with the number of selectable
-doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</li>
+</ul>
+</dd>
 <dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat the first argument as weights (see docs above).
 The default is False.</dd>
@@ -641,7 +644,6 @@ The default is True.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Close(GenericAction):
-    &#39;&#39;&#39;Class to model the host closing previously revealed doors.&#39;&#39;&#39;
     def __init__(self, doors=1, weighted=False, exclude_current=True,
                  allow_spoiled=False, allow_redundant=True):
         &#39;&#39;&#39;
@@ -650,8 +652,9 @@ The default is True.</dd>
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to close. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -663,6 +666,7 @@ The default is True.</dd>
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -2133,28 +2137,31 @@ newly created simulation. The default is True.</dd>
 <span>(</span><span>doors=1, weighted=False, exclude_current=True, exclude_revealed=True, add=False, allow_spoiled=False, allow_redundant=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Class modeling the contestant picking a door.</p>
-<p>Class to model the contestant picking one or more doors.
+<div class="desc"><p>Class to model the contestant picking one or more doors.
 Picks are significant for determining the winners of games -
 trials where doors containing cars are picked are considered wins.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
-<dd>Argument for specifying how many/which doors to pick. The default is 1.
-Possible options are as follows:
-- a single integer is interpreted as the number of doors to
-select (randomly, with equal probability)
-- a list of integers with <code>weighted=False</code> is interpeted as
+<dd>
+<p>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:</p>
+<ul>
+<li>a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)</li>
+<li>a list of integers with <code>weighted=False</code> is interpeted as
 specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
-index 0 and index 2.
-- a list of integers with <code>weighted=True</code> is interpreted as
+index 0 and index 2.</li>
+<li>a list of integers with <code>weighted=True</code> is interpreted as
 probabilities/weights for selecting a single door.
 The length
 of the weights can be either a) the same as the number of doors
 or b) less than the number of doors.
 In the latter case, the
 number of weights must align with the number of selectable
-doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</li>
+</ul>
+</dd>
 <dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat the first argument as weights (see docs above).
 The default is False.</dd>
@@ -2185,7 +2192,6 @@ The default is True.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Pick(GenericAction):
-    &#39;&#39;&#39;Class modeling the contestant picking a door.&#39;&#39;&#39;
     def __init__(self, doors=1, weighted=False, exclude_current=True,
                  exclude_revealed=True, add=False, allow_spoiled=False,
                  allow_redundant=True):
@@ -2197,8 +2203,9 @@ The default is True.</dd>
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to pick. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -2210,6 +2217,7 @@ The default is True.</dd>
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -2267,21 +2275,25 @@ considered wins.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
-<dd>Argument for specifying how many/which doors to place cars behind.
-The default is 1. Possible options are as follows:
-- a single integer is interpreted as the number of doors to
-select (randomly, with equal probability)
-- a list of integers with <code>weighted=False</code> is interpeted as
+<dd>
+<p>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:</p>
+<ul>
+<li>a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)</li>
+<li>a list of integers with <code>weighted=False</code> is interpeted as
 specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
-index 0 and index 2.
-- a list of integers with <code>weighted=True</code> is interpreted as
+index 0 and index 2.</li>
+<li>a list of integers with <code>weighted=True</code> is interpreted as
 probabilities/weights for selecting a single door.
 The length
 of the weights can be either a) the same as the number of doors
 or b) less than the number of doors.
 In the latter case, the
 number of weights must align with the number of selectable
-doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</li>
+</ul>
+</dd>
 <dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat the first argument as weights (see docs above).
 The default is False.</dd>
@@ -2321,6 +2333,7 @@ The default is True.</dd>
         doors : int or list-like, optional
             Argument for specifying how many/which doors to place cars behind.
             The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -2332,6 +2345,7 @@ The default is True.</dd>
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -2435,21 +2449,25 @@ doors.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
-<dd>Argument for specifying how many/which doors to remove cars from.
-The default is 1. Possible options are as follows:
-- a single integer is interpreted as the number of doors to
-select (randomly, with equal probability)
-- a list of integers with <code>weighted=False</code> is interpeted as
+<dd>
+<p>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:</p>
+<ul>
+<li>a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)</li>
+<li>a list of integers with <code>weighted=False</code> is interpeted as
 specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
-index 0 and index 2.
-- a list of integers with <code>weighted=True</code> is interpreted as
+index 0 and index 2.</li>
+<li>a list of integers with <code>weighted=True</code> is interpreted as
 probabilities/weights for selecting a single door.
 The length
 of the weights can be either a) the same as the number of doors
 or b) less than the number of doors.
 In the latter case, the
 number of weights must align with the number of selectable
-doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</li>
+</ul>
+</dd>
 <dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat the first argument as weights (see docs above).
 The default is False.</dd>
@@ -2486,8 +2504,9 @@ The default is True.</dd>
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to remove cars from.
+            Argument for specifying how many/which doors to place cars behind.
             The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -2499,6 +2518,7 @@ The default is True.</dd>
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -2586,28 +2606,31 @@ See <code>np.remove</code> for more details.</dd>
 <span>(</span><span>doors=1, weighted=False, exclude_current=True, exclude_cars=True, exclude_picked=True, allow_spoiled=False, allow_redundant=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Class to model the host opening a door.</p>
-<p>Class to model the host revealing one or more doors.
+<div class="desc"><p>Class to model the host revealing one or more doors.
 Revealed doors are significant for directing what information
 the player knows, and which further actions are acceptable.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
-<dd>Argument for specifying how many/which doors to reveal. The default is 1.
-Possible options are as follows:
-- a single integer is interpreted as the number of doors to
-select (randomly, with equal probability)
-- a list of integers with <code>weighted=False</code> is interpeted as
+<dd>
+<p>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:</p>
+<ul>
+<li>a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)</li>
+<li>a list of integers with <code>weighted=False</code> is interpeted as
 specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
-index 0 and index 2.
-- a list of integers with <code>weighted=True</code> is interpreted as
+index 0 and index 2.</li>
+<li>a list of integers with <code>weighted=True</code> is interpreted as
 probabilities/weights for selecting a single door.
 The length
 of the weights can be either a) the same as the number of doors
 or b) less than the number of doors.
 In the latter case, the
 number of weights must align with the number of selectable
-doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</li>
+</ul>
+</dd>
 <dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat the first argument as weights (see docs above).
 The default is False.</dd>
@@ -2638,7 +2661,6 @@ The default is True.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Reveal(GenericAction):
-    &#39;&#39;&#39;Class to model the host opening a door.&#39;&#39;&#39;
     def __init__(self, doors=1, weighted=False, exclude_current=True,
                  exclude_cars=True, exclude_picked=True,
                  allow_spoiled=False, allow_redundant=True):
@@ -2650,8 +2672,9 @@ The default is True.</dd>
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to reveal. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -2663,6 +2686,7 @@ The default is True.</dd>
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -2834,8 +2858,7 @@ applying action <code>a</code>.</p>
 <span>(</span><span>doors=1, weighted=False, exclude_current=True, allow_spoiled=False, allow_redundant=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Class modeling the contestant deselecting a door.</p>
-<p>Class to model the contestant deselecting ("unpicking") one or more
+<div class="desc"><p>Class to model the contestant deselecting ("unpicking") one or more
 doors.</p>
 <p>Note that this action does not need to be explicitly called switching
 picks from one door to another, for example when switching doors in the
@@ -2845,21 +2868,25 @@ picked door without assiging a new pick.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>doors</code></strong> :&ensp;<code>int</code> or <code>list-like</code>, optional</dt>
-<dd>Argument for specifying how many/which doors to unpick. The default is 1.
-Possible options are as follows:
-- a single integer is interpreted as the number of doors to
-select (randomly, with equal probability)
-- a list of integers with <code>weighted=False</code> is interpeted as
+<dd>
+<p>Argument for specifying how many/which doors to place cars behind.
+The default is 1. Possible options are as follows:</p>
+<ul>
+<li>a single integer is interpreted as the number of doors to
+select (randomly, with equal probability)</li>
+<li>a list of integers with <code>weighted=False</code> is interpeted as
 specific doors to pick, e.g. <code>[0, 2]</code> selects the doors at
-index 0 and index 2.
-- a list of integers with <code>weighted=True</code> is interpreted as
+index 0 and index 2.</li>
+<li>a list of integers with <code>weighted=True</code> is interpreted as
 probabilities/weights for selecting a single door.
 The length
 of the weights can be either a) the same as the number of doors
 or b) less than the number of doors.
 In the latter case, the
 number of weights must align with the number of selectable
-doors per row, based on the <code>exclude_&hellip;</code> arguments below.</dd>
+doors per row, based on the <code>exclude_&hellip;</code> arguments below.</li>
+</ul>
+</dd>
 <dt><strong><code>weighted</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat the first argument as weights (see docs above).
 The default is False.</dd>
@@ -2882,8 +2909,6 @@ The default is True.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Unpick(GenericAction):
-    &#39;&#39;&#39;Class modeling the contestant deselecting a door.&#39;&#39;&#39;
-
     def __init__(self, doors=1, weighted=False, exclude_current=True,
                  allow_spoiled=False, allow_redundant=True):
         &#39;&#39;&#39;
@@ -2898,8 +2923,9 @@ The default is True.</dd>
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to unpick. The default is 1.
-            Possible options are as follows:
+            Argument for specifying how many/which doors to place cars behind.
+            The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -2911,6 +2937,7 @@ The default is True.</dd>
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.

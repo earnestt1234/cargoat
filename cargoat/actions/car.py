@@ -23,6 +23,7 @@ class PlaceCar(GenericAction):
         doors : int or list-like, optional
             Argument for specifying how many/which doors to place cars behind.
             The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -34,6 +35,7 @@ class PlaceCar(GenericAction):
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
@@ -77,8 +79,9 @@ class RemoveCar(GenericAction):
         Parameters
         ----------
         doors : int or list-like, optional
-            Argument for specifying how many/which doors to remove cars from.
+            Argument for specifying how many/which doors to place cars behind.
             The default is 1. Possible options are as follows:
+
             - a single integer is interpreted as the number of doors to
             select (randomly, with equal probability)
             - a list of integers with `weighted=False` is interpeted as
@@ -90,6 +93,7 @@ class RemoveCar(GenericAction):
             or b) less than the number of doors.  In the latter case, the
             number of weights must align with the number of selectable
             doors per row, based on the `exclude_...` arguments below.
+
         weighted : bool, optional
             Treat the first argument as weights (see docs above).
             The default is False.
