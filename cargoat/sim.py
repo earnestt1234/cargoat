@@ -177,7 +177,7 @@ class MontyHallSim:
         None.
 
         '''
-        self.n = n
+        self.n = int(n)
 
         self.make_empty()
 
