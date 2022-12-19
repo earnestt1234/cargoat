@@ -277,6 +277,16 @@ class MontyHallSim:
 
         return self.picked.shape
 
+
+    # ---- Initialization
+    def init_doors(self, doors):
+        '''Populate arrays with zeros.'''
+        shape = (self.n, doors)
+        self.cars = np.zeros(shape, dtype=int)
+        self.picked = np.zeros(shape, dtype=int)
+        self.revealed = np.zeros(shape, dtype=int)
+        self.spoiled = np.zeros(self.n, dtype=int)
+
     # ---- Indexing
     def select(self, x=None, y=None, copy=True):
         '''

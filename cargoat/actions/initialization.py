@@ -29,11 +29,7 @@ class InitDoorsEmpty(MontyHallAction):
         self.doors = doors
 
     def __call__(self, sim):
-        shape = (sim.n, self.doors)
-        sim.cars = np.zeros(shape, dtype=int)
-        sim.picked = np.zeros(shape, dtype=int)
-        sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.init_doors(self.doors)
 
 class InitDoorsFixed(MontyHallAction):
     def __init__(self, placement=(1, 0, 0)):
