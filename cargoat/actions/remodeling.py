@@ -48,8 +48,11 @@ class RemoveDoors(MontyHallAction):
         self.positions = positions
 
     def __call__(self, sim):
-        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
-        sim.apply_func(foo)
+        if set(self.positions) == set(range(sim.shape[1])):
+            sim.make_empty()
+        else:
+            foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+            sim.apply_func(foo)
 
 class RearrangeDoors(MontyHallAction):
     def __init__(self, positions):

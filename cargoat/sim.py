@@ -179,10 +179,7 @@ class MontyHallSim:
         '''
         self.n = n
 
-        self.cars = np.empty(0)
-        self.picked = np.empty(0)
-        self.revealed = np.empty(0)
-        self.spoiled = np.empty(0)
+        self.make_empty()
 
     # ---- Class methods
 
@@ -277,6 +274,13 @@ class MontyHallSim:
 
         return self.picked.shape
 
+    @property
+    def empty(self):
+        '''Determine if the sim is "empty" - this is the status it should
+        have prior to applying any operations.'''
+        arrs = [self.cars, self.picked, self.revealed, self.spoiled]
+        return all(a.size == 0 for a in arrs)
+
 
     # ---- Initialization
     def init_doors(self, doors):
@@ -286,6 +290,13 @@ class MontyHallSim:
         self.picked = np.zeros(shape, dtype=int)
         self.revealed = np.zeros(shape, dtype=int)
         self.spoiled = np.zeros(self.n, dtype=int)
+
+    def make_empty(self):
+        '''Save empty arrays into main arrays.'''
+        self.cars = np.empty(0, dtype=int)
+        self.picked = np.empty(0, dtype=int)
+        self.revealed = np.empty(0, dtype=int)
+        self.spoiled = np.empty(0, dtype=int)
 
     # ---- Indexing
     def select(self, x=None, y=None, copy=True):
