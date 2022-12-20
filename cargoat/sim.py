@@ -5,6 +5,8 @@ Module for the cargoat `MontyHallSimulation` class, which is used for
 running a given Monty Hall experiment many times.
 """
 
+import warnings
+
 import numpy as np
 
 from cargoat.arrayops import get_index_success
@@ -248,6 +250,12 @@ class MontyHallSim:
         if len(spoiled) != n:
             raise ValueError('spoiled array does not match')
 
+        for a in (cars, picked, revealed, spoiled):
+            uniq = np.unique(a)
+            if any(u not in (0, 1) for u in uniq):
+                msg = ("Non-binary integer detected in incoming arrays.")
+                warnings.warn(RuntimeWarning(msg))
+
         copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
         out = cls(n)
@@ -299,7 +307,7 @@ class MontyHallSim:
         self.spoiled = np.empty(0, dtype=int)
 
     # ---- Indexing
-    def select(self, x=None, y=None, copy=True):
+    def select(self, x=None, y=None, copy=True, use_ix_=True):
         '''
         Index the simulation to create a new one.
 
@@ -314,6 +322,11 @@ class MontyHallSim:
         copy : bool, optional
             Create an explicit copy of the arrays before binding to the
             newly created simulation. The default is True.
+        use_ix_ : bool, optional
+            Use `np.ix_` when passing `x` and `y`.  This is typically
+            necessary for selecting doors and trials simultaneously -
+            indexing both rows and columns is not as simple as passing
+            `arr[x, y]`.
 
         Returns
         -------
@@ -321,8 +334,18 @@ class MontyHallSim:
             New simulation object.
 
         '''
+        # this prevents loss of dimension for selecting single doors
+        x = [x] if isinstance(x, int) else x
+        y = [y] if isinstance(y, int) else y
+
+        # this allows for selection of trials and doors simulataneously
+        if x is not None and y is not None and use_ix_:
+            x, y = np.ix_(x, y)
+
+        # this allows indexing of only one axis
         x = slice(None) if x is None else x
         y = slice(None) if y is None else y
+
         copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
         cars = copyfun(self.cars[x, y])
