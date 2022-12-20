@@ -194,3 +194,63 @@ class TestSelect:
         sim.picked = np.arange(9).reshape((3, 3))
         new = sim.select(x=0, y=2, copy=True)
         assert (new.picked.sum() == 2)
+
+    def test_no_copy(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        new = sim.select(x=None, y=None, copy=False)
+        new.picked[0, 0] = 42
+        assert (sim.picked[0, 0] == 42)
+
+    def test_copy(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        new = sim.select(x=None, y=None, copy=True)
+        new.picked[0, 0] = 42
+        assert (sim.picked[0, 0] == 0)
+
+    @pytest.mark.filterwarnings('ignore:Non-binary')
+    def test_boolean_x(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        sim.picked = np.arange(9).reshape((3, 3))
+        new = sim.select(x=[True, False, True], y=None, copy=True)
+        assert (new.picked.sum() == 0 + 1 + 2 + 6 + 7 + 8)
+
+    @pytest.mark.filterwarnings('ignore:Non-binary')
+    def test_boolean_y(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        sim.picked = np.arange(9).reshape((3, 3))
+        new = sim.select(x=None, y=[True, False, True], copy=True)
+        assert (new.picked.sum() == 0 + 3 + 6 + 2 + 5 + 8)
+
+    @pytest.mark.filterwarnings('ignore:Non-binary')
+    def test_boolean_both(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        sim.picked = np.arange(9).reshape((3, 3))
+        new = sim.select(x=[True, False, True], y=[True, False, True], copy=True)
+        assert (new.picked.sum() == 0 + 6 + 2 + 8)
+
+class TestSimStatusFuncs:
+
+    def generate_pickable_sim(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        sim.picked = np.identity(3, dtype=int)
+        return sim
+
+    def test_pickable_doors_exlcude_current(self):
+        sim = self.generate_pickable_sim()
+        picked = np.array([[0, 1, 1],
+                           [1, 0, 1],
+                           [1, 1, 0]]).astype(bool)
+        assert (sim.pickable_doors(exclude_current=True) == picked).all()
+
+    def test_pickable_doors_not_exlcude_current(self):
+        sim = self.generate_pickable_sim()
+        picked = np.array([[1, 1, 1],
+                           [1, 1, 1],
+                           [1, 1, 1]]).astype(bool)
+        assert (sim.pickable_doors(exclude_current=False) == picked).all()

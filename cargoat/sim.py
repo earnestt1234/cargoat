@@ -321,7 +321,11 @@ class MontyHallSim:
             in which case all doors are selected.
         copy : bool, optional
             Create an explicit copy of the arrays before binding to the
-            newly created simulation. The default is True.
+            newly created simulation. The default is True.  Note that
+            many indexing operations with this function trigger numpy advanced
+            indexing and thus create copies of the main arrays.
+            For now, copy is set to default and wastefully create more copies.
+            This may be optimized in the future.
         use_ix_ : bool, optional
             Use `np.ix_` when passing `x` and `y`.  This is typically
             necessary for selecting doors and trials simultaneously -
@@ -339,7 +343,7 @@ class MontyHallSim:
         y = [y] if isinstance(y, int) else y
 
         # this allows for selection of trials and doors simulataneously
-        if x is not None and y is not None and use_ix_:
+        if (x is not None and y is not None) and use_ix_:
             x, y = np.ix_(x, y)
 
         # this allows indexing of only one axis
