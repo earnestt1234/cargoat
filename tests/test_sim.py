@@ -6,6 +6,8 @@ Created on Sun Dec 18 23:00:59 2022
 @author: earnestt1234
 """
 
+import itertools as it
+
 import numpy as np
 import pytest
 
@@ -241,16 +243,64 @@ class TestSimStatusFuncs:
         sim.picked = np.identity(3, dtype=int)
         return sim
 
+    def generate_revealable_sim(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        sim.cars[:, 0] = 1
+        sim.picked[:, 1] = 1
+        sim.revealed[:, 2] = 1
+        return sim
+
     def test_pickable_doors_exlcude_current(self):
         sim = self.generate_pickable_sim()
-        picked = np.array([[0, 1, 1],
+        pickable = np.array([[0, 1, 1],
                            [1, 0, 1],
                            [1, 1, 0]]).astype(bool)
-        assert (sim.pickable_doors(exclude_current=True) == picked).all()
+        assert (sim.pickable_doors(exclude_current=True) == pickable).all()
 
     def test_pickable_doors_not_exlcude_current(self):
         sim = self.generate_pickable_sim()
-        picked = np.array([[1, 1, 1],
+        pickable = np.array([[1, 1, 1],
                            [1, 1, 1],
                            [1, 1, 1]]).astype(bool)
-        assert (sim.pickable_doors(exclude_current=False) == picked).all()
+        assert (sim.pickable_doors(exclude_current=False) == pickable).all()
+
+    def test_query_doors_or_all_combos(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        sim.cars[:, 0] = 1
+        sim.picked[:, 1] = 1
+        sim.revealed[:, 2] = 1
+
+        names = ['cars', 'picked', 'revealed',
+                 'not_cars', 'not_picked', 'not_revealed']
+
+        def _validate_query(query, cars=False, picked=False, revealed=False,
+                            not_cars=False, not_picked=False, not_revealed=False):
+            bools = []
+            if cars:
+                bools.append(query[:, 0].all())
+            if picked:
+                bools.append(query[:, 1].all())
+            if revealed:
+                bools.append(query[:, 2].all())
+            if not_cars:
+                bools.append(query[:, [1, 2]].all())
+            if not_picked:
+                bools.append(query[:, [0, 2]].all())
+            if not_revealed:
+                bools.append(query[:, [0, 1]].all())
+
+            return all(bools)
+
+        validations = []
+
+        for bools in it.product((True, False), repeat=6):
+            args = dict(zip(names, bools))
+            query = sim.query_doors_or(**args)
+            ans = _validate_query(query, **args)
+            validations.append(ans)
+
+        assert(all(validations))
+
+
