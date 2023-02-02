@@ -498,6 +498,10 @@ class MontyHallSim:
                  'revealed': BadReveal,
                  'picked': BadPick}[target]
 
+        if new_array.shape != self.shape:
+            raise ValueError(f'New array shape {new_array.shape} '
+                             f'does not match current shape {self.shape}')
+
         # apply checks if requested
         if n_per_row is not None:
             check_n_per_row(a=new_array, n=n_per_row, etype=etype)

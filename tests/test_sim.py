@@ -14,6 +14,7 @@ import pytest
 import cargoat as cg
 
 main_arrays = ['cars', 'revealed', 'picked']
+main_etypes = [cg.errors.BadCar, cg.errors.BadReveal, cg.errors.BadPick]
 all_arrays = main_arrays + ['spoiled']
 
 class TestSimInitializationN:
@@ -311,4 +312,32 @@ class TestSimStatusFuncs:
         assert (revealable == answer).all()
 
 class TestSimSetArray:
-    ...
+
+    def generate_blank_sim(self):
+        sim = cg.MontyHallSim(5)
+        sim.init_doors(3)
+        return sim
+
+    @pytest.mark.parametrize("target", main_arrays)
+    def test_wrong_shape(self, target):
+        sim = self.generate_blank_sim()
+        new = np.zeros([4, 4], dtype=int)
+        with pytest.raises(ValueError):
+            sim._set_array(target, new)
+
+    @pytest.mark.parametrize("i", [0, 1, 2])
+    def test_wrong_n_per_row(self, i):
+        target = main_arrays[i]
+        etype = main_etypes[i]
+        sim = self.generate_blank_sim()
+        new = np.zeros(sim.shape, dtype=int)
+        with pytest.raises(etype):
+            sim._set_array(target, new, n_per_row=1)
+
+    @pytest.mark.parametrize("i", [0, 1, 2])
+    def test_okay_n_per_row(self, i):
+        target = main_arrays[i]
+        sim = self.generate_blank_sim()
+        new = np.ones(sim.shape, dtype=int)
+        sim._set_array(target, new, n_per_row=3)
+        assert (getattr(sim, target).sum() == np.prod(sim.shape))
