@@ -438,6 +438,9 @@ class MontyHallSim:
         elif target == 'cars':
             return self._check_spoiling_cars
 
+        else:
+            raise ValueError ('Target must be "picked", "revealed", or "cars"')
+
     def _set_array(self, target, new_array,
                    behavior='overwrite', n_per_row=None, allow_spoiled=False,
                    allow_redundant=True):

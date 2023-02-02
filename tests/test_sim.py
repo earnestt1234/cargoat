@@ -245,7 +245,7 @@ class TestSimStatusFuncs:
 
     def generate_revealable_sim(self):
         sim = cg.MontyHallSim(3)
-        sim.init_doors(3)
+        sim.init_doors(4)
         sim.cars[:, 0] = 1
         sim.picked[:, 1] = 1
         sim.revealed[:, 2] = 1
@@ -303,4 +303,12 @@ class TestSimStatusFuncs:
 
         assert(all(validations))
 
+    def test_revealable_doors(self):
+        sim = self.generate_revealable_sim()
+        revealable = sim.revealable_doors()
+        answer = np.zeros([3, 4], dtype=int)
+        answer[:, 3] = 1
+        assert (revealable == answer).all()
 
+class TestSimSetArray:
+    ...
