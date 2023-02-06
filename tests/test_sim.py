@@ -12,6 +12,7 @@ import numpy as np
 import pytest
 
 import cargoat as cg
+from cargoat.errors import BadCar, BadPick, BadReveal
 
 main_arrays = ['cars', 'revealed', 'picked']
 main_etypes = [cg.errors.BadCar, cg.errors.BadReveal, cg.errors.BadPick]
@@ -341,3 +342,91 @@ class TestSimSetArray:
         new = np.ones(sim.shape, dtype=int)
         sim._set_array(target, new, n_per_row=3)
         assert (getattr(sim, target).sum() == np.prod(sim.shape))
+
+    @pytest.mark.parametrize("i", [0, 1, 2])
+    def test_redundant_allowed(self, i):
+        target = main_arrays[i]
+        sim = self.generate_blank_sim()
+        a = getattr(sim, target)
+        a[:, 0] = 1
+        new = a.copy()
+        sim._set_array(target, new, allow_redundant=True)
+        assert (getattr(sim, target).sum() == sim.shape[0])
+
+    @pytest.mark.parametrize("i", [0, 1, 2])
+    def test_redundant_not_allowed(self, i):
+        target = main_arrays[i]
+        etype = main_etypes[i]
+        sim = self.generate_blank_sim()
+        a = getattr(sim, target)
+        a[:, 0] = 1
+        new = a.copy()
+
+        with pytest.raises(etype):
+            sim._set_array(target, new, allow_redundant=False)
+
+    @pytest.mark.parametrize("i", [0, 1, 2])
+    def test_add(self, i):
+        target = main_arrays[i]
+        sim = self.generate_blank_sim()
+        a = getattr(sim, target)
+        rows = sim.shape[0]
+        first_half = rows // 2
+        last_half = rows - first_half
+        a[:first_half, -1] = 0
+        a[:last_half, -1] = 1
+
+        new_array = np.zeros(sim.shape, dtype=int)
+        new_array[:, -1] = 1
+        sim._set_array(target, new_array, behavior='add')
+
+        assert(all(getattr(sim, target)[:, -1] == 1))
+
+    @pytest.mark.parametrize("i", [0, 1, 2])
+    def test_overwrite(self, i):
+        target = main_arrays[i]
+        sim = self.generate_blank_sim()
+        new_array = np.ones(sim.shape, dtype=int)
+        sim._set_array(target, new_array, behavior='overwrite')
+
+        assert np.all(getattr(sim, target) == 1)
+
+class TestSetArraySpoiling:
+
+    def generate_ordered_coloumn_sim(self):
+        n = 5
+        sim = cg.MontyHallSim(n)
+        sim.init_doors(4)
+        sim.cars[:, 1] = 1
+        sim.picked[:, 2] = 1
+        sim.revealed[:, 3] = 1
+        return sim
+
+    def test_pick_overwrite_not_allowed(self):
+
+        def setter(sim, new_array):
+            sim._set_array('picked', new_array,
+                           behavior='overwrite',
+                           allow_spoiled=False)
+
+        trials = []
+        sim = self.generate_ordered_coloumn_sim()
+        rows, columns = sim.shape
+        for i in range(columns):
+            sim = self.generate_ordered_coloumn_sim()
+            new_array = np.zeros(sim.shape, dtype=int)
+            new_array[:, i] = 1
+
+            if np.any(sim.revealed[:, i] == 1):
+                try:
+                    setter(sim, new_array)
+                except BadPick:
+                    trials.append(True)
+            else:
+                setter(sim, new_array)
+                trials.append(True)
+
+        assert all(trials) and len(trials) == columns
+
+
+
