@@ -402,31 +402,64 @@ class TestSetArraySpoiling:
         sim.revealed[:, 3] = 1
         return sim
 
-    def test_pick_overwrite_not_allowed(self):
+    def ordered_sim_setter_helper(self, target, behavior,
+                                  allow_spoiled, should_spoil=None,
+                                  spoil_etype=None):
 
         def setter(sim, new_array):
-            sim._set_array('picked', new_array,
-                           behavior='overwrite',
-                           allow_spoiled=False)
+            sim._set_array(target=target, new_array=new_array,
+                           behavior=behavior, allow_spoiled=allow_spoiled)
 
         trials = []
         sim = self.generate_ordered_coloumn_sim()
         rows, columns = sim.shape
+
+        if should_spoil is None:
+            should_spoil = lambda x : np.full((rows, columns), False)
+
         for i in range(columns):
+            CORRECT = False
             sim = self.generate_ordered_coloumn_sim()
             new_array = np.zeros(sim.shape, dtype=int)
             new_array[:, i] = 1
 
-            if np.any(sim.revealed[:, i] == 1):
+            expect_spoil_doors = should_spoil(sim)
+            if any(expect_spoil_doors[:, i]) and not allow_spoiled:
                 try:
                     setter(sim, new_array)
-                except BadPick:
-                    trials.append(True)
+                except spoil_etype:
+                    CORRECT = True
+
+            elif any(expect_spoil_doors[:, i]) and allow_spoiled:
+                setter(sim, new_array)
+                if all(expect_spoil_doors[:, i] == sim.spoiled):
+                    CORRECT = True
+
             else:
                 setter(sim, new_array)
-                trials.append(True)
+                CORRECT = True
+
+            trials.append(CORRECT)
 
         assert all(trials) and len(trials) == columns
+
+    def test_pick_overwrite_not_allowed(self):
+
+        should_spoil = lambda x: x.revealed.astype(bool)
+        self.ordered_sim_setter_helper(target='picked',
+                                       behavior='overwrite',
+                                       allow_spoiled=False,
+                                       should_spoil=should_spoil,
+                                       spoil_etype=BadPick)
+
+    def test_pick_overwrite_allowed(self):
+
+        should_spoil = lambda x: x.revealed.astype(bool)
+        self.ordered_sim_setter_helper(target='picked',
+                                       behavior='overwrite',
+                                       allow_spoiled=True,
+                                       should_spoil=should_spoil,
+                                       spoil_etype=BadPick)
 
 
 
