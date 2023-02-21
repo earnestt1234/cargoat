@@ -521,7 +521,7 @@ class MontyHallSim:
         if behavior == 'add':
             new_array = np.logical_or(new_array, old_array).astype(int)
         elif behavior == 'remove':
-            new_array = old_array - np.logical_and(new_array, old_array, dtype=int)
+            new_array = old_array - np.logical_and(new_array, old_array).astype(int)
             new_array[new_array < 0] = 0
 
         setattr(self, target, new_array)

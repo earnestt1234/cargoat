@@ -18,6 +18,27 @@ main_arrays = ['cars', 'revealed', 'picked']
 main_etypes = [cg.errors.BadCar, cg.errors.BadReveal, cg.errors.BadPick]
 all_arrays = main_arrays + ['spoiled']
 
+# ---- Helpers
+def generate_all_one_door_sims():
+    sims = []
+    opts = [True, False]
+    for i in opts:
+        for j in opts:
+            for k in opts:
+                sim = cg.MontyHallSim(1)
+                sim.init_doors(1)
+                if i:
+                    sim.cars[0, 0] = 1
+                if j:
+                    sim.picked[0, 0] = 1
+                if k:
+                    sim.revealed[0, 0] = 1
+                sims.append(sim)
+
+    return sims
+
+# ---- Main Testing
+
 class TestSimInitializationN:
 
     # ---- Errors
@@ -391,75 +412,50 @@ class TestSimSetArray:
 
         assert np.all(getattr(sim, target) == 1)
 
-class TestSetArraySpoiling:
 
-    def generate_ordered_coloumn_sim(self):
-        n = 5
-        sim = cg.MontyHallSim(n)
-        sim.init_doors(4)
-        sim.cars[:, 1] = 1
-        sim.picked[:, 2] = 1
-        sim.revealed[:, 3] = 1
-        return sim
+class TestSetArrayOneDoor:
 
-    def ordered_sim_setter_helper(self, target, behavior,
-                                  allow_spoiled, should_spoil=None,
-                                  spoil_etype=None):
+    @pytest.mark.parametrize("sim", generate_all_one_door_sims())
+    @pytest.mark.parametrize("target", main_arrays)
+    @pytest.mark.parametrize("behavior", ['overwrite', 'add', 'remove'])
+    @pytest.mark.parametrize("allow_spoiled", [True, False])
+    def test_set_array(self, sim, target, behavior, allow_spoiled):
+
+        allow_spoiled = False
 
         def setter(sim, new_array):
             sim._set_array(target=target, new_array=new_array,
-                           behavior=behavior, allow_spoiled=allow_spoiled)
+                           behavior=behavior, allow_spoiled=allow_spoiled,
+                           allow_redundant=True)
 
-        trials = []
-        sim = self.generate_ordered_coloumn_sim()
-        rows, columns = sim.shape
+        SUCCESS = False
 
-        if should_spoil is None:
-            should_spoil = lambda x : np.full((rows, columns), False)
+        new_array = np.ones([1, 1], dtype=int)
+        check_spoiled = sim._get_spoiling_func(target)
+        valid = check_spoiled(new_array, behavior=behavior, allow_spoiled=True)
+        should_spoil = not valid[0, 0]
+        spoil_etype = {'cars': BadCar,
+                       'revealed': BadReveal,
+                       'picked': BadPick}[target]
 
-        for i in range(columns):
-            CORRECT = False
-            sim = self.generate_ordered_coloumn_sim()
-            new_array = np.zeros(sim.shape, dtype=int)
-            new_array[:, i] = 1
-
-            expect_spoil_doors = should_spoil(sim)
-            if any(expect_spoil_doors[:, i]) and not allow_spoiled:
-                try:
-                    setter(sim, new_array)
-                except spoil_etype:
-                    CORRECT = True
-
-            elif any(expect_spoil_doors[:, i]) and allow_spoiled:
+        if should_spoil and not allow_spoiled:
+            try:
                 setter(sim, new_array)
-                if all(expect_spoil_doors[:, i] == sim.spoiled):
-                    CORRECT = True
+            except spoil_etype:
+                SUCCESS = True
 
-            else:
-                setter(sim, new_array)
-                CORRECT = True
+        elif should_spoil and allow_spoiled:
+            setter(sim, new_array)
+            if sim.spoiled[0] == 1:
+                SUCCESS = True
 
-            trials.append(CORRECT)
+        else:
+            setter(sim, new_array)
+            answer = 1 if behavior in ['add', 'overwrite'] else 0
+            SUCCESS = getattr(sim, target)[0, 0] == answer
 
-        assert all(trials) and len(trials) == columns
+        assert SUCCESS
 
-    def test_pick_overwrite_not_allowed(self):
-
-        should_spoil = lambda x: x.revealed.astype(bool)
-        self.ordered_sim_setter_helper(target='picked',
-                                       behavior='overwrite',
-                                       allow_spoiled=False,
-                                       should_spoil=should_spoil,
-                                       spoil_etype=BadPick)
-
-    def test_pick_overwrite_allowed(self):
-
-        should_spoil = lambda x: x.revealed.astype(bool)
-        self.ordered_sim_setter_helper(target='picked',
-                                       behavior='overwrite',
-                                       allow_spoiled=True,
-                                       should_spoil=should_spoil,
-                                       spoil_etype=BadPick)
 
 
 
