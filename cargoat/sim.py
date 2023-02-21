@@ -137,6 +137,8 @@ def combine_sims(sims, index=None, copy=True):
 class MontyHallSim:
     '''Class for remembering the status of the game simualtion.'''
 
+    # ---- Dunder methods
+
     def __init__(self, n):
         '''
         The MontyHallSim object tracks the game status for repeated Monty Hall
@@ -182,6 +184,18 @@ class MontyHallSim:
         self.n = int(n)
 
         self.make_empty()
+
+    def __eq__(self, sim):
+        if not isinstance(sim, MontyHallSim):
+            return False
+        elif self.shape != sim.shape:
+            return False
+        else:
+            return all([(self.cars == sim.cars).all(),
+                        (self.picked == sim.picked).all(),
+                        (self.revealed == sim.revealed).all(),
+                        (self.spoiled == sim.spoiled).all(),
+                        (self.n == sim.n)])
 
     # ---- Class methods
 
@@ -623,11 +637,14 @@ class MontyHallSim:
         MontyHallSim
 
         '''
-        return self.from_arrays(picked=self.picked,
-                                revealed=self.revealed,
-                                cars=self.cars,
-                                spoiled=self.spoiled,
-                                copy=True)
+        if self.empty:
+            return MontyHallSim(self.n)
+        else:
+            return self.from_arrays(picked=self.picked,
+                                    revealed=self.revealed,
+                                    cars=self.cars,
+                                    spoiled=self.spoiled,
+                                    copy=True)
 
     # ---- Results
     def get_results(self, spoiled_games='omit'):

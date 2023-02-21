@@ -67,6 +67,51 @@ class TestSimInitializationN:
         sim = cg.MontyHallSim(-10)
         assert isinstance(sim, cg.MontyHallSim) and sim.n == -10
 
+class TestSimEqual:
+
+    def test_copy_equal(self):
+        a = cg.MontyHallSim(5)
+        a.init_doors(3)
+        b = a.copy()
+        assert a == b
+
+    @pytest.mark.parametrize("target", all_arrays)
+    def test_one_door_changed(self, target):
+        a = cg.MontyHallSim(5)
+        a.init_doors(3)
+        b = a.copy()
+        if target == 'spoiled':
+            b.spoiled[0] = 1
+        else:
+            getattr(b, target)[0, 0] = 1
+        assert a != b
+
+    def test_empty_equal_same_n(self):
+        a = cg.MontyHallSim(10)
+        b = cg.MontyHallSim(10)
+        assert a == b
+
+    def test_empty_equal_diff_n(self):
+        a = cg.MontyHallSim(10)
+        b = cg.MontyHallSim(5)
+        assert a != b
+
+    def test_constructed_separately(self):
+        a = cg.MontyHallSim(3)
+        a.init_doors(3)
+        a.picked[1, 1] = 1
+
+        b = cg.MontyHallSim(3)
+        b.init_doors(3)
+        b.picked[1, 1] = 1
+
+        assert a == b
+
+    def test_non_sim_other(self):
+        a = cg.MontyHallSim(10)
+        b = dict()
+        assert (a != b) and (b != a)
+
 class TestSimEmpty:
 
     def test_init_empty(self):
