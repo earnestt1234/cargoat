@@ -630,3 +630,61 @@ class TestGetResults:
         r = sim.get_results(spoiled_games='only')
         assert (r['wins'] == 5) and (r['percent_wins'] == 100)
 
+class TestCombineSims:
+
+    def make_sims(self):
+        a = cg.MontyHallSim(3)
+        a.init_doors(3)
+        a.picked[:] = 1
+
+        b = cg.MontyHallSim(3)
+        b.init_doors(3)
+
+        return a, b
+
+    def test_no_index(self):
+        a, b = self.make_sims()
+        c = cg.combine_sims([a, b])
+        picked = np.array([[1, 1, 1],
+                           [1, 1, 1],
+                           [1, 1, 1],
+                           [0, 0, 0],
+                           [0, 0, 0],
+                           [0, 0, 0]])
+
+        assert np.all(c.picked == picked)
+
+    def test_interleave(self):
+        a, b = self.make_sims()
+        c = cg.combine_sims([a, b], index=[0, 1, 0, 1, 0, 1])
+        picked = np.array([[1, 1, 1],
+                           [0, 0, 0],
+                           [1, 1, 1],
+                           [0, 0, 0],
+                           [1, 1, 1],
+                           [0, 0, 0]])
+
+        assert np.all(c.picked == picked)
+
+    def test_index_out_of_bounds(self):
+        a, b = self.make_sims()
+        with pytest.raises(IndexError):
+            _ = cg.combine_sims([a, b], index=[1, 2, 1, 2, 1, 2])
+
+    def test_index_wrong_length(self):
+        a, b = self.make_sims()
+        with pytest.raises(ValueError):
+            _ = cg.combine_sims([a, b], index=[0, 1])
+
+    def test_combine_wrong_shape(self):
+        a, _ = self.make_sims()
+        b = cg.MontyHallSim(3)
+        b.init_doors(5)
+        with pytest.raises(ValueError):
+            _ = cg.combine_sims([a, b])
+
+    def test_empty_sim(self):
+        a, _ = self.make_sims()
+        b = cg.MontyHallSim(3)
+        with pytest.raises(ValueError):
+            _ = cg.combine_sims([a, b])

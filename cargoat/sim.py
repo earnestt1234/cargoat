@@ -49,7 +49,7 @@ def combine_sims(sims, index=None, copy=True):
     Raises
     ------
     ValueError
-        Different number of doors between simulations.
+        Different number of doors between simulations, or empty sims passed.
 
     Returns
     -------
@@ -102,6 +102,9 @@ def combine_sims(sims, index=None, copy=True):
     ```
 
     '''
+
+    if any(sim.empty for sim in sims):
+        raise ValueError('Empty simulations can not be used for combination.')
 
     n = len(sims)
     rows = [x.shape[0] for x in sims]
