@@ -43,7 +43,7 @@ def combine_sims(sims, index=None, copy=True):
         See examples below.
 
     copy : bool, optional
-        Explicityl copy the arrays of the simulation before creating the
+        Explicitly copy the arrays of the simulation before creating the
         new simulation. The default is True.
 
     Raises
