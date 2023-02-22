@@ -501,6 +501,47 @@ class TestSetArrayOneDoor:
 
         assert SUCCESS
 
+class TestApplyFunc:
+
+    def make_sim(self):
+        sim = cg.MontyHallSim(3)
+        sim.init_doors(3)
+        return sim
+
+    def test_not_inplace_correct(self):
+        sim = self.make_sim()
+        func = lambda x: x + 42
+        sim.apply_func(func, inplace=False)
+        assert [(getattr(sim, target) == 42).all()
+                for target in main_arrays]
+
+    def test_not_inplace_incorrect(self):
+        sim = self.make_sim()
+        func = lambda x: x + 42
+        sim.apply_func(func, inplace=True)
+        assert [(getattr(sim, target) == 0).all()
+                for target in main_arrays]
+
+    def test_inplace_correct(self):
+        sim = self.make_sim()
+        func = lambda x: np.place(x, x==0, 42)
+        sim.apply_func(func, inplace=True)
+        assert [(getattr(sim, target) == 42).all()
+                for target in main_arrays]
+
+    def test_inplace_incorrect(self):
+        sim = self.make_sim()
+        func = lambda x: np.place(x, x==0, 42)
+        sim.apply_func(func, inplace=False)
+        assert [(getattr(sim, target) is None)
+                for target in main_arrays]
+
+    def test_none_specified(self):
+        sim = self.make_sim()
+        func = lambda x: x + 42
+        sim.apply_func(func, inplace=False, cars=False, picked=False, revealed=False)
+        assert [(getattr(sim, target) == 0).all()
+                for target in main_arrays]
 
 
 
