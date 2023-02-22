@@ -543,5 +543,24 @@ class TestApplyFunc:
         assert [(getattr(sim, target) == 0).all()
                 for target in main_arrays]
 
+class TestCopy:
 
+    def test_copy_empty(self):
+        a = cg.MontyHallSim(10)
+        b = a.copy()
+        assert b.empty
+
+    def test_copy_full(self):
+        a = cg.MontyHallSim(3)
+        a.init_doors(3)
+        a.cars[:] = 1
+        a.picked[:] = 1
+        a.revealed[:] = 1
+        a.spoiled[:] = 1
+
+        b = a.copy()
+        assert all([np.all(b.cars == 1),
+                    np.all(b.picked == 1),
+                    np.all(b.revealed == 1),
+                    np.all(b.spoiled == 1)])
 
