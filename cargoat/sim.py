@@ -49,7 +49,8 @@ def combine_sims(sims, index=None, copy=True):
     Raises
     ------
     ValueError
-        Different number of doors between simulations, or empty sims passed.
+        Different number of doors between simulations, or index does not
+        match total number of trials.
 
     Returns
     -------
@@ -103,12 +104,9 @@ def combine_sims(sims, index=None, copy=True):
 
     '''
 
-    if any(sim.empty for sim in sims):
-        raise ValueError('Empty simulations can not be used for combination.')
-
     n = len(sims)
     rows = [x.shape[0] for x in sims]
-    cols = [x.shape[1] for x in sims]
+    cols = [x.shape[1] for x in sims if not x.empty]
     copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
     if len(set(cols)) != 1:
@@ -116,6 +114,9 @@ def combine_sims(sims, index=None, copy=True):
 
     if index is None:
         index = np.repeat(np.arange(n, dtype=int), rows)
+
+    if len(index) != sum(rows):
+        raise ValueError('Index length must match number of trials across simulations.')
 
     shape = (len(index), cols[0])
 

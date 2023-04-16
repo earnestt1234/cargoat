@@ -686,5 +686,5 @@ class TestCombineSims:
     def test_empty_sim(self):
         a, _ = self.make_sims()
         b = cg.MontyHallSim(3)
-        with pytest.raises(ValueError):
-            _ = cg.combine_sims([a, b])
+        c = cg.combine_sims([a, b])
+        assert a == c
