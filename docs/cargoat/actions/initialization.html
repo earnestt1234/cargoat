@@ -59,11 +59,8 @@ class InitDoorsEmpty(MontyHallAction):
         self.doors = doors
 
     def __call__(self, sim):
-        shape = (sim.n, self.doors)
-        sim.cars = np.zeros(shape, dtype=int)
-        sim.picked = np.zeros(shape, dtype=int)
-        sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.init_doors(self.doors)
+        return sim
 
 class InitDoorsFixed(MontyHallAction):
     def __init__(self, placement=(1, 0, 0)):
@@ -92,6 +89,7 @@ class InitDoorsFixed(MontyHallAction):
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
+        return sim
 
 class InitDoorsRandom(MontyHallAction):
     def __init__(self, cars=1, goats=2):
@@ -123,7 +121,8 @@ class InitDoorsRandom(MontyHallAction):
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
         p = np.random.rand(shape[0], shape[1]).argsort(1)
-        sim.cars[p &lt; self.cars] = 1</code></pre>
+        sim.cars[p &lt; self.cars] = 1
+        return sim</code></pre>
 </details>
 </section>
 <section>
@@ -173,11 +172,8 @@ All doors will contain goats.</p>
         self.doors = doors
 
     def __call__(self, sim):
-        shape = (sim.n, self.doors)
-        sim.cars = np.zeros(shape, dtype=int)
-        sim.picked = np.zeros(shape, dtype=int)
-        sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+        sim.init_doors(self.doors)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -231,7 +227,8 @@ simulation, all with placement goat-goat-car.</dd>
         sim.cars = np.tile(self.placement, (sim.n, 1))
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+        sim.spoiled = np.zeros(sim.n, dtype=int)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -290,7 +287,8 @@ is closest to the original Monty Hall game.</p>
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
         p = np.random.rand(shape[0], shape[1]).argsort(1)
-        sim.cars[p &lt; self.cars] = 1</code></pre>
+        sim.cars[p &lt; self.cars] = 1
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

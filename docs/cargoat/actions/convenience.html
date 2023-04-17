@@ -39,14 +39,14 @@ from cargoat.actions.pick import Pick
 class Pass(MontyHallAction):
     &#39;&#39;&#39;Action for doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass
+        return sim
 
 class Stay(MontyHallAction):
     &#39;&#39;&#39;Model the action of keeping the same door in the Monty
     Hall game, as opposed to switching.  Action is equivalent
     to `Pass`, aka doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass
+        return sim
 
 class Switch(MontyHallAction):
     &#39;&#39;&#39;Model the action of switching doors in the Monty Hall game
@@ -57,7 +57,7 @@ class Switch(MontyHallAction):
         self.action = Pick()
 
     def __call__(self, sim):
-        self.action(sim)</code></pre>
+        return self.action(sim)</code></pre>
 </details>
 </section>
 <section>
@@ -81,7 +81,7 @@ class Switch(MontyHallAction):
 <pre><code class="python">class Pass(MontyHallAction):
     &#39;&#39;&#39;Action for doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass</code></pre>
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -105,7 +105,7 @@ to <code><a title="cargoat.actions.convenience.Pass" href="#cargoat.actions.conv
     Hall game, as opposed to switching.  Action is equivalent
     to `Pass`, aka doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass</code></pre>
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -134,7 +134,7 @@ is equivalent to picking a new door, implement with
         self.action = Pick()
 
     def __call__(self, sim):
-        self.action(sim)</code></pre>
+        return self.action(sim)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

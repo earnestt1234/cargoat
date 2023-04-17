@@ -180,7 +180,8 @@ See <code>np.insert</code> for more details.</dd>
 
     def __call__(self, sim):
         foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
-        sim.apply_func(foo)</code></pre>
+        sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -233,7 +234,8 @@ the simulation will have the action applied.</p>
     def __call__(self, sim):
         draws = np.random.rand(len(sim.idx))
         action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
-        action(sim)</code></pre>
+        action(sim)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -338,7 +340,9 @@ problem trials as spoiled, but don't stop the simulation) or
         if self.multiple_picks:
             good = sim.count_totals(&#39;picked&#39;) &lt;= 1
             _verify_all_good_1D(sim, good, fail_message=&#39;Found trials with multiple picked doors&#39;,
-                                behavior=self.behavior)</code></pre>
+                                behavior=self.behavior)
+
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -493,7 +497,8 @@ The default is True.</dd>
         self.spoiled_games = spoiled_games
 
     def __call__(self, sim):
-        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)</code></pre>
+        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -590,7 +595,9 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
         sim.picked = new.picked
         sim.revealed = new.revealed
         sim.cars = new.cars
-        sim.spoiled = new.spoiled</code></pre>
+        sim.spoiled = new.spoiled
+
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -635,11 +642,8 @@ All doors will contain goats.</p>
         self.doors = doors
 
     def __call__(self, sim):
-        shape = (sim.n, self.doors)
-        sim.cars = np.zeros(shape, dtype=int)
-        sim.picked = np.zeros(shape, dtype=int)
-        sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+        sim.init_doors(self.doors)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -693,7 +697,8 @@ simulation, all with placement goat-goat-car.</dd>
         sim.cars = np.tile(self.placement, (sim.n, 1))
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+        sim.spoiled = np.zeros(sim.n, dtype=int)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -752,7 +757,8 @@ is closest to the original Monty Hall game.</p>
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
         p = np.random.rand(shape[0], shape[1]).argsort(1)
-        sim.cars[p &lt; self.cars] = 1</code></pre>
+        sim.cars[p &lt; self.cars] = 1
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -774,7 +780,8 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 1</code></pre>
+        sim.spoiled[True] = 1
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -796,7 +803,8 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 0</code></pre>
+        sim.spoiled[True] = 0
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -815,7 +823,7 @@ Can be combined with
 <pre><code class="python">class Pass(MontyHallAction):
     &#39;&#39;&#39;Action for doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass</code></pre>
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1122,7 +1130,8 @@ the new position of each door.</dd>
                               f&#34;the column indices, i.e. {col_range}.&#34;)
 
         foo = lambda a: a.copy()[:, self.positions]
-        sim.apply_func(foo)</code></pre>
+        sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1283,8 +1292,13 @@ See <code>np.remove</code> for more details.</dd>
         self.positions = positions
 
     def __call__(self, sim):
-        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
-        sim.apply_func(foo)</code></pre>
+        tolist = [self.positions] if type(self.positions) in [float, int] else self.positions
+        if set(tolist) == set(range(sim.shape[1])):
+            sim.make_empty()
+        else:
+            foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+            sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1438,7 +1452,7 @@ to <code><a title="cargoat.actions.Pass" href="#cargoat.actions.Pass">Pass</a></
     Hall game, as opposed to switching.  Action is equivalent
     to `Pass`, aka doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass</code></pre>
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1467,7 +1481,7 @@ is equivalent to picking a new door, implement with
         self.action = Pick()
 
     def __call__(self, sim):
-        self.action(sim)</code></pre>
+        return self.action(sim)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1536,7 +1550,9 @@ applying action <code>a</code>.</p>
             sim.picked=temp.picked
             sim.cars=temp.cars
             sim.revealed=temp.revealed
-            sim.spoiled=temp.spoiled</code></pre>
+            sim.spoiled=temp.spoiled
+        finally:
+            return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

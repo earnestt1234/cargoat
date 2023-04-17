@@ -65,6 +65,7 @@ class ChanceTo(MontyHallAction):
         draws = np.random.rand(len(sim.idx))
         action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
         action(sim)
+        return sim
 
 class IfElse(MontyHallAction):
     def __init__(self, condition, a, b, call=True):
@@ -120,6 +121,8 @@ class IfElse(MontyHallAction):
         sim.cars = new.cars
         sim.spoiled = new.spoiled
 
+        return sim
+
 class TryExcept(MontyHallAction):
     def __init__(self, a, b):
         &#39;&#39;&#39;
@@ -156,7 +159,9 @@ class TryExcept(MontyHallAction):
             sim.picked=temp.picked
             sim.cars=temp.cars
             sim.revealed=temp.revealed
-            sim.spoiled=temp.spoiled</code></pre>
+            sim.spoiled=temp.spoiled
+        finally:
+            return sim</code></pre>
 </details>
 </section>
 <section>
@@ -214,7 +219,8 @@ the simulation will have the action applied.</p>
     def __call__(self, sim):
         draws = np.random.rand(len(sim.idx))
         action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
-        action(sim)</code></pre>
+        action(sim)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -311,7 +317,9 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
         sim.picked = new.picked
         sim.revealed = new.revealed
         sim.cars = new.cars
-        sim.spoiled = new.spoiled</code></pre>
+        sim.spoiled = new.spoiled
+
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -380,7 +388,9 @@ applying action <code>a</code>.</p>
             sim.picked=temp.picked
             sim.cars=temp.cars
             sim.revealed=temp.revealed
-            sim.spoiled=temp.spoiled</code></pre>
+            sim.spoiled=temp.spoiled
+        finally:
+            return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

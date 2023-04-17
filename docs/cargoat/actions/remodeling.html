@@ -58,6 +58,7 @@ class AddDoors(MontyHallAction):
     def __call__(self, sim):
         foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
         sim.apply_func(foo)
+        return sim
 
 class RemoveDoors(MontyHallAction):
     def __init__(self, positions):
@@ -77,8 +78,13 @@ class RemoveDoors(MontyHallAction):
         self.positions = positions
 
     def __call__(self, sim):
-        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
-        sim.apply_func(foo)
+        tolist = [self.positions] if type(self.positions) in [float, int] else self.positions
+        if set(tolist) == set(range(sim.shape[1])):
+            sim.make_empty()
+        else:
+            foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+            sim.apply_func(foo)
+        return sim
 
 class RearrangeDoors(MontyHallAction):
     def __init__(self, positions):
@@ -108,7 +114,8 @@ class RearrangeDoors(MontyHallAction):
                               f&#34;the column indices, i.e. {col_range}.&#34;)
 
         foo = lambda a: a.copy()[:, self.positions]
-        sim.apply_func(foo)</code></pre>
+        sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 </section>
 <section>
@@ -159,7 +166,8 @@ See <code>np.insert</code> for more details.</dd>
 
     def __call__(self, sim):
         foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
-        sim.apply_func(foo)</code></pre>
+        sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -214,7 +222,8 @@ the new position of each door.</dd>
                               f&#34;the column indices, i.e. {col_range}.&#34;)
 
         foo = lambda a: a.copy()[:, self.positions]
-        sim.apply_func(foo)</code></pre>
+        sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -257,8 +266,13 @@ See <code>np.remove</code> for more details.</dd>
         self.positions = positions
 
     def __call__(self, sim):
-        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
-        sim.apply_func(foo)</code></pre>
+        tolist = [self.positions] if type(self.positions) in [float, int] else self.positions
+        if set(tolist) == set(range(sim.shape[1])):
+            sim.make_empty()
+        else:
+            foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+            sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

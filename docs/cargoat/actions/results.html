@@ -58,7 +58,8 @@ class Finish(MontyHallAction):
         self.spoiled_games = spoiled_games
 
     def __call__(self, sim):
-        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)</code></pre>
+        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
+        return sim</code></pre>
 </details>
 </section>
 <section>
@@ -111,7 +112,8 @@ class Finish(MontyHallAction):
         self.spoiled_games = spoiled_games
 
     def __call__(self, sim):
-        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)</code></pre>
+        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

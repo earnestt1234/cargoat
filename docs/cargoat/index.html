@@ -152,13 +152,14 @@ all simulations passed.</p>
 <p>See examples below.</p>
 </dd>
 <dt><strong><code>copy</code></strong> :&ensp;<code>bool</code>, optional</dt>
-<dd>Explicityl copy the arrays of the simulation before creating the
+<dd>Explicitly copy the arrays of the simulation before creating the
 new simulation. The default is True.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
 <dt><code>ValueError</code></dt>
-<dd>Different number of doors between simulations.</dd>
+<dd>Different number of doors between simulations, or index does not
+match total number of trials.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -234,13 +235,14 @@ array([[1, 1, 1],
         See examples below.
 
     copy : bool, optional
-        Explicityl copy the arrays of the simulation before creating the
+        Explicitly copy the arrays of the simulation before creating the
         new simulation. The default is True.
 
     Raises
     ------
     ValueError
-        Different number of doors between simulations.
+        Different number of doors between simulations, or index does not
+        match total number of trials.
 
     Returns
     -------
@@ -296,7 +298,7 @@ array([[1, 1, 1],
 
     n = len(sims)
     rows = [x.shape[0] for x in sims]
-    cols = [x.shape[1] for x in sims]
+    cols = [x.shape[1] for x in sims if not x.empty]
     copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
     if len(set(cols)) != 1:
@@ -304,6 +306,9 @@ array([[1, 1, 1],
 
     if index is None:
         index = np.repeat(np.arange(n, dtype=int), rows)
+
+    if len(index) != sum(rows):
+        raise ValueError(&#39;Index length must match number of trials across simulations.&#39;)
 
     shape = (len(index), cols[0])
 
@@ -429,7 +434,8 @@ See <code>np.insert</code> for more details.</dd>
 
     def __call__(self, sim):
         foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
-        sim.apply_func(foo)</code></pre>
+        sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -482,7 +488,8 @@ the simulation will have the action applied.</p>
     def __call__(self, sim):
         draws = np.random.rand(len(sim.idx))
         action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
-        action(sim)</code></pre>
+        action(sim)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -587,7 +594,9 @@ problem trials as spoiled, but don't stop the simulation) or
         if self.multiple_picks:
             good = sim.count_totals(&#39;picked&#39;) &lt;= 1
             _verify_all_good_1D(sim, good, fail_message=&#39;Found trials with multiple picked doors&#39;,
-                                behavior=self.behavior)</code></pre>
+                                behavior=self.behavior)
+
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -742,7 +751,8 @@ The default is True.</dd>
         self.spoiled_games = spoiled_games
 
     def __call__(self, sim):
-        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)</code></pre>
+        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -839,7 +849,9 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
         sim.picked = new.picked
         sim.revealed = new.revealed
         sim.cars = new.cars
-        sim.spoiled = new.spoiled</code></pre>
+        sim.spoiled = new.spoiled
+
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -884,11 +896,8 @@ All doors will contain goats.</p>
         self.doors = doors
 
     def __call__(self, sim):
-        shape = (sim.n, self.doors)
-        sim.cars = np.zeros(shape, dtype=int)
-        sim.picked = np.zeros(shape, dtype=int)
-        sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+        sim.init_doors(self.doors)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -942,7 +951,8 @@ simulation, all with placement goat-goat-car.</dd>
         sim.cars = np.tile(self.placement, (sim.n, 1))
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)</code></pre>
+        sim.spoiled = np.zeros(sim.n, dtype=int)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1001,7 +1011,8 @@ is closest to the original Monty Hall game.</p>
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
         p = np.random.rand(shape[0], shape[1]).argsort(1)
-        sim.cars[p &lt; self.cars] = 1</code></pre>
+        sim.cars[p &lt; self.cars] = 1
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1023,7 +1034,8 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 1</code></pre>
+        sim.spoiled[True] = 1
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1045,7 +1057,8 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 0</code></pre>
+        sim.spoiled[True] = 0
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1101,6 +1114,8 @@ simulation.</p>
 <pre><code class="python">class MontyHallSim:
     &#39;&#39;&#39;Class for remembering the status of the game simualtion.&#39;&#39;&#39;
 
+    # ---- Dunder methods
+
     def __init__(self, n):
         &#39;&#39;&#39;
         The MontyHallSim object tracks the game status for repeated Monty Hall
@@ -1143,12 +1158,21 @@ simulation.</p>
         None.
 
         &#39;&#39;&#39;
-        self.n = n
+        self.n = int(n)
 
-        self.cars = np.empty(0)
-        self.picked = np.empty(0)
-        self.revealed = np.empty(0)
-        self.spoiled = np.empty(0)
+        self.make_empty()
+
+    def __eq__(self, sim):
+        if not isinstance(sim, MontyHallSim):
+            return False
+        elif self.shape != sim.shape:
+            return False
+        else:
+            return all([(self.cars == sim.cars).all(),
+                        (self.picked == sim.picked).all(),
+                        (self.revealed == sim.revealed).all(),
+                        (self.spoiled == sim.spoiled).all(),
+                        (self.n == sim.n)])
 
     # ---- Class methods
 
@@ -1217,6 +1241,12 @@ simulation.</p>
         if len(spoiled) != n:
             raise ValueError(&#39;spoiled array does not match&#39;)
 
+        for a in (cars, picked, revealed, spoiled):
+            uniq = np.unique(a)
+            if any(u not in (0, 1) for u in uniq):
+                msg = (&#34;Non-binary integer detected in incoming arrays.&#34;)
+                warnings.warn(RuntimeWarning(msg))
+
         copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
         out = cls(n)
@@ -1243,8 +1273,32 @@ simulation.</p>
 
         return self.picked.shape
 
+    @property
+    def empty(self):
+        &#39;&#39;&#39;Determine if the sim is &#34;empty&#34; - this is the status it should
+        have prior to applying any operations.&#39;&#39;&#39;
+        arrs = [self.cars, self.picked, self.revealed, self.spoiled]
+        return all(a.size == 0 for a in arrs)
+
+
+    # ---- Initialization
+    def init_doors(self, doors):
+        &#39;&#39;&#39;Populate arrays with zeros.&#39;&#39;&#39;
+        shape = (self.n, doors)
+        self.cars = np.zeros(shape, dtype=int)
+        self.picked = np.zeros(shape, dtype=int)
+        self.revealed = np.zeros(shape, dtype=int)
+        self.spoiled = np.zeros(self.n, dtype=int)
+
+    def make_empty(self):
+        &#39;&#39;&#39;Save empty arrays into main arrays.&#39;&#39;&#39;
+        self.cars = np.empty(0, dtype=int)
+        self.picked = np.empty(0, dtype=int)
+        self.revealed = np.empty(0, dtype=int)
+        self.spoiled = np.empty(0, dtype=int)
+
     # ---- Indexing
-    def select(self, x=None, y=None, copy=True):
+    def select(self, x=None, y=None, copy=True, use_ix_=True):
         &#39;&#39;&#39;
         Index the simulation to create a new one.
 
@@ -1258,7 +1312,16 @@ simulation.</p>
             in which case all doors are selected.
         copy : bool, optional
             Create an explicit copy of the arrays before binding to the
-            newly created simulation. The default is True.
+            newly created simulation. The default is True.  Note that
+            many indexing operations with this function trigger numpy advanced
+            indexing and thus create copies of the main arrays.
+            For now, copy is set to default and wastefully create more copies.
+            This may be optimized in the future.
+        use_ix_ : bool, optional
+            Use `np.ix_` when passing `x` and `y`.  This is typically
+            necessary for selecting doors and trials simultaneously -
+            indexing both rows and columns is not as simple as passing
+            `arr[x, y]`.
 
         Returns
         -------
@@ -1266,8 +1329,18 @@ simulation.</p>
             New simulation object.
 
         &#39;&#39;&#39;
+        # this prevents loss of dimension for selecting single doors
+        x = [x] if isinstance(x, int) else x
+        y = [y] if isinstance(y, int) else y
+
+        # this allows for selection of trials and doors simulataneously
+        if (x is not None and y is not None) and use_ix_:
+            x, y = np.ix_(x, y)
+
+        # this allows indexing of only one axis
         x = slice(None) if x is None else x
         y = slice(None) if y is None else y
+
         copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
         cars = copyfun(self.cars[x, y])
@@ -1356,6 +1429,9 @@ simulation.</p>
         elif target == &#39;cars&#39;:
             return self._check_spoiling_cars
 
+        else:
+            raise ValueError (&#39;Target must be &#34;picked&#34;, &#34;revealed&#34;, or &#34;cars&#34;&#39;)
+
     def _set_array(self, target, new_array,
                    behavior=&#39;overwrite&#39;, n_per_row=None, allow_spoiled=False,
                    allow_redundant=True):
@@ -1413,6 +1489,10 @@ simulation.</p>
                  &#39;revealed&#39;: BadReveal,
                  &#39;picked&#39;: BadPick}[target]
 
+        if new_array.shape != self.shape:
+            raise ValueError(f&#39;New array shape {new_array.shape} &#39;
+                             f&#39;does not match current shape {self.shape}&#39;)
+
         # apply checks if requested
         if n_per_row is not None:
             check_n_per_row(a=new_array, n=n_per_row, etype=etype)
@@ -1432,7 +1512,7 @@ simulation.</p>
         if behavior == &#39;add&#39;:
             new_array = np.logical_or(new_array, old_array).astype(int)
         elif behavior == &#39;remove&#39;:
-            new_array = old_array - np.logical_and(new_array, old_array, dtype=int)
+            new_array = old_array - np.logical_and(new_array, old_array).astype(int)
             new_array[new_array &lt; 0] = 0
 
         setattr(self, target, new_array)
@@ -1534,11 +1614,14 @@ simulation.</p>
         MontyHallSim
 
         &#39;&#39;&#39;
-        return self.from_arrays(picked=self.picked,
-                                revealed=self.revealed,
-                                cars=self.cars,
-                                spoiled=self.spoiled,
-                                copy=True)
+        if self.empty:
+            return MontyHallSim(self.n)
+        else:
+            return self.from_arrays(picked=self.picked,
+                                    revealed=self.revealed,
+                                    cars=self.cars,
+                                    spoiled=self.spoiled,
+                                    copy=True)
 
     # ---- Results
     def get_results(self, spoiled_games=&#39;omit&#39;):
@@ -1702,6 +1785,12 @@ def from_arrays(cls, picked=None, revealed=None, cars=None,
     if len(spoiled) != n:
         raise ValueError(&#39;spoiled array does not match&#39;)
 
+    for a in (cars, picked, revealed, spoiled):
+        uniq = np.unique(a)
+        if any(u not in (0, 1) for u in uniq):
+            msg = (&#34;Non-binary integer detected in incoming arrays.&#34;)
+            warnings.warn(RuntimeWarning(msg))
+
     copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
     out = cls(n)
@@ -1716,6 +1805,22 @@ def from_arrays(cls, picked=None, revealed=None, cars=None,
 </dl>
 <h3>Instance variables</h3>
 <dl>
+<dt id="cargoat.MontyHallSim.empty"><code class="name">var <span class="ident">empty</span></code></dt>
+<dd>
+<div class="desc"><p>Determine if the sim is "empty" - this is the status it should
+have prior to applying any operations.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def empty(self):
+    &#39;&#39;&#39;Determine if the sim is &#34;empty&#34; - this is the status it should
+    have prior to applying any operations.&#39;&#39;&#39;
+    arrs = [self.cars, self.picked, self.revealed, self.spoiled]
+    return all(a.size == 0 for a in arrs)</code></pre>
+</details>
+</dd>
 <dt id="cargoat.MontyHallSim.idx"><code class="name">var <span class="ident">idx</span></code></dt>
 <dd>
 <div class="desc"><p>Return a numpy arange of length <code>self.n</code></p></div>
@@ -1833,11 +1938,14 @@ arrays.</p>
     MontyHallSim
 
     &#39;&#39;&#39;
-    return self.from_arrays(picked=self.picked,
-                            revealed=self.revealed,
-                            cars=self.cars,
-                            spoiled=self.spoiled,
-                            copy=True)</code></pre>
+    if self.empty:
+        return MontyHallSim(self.n)
+    else:
+        return self.from_arrays(picked=self.picked,
+                                revealed=self.revealed,
+                                cars=self.cars,
+                                spoiled=self.spoiled,
+                                copy=True)</code></pre>
 </details>
 </dd>
 <dt id="cargoat.MontyHallSim.count_totals"><code class="name flex">
@@ -1939,6 +2047,41 @@ both have 1s in the same position.</p>
         }
 
     return results</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.init_doors"><code class="name flex">
+<span>def <span class="ident">init_doors</span></span>(<span>self, doors)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Populate arrays with zeros.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def init_doors(self, doors):
+    &#39;&#39;&#39;Populate arrays with zeros.&#39;&#39;&#39;
+    shape = (self.n, doors)
+    self.cars = np.zeros(shape, dtype=int)
+    self.picked = np.zeros(shape, dtype=int)
+    self.revealed = np.zeros(shape, dtype=int)
+    self.spoiled = np.zeros(self.n, dtype=int)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.make_empty"><code class="name flex">
+<span>def <span class="ident">make_empty</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save empty arrays into main arrays.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_empty(self):
+    &#39;&#39;&#39;Save empty arrays into main arrays.&#39;&#39;&#39;
+    self.cars = np.empty(0, dtype=int)
+    self.picked = np.empty(0, dtype=int)
+    self.revealed = np.empty(0, dtype=int)
+    self.spoiled = np.empty(0, dtype=int)</code></pre>
 </details>
 </dd>
 <dt id="cargoat.MontyHallSim.pickable_doors"><code class="name flex">
@@ -2048,7 +2191,7 @@ not revealed, don't contain cars, and aren't currently picked.</p></div>
 </details>
 </dd>
 <dt id="cargoat.MontyHallSim.select"><code class="name flex">
-<span>def <span class="ident">select</span></span>(<span>self, x=None, y=None, copy=True)</span>
+<span>def <span class="ident">select</span></span>(<span>self, x=None, y=None, copy=True, use_ix_=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Index the simulation to create a new one.</p>
@@ -2062,7 +2205,18 @@ in which case all trials are selected.</dd>
 in which case all doors are selected.</dd>
 <dt><strong><code>copy</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Create an explicit copy of the arrays before binding to the
-newly created simulation. The default is True.</dd>
+newly created simulation. The default is True.
+Note that
+many indexing operations with this function trigger numpy advanced
+indexing and thus create copies of the main arrays.
+For now, copy is set to default and wastefully create more copies.
+This may be optimized in the future.</dd>
+<dt><strong><code>use_ix_</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Use <code>np.ix_</code> when passing <code>x</code> and <code>y</code>.
+This is typically
+necessary for selecting doors and trials simultaneously -
+indexing both rows and columns is not as simple as passing
+<code>arr[x, y]</code>.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -2073,7 +2227,7 @@ newly created simulation. The default is True.</dd>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def select(self, x=None, y=None, copy=True):
+<pre><code class="python">def select(self, x=None, y=None, copy=True, use_ix_=True):
     &#39;&#39;&#39;
     Index the simulation to create a new one.
 
@@ -2087,7 +2241,16 @@ newly created simulation. The default is True.</dd>
         in which case all doors are selected.
     copy : bool, optional
         Create an explicit copy of the arrays before binding to the
-        newly created simulation. The default is True.
+        newly created simulation. The default is True.  Note that
+        many indexing operations with this function trigger numpy advanced
+        indexing and thus create copies of the main arrays.
+        For now, copy is set to default and wastefully create more copies.
+        This may be optimized in the future.
+    use_ix_ : bool, optional
+        Use `np.ix_` when passing `x` and `y`.  This is typically
+        necessary for selecting doors and trials simultaneously -
+        indexing both rows and columns is not as simple as passing
+        `arr[x, y]`.
 
     Returns
     -------
@@ -2095,8 +2258,18 @@ newly created simulation. The default is True.</dd>
         New simulation object.
 
     &#39;&#39;&#39;
+    # this prevents loss of dimension for selecting single doors
+    x = [x] if isinstance(x, int) else x
+    y = [y] if isinstance(y, int) else y
+
+    # this allows for selection of trials and doors simulataneously
+    if (x is not None and y is not None) and use_ix_:
+        x, y = np.ix_(x, y)
+
+    # this allows indexing of only one axis
     x = slice(None) if x is None else x
     y = slice(None) if y is None else y
+
     copyfun = (lambda x: x.copy()) if copy else (lambda x: x)
 
     cars = copyfun(self.cars[x, y])
@@ -2125,7 +2298,7 @@ newly created simulation. The default is True.</dd>
 <pre><code class="python">class Pass(MontyHallAction):
     &#39;&#39;&#39;Action for doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass</code></pre>
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2432,7 +2605,8 @@ the new position of each door.</dd>
                               f&#34;the column indices, i.e. {col_range}.&#34;)
 
         foo = lambda a: a.copy()[:, self.positions]
-        sim.apply_func(foo)</code></pre>
+        sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2593,8 +2767,13 @@ See <code>np.remove</code> for more details.</dd>
         self.positions = positions
 
     def __call__(self, sim):
-        foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
-        sim.apply_func(foo)</code></pre>
+        tolist = [self.positions] if type(self.positions) in [float, int] else self.positions
+        if set(tolist) == set(range(sim.shape[1])):
+            sim.make_empty()
+        else:
+            foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
+            sim.apply_func(foo)
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2748,7 +2927,7 @@ to <code><a title="cargoat.Pass" href="#cargoat.Pass">Pass</a></code>, aka doing
     Hall game, as opposed to switching.  Action is equivalent
     to `Pass`, aka doing nothing.&#39;&#39;&#39;
     def __call__(self, sim):
-        pass</code></pre>
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2777,7 +2956,7 @@ is equivalent to picking a new door, implement with
         self.action = Pick()
 
     def __call__(self, sim):
-        self.action(sim)</code></pre>
+        return self.action(sim)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2846,7 +3025,9 @@ applying action <code>a</code>.</p>
             sim.picked=temp.picked
             sim.cars=temp.cars
             sim.revealed=temp.revealed
-            sim.spoiled=temp.spoiled</code></pre>
+            sim.spoiled=temp.spoiled
+        finally:
+            return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3037,9 +3218,12 @@ The default is True.</dd>
 <li><code><a title="cargoat.MontyHallSim.apply_func" href="#cargoat.MontyHallSim.apply_func">apply_func</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.copy" href="#cargoat.MontyHallSim.copy">copy</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.count_totals" href="#cargoat.MontyHallSim.count_totals">count_totals</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.empty" href="#cargoat.MontyHallSim.empty">empty</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.from_arrays" href="#cargoat.MontyHallSim.from_arrays">from_arrays</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.get_results" href="#cargoat.MontyHallSim.get_results">get_results</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.idx" href="#cargoat.MontyHallSim.idx">idx</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.init_doors" href="#cargoat.MontyHallSim.init_doors">init_doors</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.make_empty" href="#cargoat.MontyHallSim.make_empty">make_empty</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.pickable_doors" href="#cargoat.MontyHallSim.pickable_doors">pickable_doors</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.query_doors_or" href="#cargoat.MontyHallSim.query_doors_or">query_doors_or</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.revealable_doors" href="#cargoat.MontyHallSim.revealable_doors">revealable_doors</a></code></li>

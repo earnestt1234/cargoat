@@ -129,17 +129,21 @@ class CheckSpoiled(MontyHallAction):
             _verify_all_good_1D(sim, good, fail_message=&#39;Found trials with multiple picked doors&#39;,
                                 behavior=self.behavior)
 
+        return sim
+
 class MarkSpoiled(MontyHallAction):
     &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
         sim.spoiled[True] = 1
+        return sim
 
 class MarkUnspoiled(MontyHallAction):
     &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 0</code></pre>
+        sim.spoiled[True] = 0
+        return sim</code></pre>
 </details>
 </section>
 <section>
@@ -249,7 +253,9 @@ problem trials as spoiled, but don't stop the simulation) or
         if self.multiple_picks:
             good = sim.count_totals(&#39;picked&#39;) &lt;= 1
             _verify_all_good_1D(sim, good, fail_message=&#39;Found trials with multiple picked doors&#39;,
-                                behavior=self.behavior)</code></pre>
+                                behavior=self.behavior)
+
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -271,7 +277,8 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 1</code></pre>
+        sim.spoiled[True] = 1
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -293,7 +300,8 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 0</code></pre>
+        sim.spoiled[True] = 0
+        return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
