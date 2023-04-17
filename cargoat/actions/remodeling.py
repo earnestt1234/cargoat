@@ -48,7 +48,8 @@ class RemoveDoors(MontyHallAction):
         self.positions = positions
 
     def __call__(self, sim):
-        if set(self.positions) == set(range(sim.shape[1])):
+        tolist = [self.positions] if type(self.positions) in [float, int] else self.positions
+        if set(tolist) == set(range(sim.shape[1])):
             sim.make_empty()
         else:
             foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
