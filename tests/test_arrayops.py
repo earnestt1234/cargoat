@@ -9,7 +9,6 @@ Created on Sun Apr 16 22:23:37 2023
 import numpy as np
 import pytest
 
-import cargoat as cg
 from cargoat.arrayops import (get_index_success,
                               n_per_row,
                               one_per_row,
