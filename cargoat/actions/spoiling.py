@@ -100,14 +100,18 @@ class CheckSpoiled(MontyHallAction):
             _verify_all_good_1D(sim, good, fail_message='Found trials with multiple picked doors',
                                 behavior=self.behavior)
 
+        return sim
+
 class MarkSpoiled(MontyHallAction):
     '''Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.'''
     def __call__(self, sim):
         sim.spoiled[True] = 1
+        return sim
 
 class MarkUnspoiled(MontyHallAction):
     '''Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.'''
     def __call__(self, sim):
         sim.spoiled[True] = 0
+        return sim

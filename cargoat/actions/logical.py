@@ -36,6 +36,7 @@ class ChanceTo(MontyHallAction):
         draws = np.random.rand(len(sim.idx))
         action = IfElse(draws < self.p, self.action, Pass(), call=False)
         action(sim)
+        return sim
 
 class IfElse(MontyHallAction):
     def __init__(self, condition, a, b, call=True):
@@ -91,6 +92,8 @@ class IfElse(MontyHallAction):
         sim.cars = new.cars
         sim.spoiled = new.spoiled
 
+        return sim
+
 class TryExcept(MontyHallAction):
     def __init__(self, a, b):
         '''
@@ -128,3 +131,5 @@ class TryExcept(MontyHallAction):
             sim.cars=temp.cars
             sim.revealed=temp.revealed
             sim.spoiled=temp.spoiled
+        finally:
+            return sim

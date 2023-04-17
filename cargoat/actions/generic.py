@@ -154,3 +154,5 @@ class GenericAction(MontyHallAction):
                        n_per_row=n,
                        allow_spoiled=self.allow_spoiled,
                        allow_redundant=self.allow_redundant)
+
+        return sim

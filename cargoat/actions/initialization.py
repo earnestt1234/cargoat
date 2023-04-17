@@ -30,6 +30,7 @@ class InitDoorsEmpty(MontyHallAction):
 
     def __call__(self, sim):
         sim.init_doors(self.doors)
+        return sim
 
 class InitDoorsFixed(MontyHallAction):
     def __init__(self, placement=(1, 0, 0)):
@@ -58,6 +59,7 @@ class InitDoorsFixed(MontyHallAction):
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
+        return sim
 
 class InitDoorsRandom(MontyHallAction):
     def __init__(self, cars=1, goats=2):
@@ -90,3 +92,4 @@ class InitDoorsRandom(MontyHallAction):
 
         p = np.random.rand(shape[0], shape[1]).argsort(1)
         sim.cars[p < self.cars] = 1
+        return sim

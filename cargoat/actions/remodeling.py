@@ -29,6 +29,7 @@ class AddDoors(MontyHallAction):
     def __call__(self, sim):
         foo = lambda a: np.insert(arr=a, obj=self.positions, values=0, axis=1)
         sim.apply_func(foo)
+        return sim
 
 class RemoveDoors(MontyHallAction):
     def __init__(self, positions):
@@ -54,6 +55,7 @@ class RemoveDoors(MontyHallAction):
         else:
             foo = lambda a: np.delete(arr=a, obj=self.positions, axis=1)
             sim.apply_func(foo)
+        return sim
 
 class RearrangeDoors(MontyHallAction):
     def __init__(self, positions):
@@ -84,3 +86,4 @@ class RearrangeDoors(MontyHallAction):
 
         foo = lambda a: a.copy()[:, self.positions]
         sim.apply_func(foo)
+        return sim

@@ -30,3 +30,4 @@ class Finish(MontyHallAction):
 
     def __call__(self, sim):
         pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
+        return sim

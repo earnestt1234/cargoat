@@ -10,14 +10,14 @@ from cargoat.actions.pick import Pick
 class Pass(MontyHallAction):
     '''Action for doing nothing.'''
     def __call__(self, sim):
-        pass
+        return sim
 
 class Stay(MontyHallAction):
     '''Model the action of keeping the same door in the Monty
     Hall game, as opposed to switching.  Action is equivalent
     to `Pass`, aka doing nothing.'''
     def __call__(self, sim):
-        pass
+        return sim
 
 class Switch(MontyHallAction):
     '''Model the action of switching doors in the Monty Hall game
@@ -28,4 +28,4 @@ class Switch(MontyHallAction):
         self.action = Pick()
 
     def __call__(self, sim):
-        self.action(sim)
+        return self.action(sim)
