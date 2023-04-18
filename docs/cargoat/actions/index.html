@@ -44,7 +44,6 @@ __all__ = [
     &#39;ChanceTo&#39;,
     &#39;CheckSpoiled&#39;,
     &#39;Close&#39;,
-    &#39;Finish&#39;,
     &#39;IfElse&#39;,
     &#39;InitDoorsEmpty&#39;,
     &#39;InitDoorsFixed&#39;,
@@ -58,6 +57,7 @@ __all__ = [
     &#39;RemoveCar&#39;,
     &#39;RemoveDoors&#39;,
     &#39;Reveal&#39;,
+    &#39;ShowResults&#39;,
     &#39;Stay&#39;,
     &#39;Switch&#39;,
     &#39;TryExcept&#39;,
@@ -78,7 +78,7 @@ from cargoat.actions.logical import ChanceTo, IfElse, TryExcept
 
 from cargoat.actions.remodeling import AddDoors, RemoveDoors, RearrangeDoors
 
-from cargoat.actions.results import Finish
+from cargoat.actions.results import ShowResults
 
 from cargoat.actions.spoiling import CheckSpoiled, MarkSpoiled, MarkUnspoiled</code></pre>
 </details>
@@ -453,55 +453,6 @@ The default is True.</dd>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="cargoat.actions.generic.GenericAction" href="generic.html#cargoat.actions.generic.GenericAction">GenericAction</a></li>
-<li><a title="cargoat.actions.base.MontyHallAction" href="base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
-</ul>
-</dd>
-<dt id="cargoat.actions.Finish"><code class="flex name class">
-<span>class <span class="ident">Finish</span></span>
-<span>(</span><span>spoiled_games='omit')</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Print the number of wins and losses.</p>
-<h2 id="parameters">Parameters</h2>
-<dl>
-<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Behavior for dealing with spoiled games. The default is 'omit'.
-- 'omit': discard spoiled games
-- 'include': include spoiled games in the results
-- 'only': only show the results for spoiled games</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>None.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class Finish(MontyHallAction):
-    def __init__(self, spoiled_games=&#39;omit&#39;):
-        &#39;&#39;&#39;
-        Print the number of wins and losses.
-
-        Parameters
-        ----------
-        spoiled_games : str, optional
-            Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
-            - &#39;omit&#39;: discard spoiled games
-            - &#39;include&#39;: include spoiled games in the results
-            - &#39;only&#39;: only show the results for spoiled games
-
-        Returns
-        -------
-        None.
-
-        &#39;&#39;&#39;
-        self.spoiled_games = spoiled_games
-
-    def __call__(self, sim):
-        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
-        return sim</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
 <li><a title="cargoat.actions.base.MontyHallAction" href="base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
 </ul>
 </dd>
@@ -1435,6 +1386,55 @@ The default is True.</dd>
 <li><a title="cargoat.actions.base.MontyHallAction" href="base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
 </ul>
 </dd>
+<dt id="cargoat.actions.ShowResults"><code class="flex name class">
+<span>class <span class="ident">ShowResults</span></span>
+<span>(</span><span>spoiled_games='omit')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Print the number of wins and losses.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Behavior for dealing with spoiled games. The default is 'omit'.
+- 'omit': discard spoiled games
+- 'include': include spoiled games in the results
+- 'only': only show the results for spoiled games</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ShowResults(MontyHallAction):
+    def __init__(self, spoiled_games=&#39;omit&#39;):
+        &#39;&#39;&#39;
+        Print the number of wins and losses.
+
+        Parameters
+        ----------
+        spoiled_games : str, optional
+            Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
+            - &#39;omit&#39;: discard spoiled games
+            - &#39;include&#39;: include spoiled games in the results
+            - &#39;only&#39;: only show the results for spoiled games
+
+        Returns
+        -------
+        None.
+
+        &#39;&#39;&#39;
+        self.spoiled_games = spoiled_games
+
+    def __call__(self, sim):
+        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
+        return sim</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cargoat.actions.base.MontyHallAction" href="base.html#cargoat.actions.base.MontyHallAction">MontyHallAction</a></li>
+</ul>
+</dd>
 <dt id="cargoat.actions.Stay"><code class="flex name class">
 <span>class <span class="ident">Stay</span></span>
 </code></dt>
@@ -1722,9 +1722,6 @@ The default is True.</dd>
 <h4><code><a title="cargoat.actions.Close" href="#cargoat.actions.Close">Close</a></code></h4>
 </li>
 <li>
-<h4><code><a title="cargoat.actions.Finish" href="#cargoat.actions.Finish">Finish</a></code></h4>
-</li>
-<li>
 <h4><code><a title="cargoat.actions.IfElse" href="#cargoat.actions.IfElse">IfElse</a></code></h4>
 </li>
 <li>
@@ -1762,6 +1759,9 @@ The default is True.</dd>
 </li>
 <li>
 <h4><code><a title="cargoat.actions.Reveal" href="#cargoat.actions.Reveal">Reveal</a></code></h4>
+</li>
+<li>
+<h4><code><a title="cargoat.actions.ShowResults" href="#cargoat.actions.ShowResults">ShowResults</a></code></h4>
 </li>
 <li>
 <h4><code><a title="cargoat.actions.Stay" href="#cargoat.actions.Stay">Stay</a></code></h4>
