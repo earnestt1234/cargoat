@@ -17,7 +17,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 # read version
 with open(path.join(this_directory, 'cargoat', '_version.py'), encoding='utf-8') as f:
-    version = f.read().split('=')[1].strip('\'"')
+    version = f.read().split('=')[1].strip('\'"\n')
 
 setup(name='cargoat',
       version=version,
