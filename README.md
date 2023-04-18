@@ -41,7 +41,7 @@ game = [cg.InitDoorsRandom(cars=1, goats=2),
         cg.Pick(),
         cg.Reveal(),
         cg.Switch(),
-        cg.Finish()]
+        cg.ShowResults()]
 
 cg.play(game, n=1000)
 ```

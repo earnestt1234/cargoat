@@ -9,7 +9,6 @@ __all__ = [
     'ChanceTo',
     'CheckSpoiled',
     'Close',
-    'Finish',
     'IfElse',
     'InitDoorsEmpty',
     'InitDoorsFixed',
@@ -23,6 +22,7 @@ __all__ = [
     'RemoveCar',
     'RemoveDoors',
     'Reveal',
+    'ShowResults',
     'Stay',
     'Switch',
     'TryExcept',
@@ -43,7 +43,7 @@ from cargoat.actions.logical import ChanceTo, IfElse, TryExcept
 
 from cargoat.actions.remodeling import AddDoors, RemoveDoors, RearrangeDoors
 
-from cargoat.actions.results import Finish
+from cargoat.actions.results import ShowResults
 
 from cargoat.actions.spoiling import CheckSpoiled, MarkSpoiled, MarkUnspoiled
 

@@ -8,7 +8,7 @@ import pprint
 
 from cargoat.actions.base import MontyHallAction
 
-class Finish(MontyHallAction):
+class ShowResults(MontyHallAction):
     def __init__(self, spoiled_games='omit'):
         '''
         Print the number of wins and losses.
