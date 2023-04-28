@@ -52,7 +52,7 @@ class TestIfElse:
         a = cg.Pick()
         b = cg.Pass()
 
-        action = cg.IfElse(condition, a, b, call=True)
+        action = cg.IfElse(condition, a, b, condition_call=True)
         action(sim)
 
         assert np.all(sim.count_totals('picked') == np.repeat([1, 0], [500, 500]))
@@ -66,7 +66,7 @@ class TestIfElse:
         a = cg.Pick()
         b = cg.Pass()
 
-        action = cg.IfElse(condition, a, b, call=False)
+        action = cg.IfElse(condition, a, b, condition_call=False)
         action(sim)
 
         assert np.all(sim.count_totals('picked') == np.repeat([1, 0], [500, 500]))

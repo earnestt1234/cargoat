@@ -34,12 +34,12 @@ class ChanceTo(MontyHallAction):
 
     def __call__(self, sim):
         draws = np.random.rand(len(sim.idx))
-        action = IfElse(draws < self.p, self.action, Pass(), call=False)
+        action = IfElse(draws < self.p, self.action, Pass(), condition_call=False)
         action(sim)
         return sim
 
 class IfElse(MontyHallAction):
-    def __init__(self, condition, a, b, call=True):
+    def __init__(self, condition, a, b, condition_call=True):
         '''
         Do an if-else comparison to decide which of two actions
         to apply.  A condition is tested on all rows of the simulation
@@ -73,11 +73,11 @@ class IfElse(MontyHallAction):
         self.condition = condition
         self.a = a
         self.b = b
-        self.call = call
+        self.condition_call = condition_call
 
     def __call__(self, sim):
 
-        bools = self.condition(sim) if self.call else self.condition
+        bools = self.condition(sim) if self.condition_call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
         sim_true._ifelse_index = bools

@@ -651,7 +651,7 @@ class MontyHallSim:
                                     copy=True)
 
     # ---- Results
-    def get_results(self, spoiled_games='omit'):
+    def get_results(self, condition=None):
         '''
         Return a dictionary containing the game results,
         e.g. number of wins and losses.  Trials are counted
@@ -660,33 +660,17 @@ class MontyHallSim:
 
         Parameters
         ----------
-        spoiled_games : str, optional
-            Behavior for dealing with spoiled games. The default is 'omit'.
-            - 'omit': discard spoiled games
-            - 'include': include spoiled games in the results
-            - 'only': only show the results for spoiled games
-
-        Raises
-        ------
-        ValueError
-            Unrecognized value for `spoiled_games`.
+        condition :  callable or list-like
+            A pre-computed 1D boolean arrray used to index the simulation.
 
         Returns
         -------
-        results : dict
-            Dictionary of results.
+        None.
 
         '''
 
-        spoiled = self.spoiled == 1
-        if spoiled_games == 'include':
-            sim = self
-        elif spoiled_games == 'omit':
-            sim = self.select(~spoiled)
-        elif spoiled_games == 'only':
-            sim = self.select(spoiled)
-        else:
-            raise ValueError('`spoiled_games` must be "include", "omit", or "only".')
+
+        sim = self.select(x=condition) if condition is not None else self
 
         wins = np.sum(np.any(sim.picked * sim.cars, axis=1))
         losses = sim.n - wins

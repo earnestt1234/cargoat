@@ -590,44 +590,44 @@ class TestGetResults:
 
     def test_wins_none_picked(self):
         sim = self.make_sim()
-        r = sim.get_results(spoiled_games='omit')
+        r = sim.get_results()
         assert r['wins'] == 0
 
     def test_wins_all_picked(self):
         sim = self.make_sim()
         sim.picked[:5, 0] = 1
         sim.picked[5:, 2] = 1
-        r = sim.get_results(spoiled_games='omit')
+        r = sim.get_results()
         assert r['wins'] == 10
 
     def test_wins_half_picked(self):
         sim = self.make_sim()
         sim.picked[:, 0] = 1
-        r = sim.get_results(spoiled_games='omit')
+        r = sim.get_results()
         assert r['wins'] == 5
 
     def test_wins_overpicked(self):
         sim = self.make_sim()
         sim.picked[:] = 1
-        r = sim.get_results(spoiled_games='omit')
+        r = sim.get_results()
         assert r['wins'] == 10
 
     def test_wins_omit_spoiled(self):
         sim = self.make_sim_spoiled()
         sim.picked = sim.cars
-        r = sim.get_results(spoiled_games='omit')
+        r = sim.get_results(condition=~sim.spoiled.astype(bool))
         assert (r['wins'] == 5) and (r['percent_wins'] == 100)
 
     def test_wins_include_spoiled(self):
         sim = self.make_sim_spoiled()
         sim.picked = sim.cars
-        r = sim.get_results(spoiled_games='include')
+        r = sim.get_results(condition=None)
         assert (r['wins'] == 10) and (r['percent_wins'] == 100)
 
     def test_wins_only_spoiled(self):
         sim = self.make_sim_spoiled()
         sim.picked = sim.cars
-        r = sim.get_results(spoiled_games='only')
+        r = sim.get_results(condition=sim.spoiled.astype(bool))
         assert (r['wins'] == 5) and (r['percent_wins'] == 100)
 
 class TestCombineSims:
