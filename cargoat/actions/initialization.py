@@ -61,7 +61,7 @@ class InitDoorsFixed(MontyHallAction):
         sim.cars[:, cols] = 1
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
         return sim
 
 class InitDoorsRandom(MontyHallAction):
@@ -90,7 +90,7 @@ class InitDoorsRandom(MontyHallAction):
         shape = (sim.n, self.cars + self.goats)
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
 
         if self.cars == 1:
             sim.cars = one_per_row(shape, dtype=int)

@@ -233,7 +233,7 @@ the simulation will have the action applied.</p>
 
     def __call__(self, sim):
         draws = np.random.rand(len(sim.idx))
-        action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
+        action = IfElse(draws &lt; self.p, self.action, Pass(), condition_call=False)
         action(sim)
         return sim</code></pre>
 </details>
@@ -458,7 +458,7 @@ The default is True.</dd>
 </dd>
 <dt id="cargoat.actions.IfElse"><code class="flex name class">
 <span>class <span class="ident">IfElse</span></span>
-<span>(</span><span>condition, a, b, call=True)</span>
+<span>(</span><span>condition, a, b, condition_call=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Do an if-else comparison to decide which of two actions
@@ -495,7 +495,7 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class IfElse(MontyHallAction):
-    def __init__(self, condition, a, b, call=True):
+    def __init__(self, condition, a, b, condition_call=True):
         &#39;&#39;&#39;
         Do an if-else comparison to decide which of two actions
         to apply.  A condition is tested on all rows of the simulation
@@ -529,13 +529,15 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
         self.condition = condition
         self.a = a
         self.b = b
-        self.call = call
+        self.condition_call = condition_call
 
     def __call__(self, sim):
 
-        bools = self.condition(sim) if self.call else self.condition
+        bools = self.condition(sim) if self.condition_call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
+        sim_true._ifelse_index = bools
+        sim_false._ifelse_index = ~bools
 
         self.a(sim_true)
         self.b(sim_false)
@@ -650,7 +652,7 @@ simulation, all with placement goat-goat-car.</dd>
         sim.cars[:, cols] = 1
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -706,7 +708,7 @@ is closest to the original Monty Hall game.</p>
         shape = (sim.n, self.cars + self.goats)
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
 
         if self.cars == 1:
             sim.cars = one_per_row(shape, dtype=int)
@@ -735,7 +737,7 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 1
+        sim.spoiled[:] = True
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -758,7 +760,7 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 0
+        sim.spoiled[:] = False
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -1392,17 +1394,25 @@ The default is True.</dd>
 </dd>
 <dt id="cargoat.actions.ShowResults"><code class="flex name class">
 <span>class <span class="ident">ShowResults</span></span>
-<span>(</span><span>spoiled_games='omit')</span>
+<span>(</span><span>condition=None, condition_call=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Print the number of wins and losses.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Behavior for dealing with spoiled games. The default is 'omit'.
-- 'omit': discard spoiled games
-- 'include': include spoiled games in the results
-- 'only': only show the results for spoiled games</dd>
+<dt><strong><code>condition</code></strong> :&ensp;<code> callable</code> or <code>list-like</code></dt>
+<dd>
+<p>Use this argument to show result for only certain trials.
+By default, this is expected to be a callable.
+The callable is
+passed the current simulation, and is expected to return a boolean
+1D array which dictates the rows/trials to include.</p>
+<p>A pre-computed condition can be applied by passing
+<code>condition_call=False</code> - in this case, <code>condition</code> will not be called,
+it will simply be used to index the simulation.</p>
+</dd>
+<dt><strong><code>call</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Treat <code>condition</code> as a callable. The default is True.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>None.</p></div>
@@ -1411,27 +1421,37 @@ The default is True.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ShowResults(MontyHallAction):
-    def __init__(self, spoiled_games=&#39;omit&#39;):
+    def __init__(self, condition=None, condition_call=True):
         &#39;&#39;&#39;
         Print the number of wins and losses.
 
         Parameters
         ----------
-        spoiled_games : str, optional
-            Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
-            - &#39;omit&#39;: discard spoiled games
-            - &#39;include&#39;: include spoiled games in the results
-            - &#39;only&#39;: only show the results for spoiled games
+        condition :  callable or list-like
+            Use this argument to show result for only certain trials.
+            By default, this is expected to be a callable.  The callable is
+            passed the current simulation, and is expected to return a boolean
+            1D array which dictates the rows/trials to include.
+
+            A pre-computed condition can be applied by passing
+            `condition_call=False` - in this case, `condition` will not be called,
+            it will simply be used to index the simulation.
+        call : bool, optional
+            Treat `condition` as a callable. The default is True.
 
         Returns
         -------
         None.
 
         &#39;&#39;&#39;
-        self.spoiled_games = spoiled_games
+        self.condition = condition
+        self.condition_call = condition_call
 
     def __call__(self, sim):
-        pprint.pprint(sim.get_results(spoiled_games=self.spoiled_games), sort_dicts=False)
+        condition_call = False if self.condition is None else self.condition_call
+        bools = self.condition(sim) if condition_call else self.conditon
+        res = sim.get_results(condition=bools)
+        pprint.pprint(res, sort_dicts=False)
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>

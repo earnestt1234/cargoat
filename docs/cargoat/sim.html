@@ -154,7 +154,7 @@ def combine_sims(sims, index=None, copy=True):
     cars = np.zeros(shape, dtype=int)
     picked = np.zeros(shape, dtype=int)
     revealed = np.zeros(shape, dtype=int)
-    spoiled = np.zeros(shape[0], dtype=int)
+    spoiled = np.zeros(shape[0], dtype=bool)
 
     for i in np.unique(index):
         sim = sims[i]
@@ -191,7 +191,7 @@ class MontyHallSim:
         the number of trials.  The number of doors is determined by the particular
         game being played.
 
-        There is also a `spoiled` attribute, which is a numpy array of
+        There is also a `spoiled` attribute, which is a boolean numpy array of
         shape (trials,).  This simply records whether a trial has broken
         the rules of the traditional Monty Hall game.
 
@@ -249,7 +249,7 @@ class MontyHallSim:
         cars : 2D numpy array, optional
             Integer array indicating doors containing cars. The default is None.
         spoiled : 1D numpy array, optional
-            Integer array indicating spoiled trials. The default is None.
+            Boolean array indicating spoiled trials. The default is None.
         default : int, optional
             When only some of `picked`/`revealed`/`cars` are provided, use
             this value to fill the missing arrays. The default is 0.
@@ -295,7 +295,7 @@ class MontyHallSim:
 
         n, doors = shape
         if spoiled is None:
-            spoiled = np.zeros(n, dtype=int)
+            spoiled = np.zeros(n, dtype=bool)
         if len(spoiled) != n:
             raise ValueError(&#39;spoiled array does not match&#39;)
 
@@ -346,14 +346,14 @@ class MontyHallSim:
         self.cars = np.zeros(shape, dtype=int)
         self.picked = np.zeros(shape, dtype=int)
         self.revealed = np.zeros(shape, dtype=int)
-        self.spoiled = np.zeros(self.n, dtype=int)
+        self.spoiled = np.zeros(self.n, dtype=bool)
 
     def make_empty(self):
         &#39;&#39;&#39;Save empty arrays into main arrays.&#39;&#39;&#39;
         self.cars = np.empty(0, dtype=int)
         self.picked = np.empty(0, dtype=int)
         self.revealed = np.empty(0, dtype=int)
-        self.spoiled = np.empty(0, dtype=int)
+        self.spoiled = np.empty(0, dtype=bool)
 
     # ---- Indexing
     def select(self, x=None, y=None, copy=True, use_ix_=True):
@@ -682,7 +682,7 @@ class MontyHallSim:
                                     copy=True)
 
     # ---- Results
-    def get_results(self, spoiled_games=&#39;omit&#39;):
+    def get_results(self, condition=None):
         &#39;&#39;&#39;
         Return a dictionary containing the game results,
         e.g. number of wins and losses.  Trials are counted
@@ -691,33 +691,17 @@ class MontyHallSim:
 
         Parameters
         ----------
-        spoiled_games : str, optional
-            Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
-            - &#39;omit&#39;: discard spoiled games
-            - &#39;include&#39;: include spoiled games in the results
-            - &#39;only&#39;: only show the results for spoiled games
-
-        Raises
-        ------
-        ValueError
-            Unrecognized value for `spoiled_games`.
+        condition :  callable or list-like
+            A pre-computed 1D boolean arrray used to index the simulation.
 
         Returns
         -------
-        results : dict
-            Dictionary of results.
+        None.
 
         &#39;&#39;&#39;
 
-        spoiled = self.spoiled == 1
-        if spoiled_games == &#39;include&#39;:
-            sim = self
-        elif spoiled_games == &#39;omit&#39;:
-            sim = self.select(~spoiled)
-        elif spoiled_games == &#39;only&#39;:
-            sim = self.select(spoiled)
-        else:
-            raise ValueError(&#39;`spoiled_games` must be &#34;include&#34;, &#34;omit&#34;, or &#34;only&#34;.&#39;)
+
+        sim = self.select(x=condition) if condition is not None else self
 
         wins = np.sum(np.any(sim.picked * sim.cars, axis=1))
         losses = sim.n - wins
@@ -930,7 +914,7 @@ array([[1, 1, 1],
     cars = np.zeros(shape, dtype=int)
     picked = np.zeros(shape, dtype=int)
     revealed = np.zeros(shape, dtype=int)
-    spoiled = np.zeros(shape[0], dtype=int)
+    spoiled = np.zeros(shape[0], dtype=bool)
 
     for i in np.unique(index):
         sim = sims[i]
@@ -973,7 +957,7 @@ The initialization argument <code>n</code> determines
 the number of trials.
 The number of doors is determined by the particular
 game being played.</p>
-<p>There is also a <code>spoiled</code> attribute, which is a numpy array of
+<p>There is also a <code>spoiled</code> attribute, which is a boolean numpy array of
 shape (trials,).
 This simply records whether a trial has broken
 the rules of the traditional Monty Hall game.</p>
@@ -1019,7 +1003,7 @@ simulation.</p>
         the number of trials.  The number of doors is determined by the particular
         game being played.
 
-        There is also a `spoiled` attribute, which is a numpy array of
+        There is also a `spoiled` attribute, which is a boolean numpy array of
         shape (trials,).  This simply records whether a trial has broken
         the rules of the traditional Monty Hall game.
 
@@ -1077,7 +1061,7 @@ simulation.</p>
         cars : 2D numpy array, optional
             Integer array indicating doors containing cars. The default is None.
         spoiled : 1D numpy array, optional
-            Integer array indicating spoiled trials. The default is None.
+            Boolean array indicating spoiled trials. The default is None.
         default : int, optional
             When only some of `picked`/`revealed`/`cars` are provided, use
             this value to fill the missing arrays. The default is 0.
@@ -1123,7 +1107,7 @@ simulation.</p>
 
         n, doors = shape
         if spoiled is None:
-            spoiled = np.zeros(n, dtype=int)
+            spoiled = np.zeros(n, dtype=bool)
         if len(spoiled) != n:
             raise ValueError(&#39;spoiled array does not match&#39;)
 
@@ -1174,14 +1158,14 @@ simulation.</p>
         self.cars = np.zeros(shape, dtype=int)
         self.picked = np.zeros(shape, dtype=int)
         self.revealed = np.zeros(shape, dtype=int)
-        self.spoiled = np.zeros(self.n, dtype=int)
+        self.spoiled = np.zeros(self.n, dtype=bool)
 
     def make_empty(self):
         &#39;&#39;&#39;Save empty arrays into main arrays.&#39;&#39;&#39;
         self.cars = np.empty(0, dtype=int)
         self.picked = np.empty(0, dtype=int)
         self.revealed = np.empty(0, dtype=int)
-        self.spoiled = np.empty(0, dtype=int)
+        self.spoiled = np.empty(0, dtype=bool)
 
     # ---- Indexing
     def select(self, x=None, y=None, copy=True, use_ix_=True):
@@ -1510,7 +1494,7 @@ simulation.</p>
                                     copy=True)
 
     # ---- Results
-    def get_results(self, spoiled_games=&#39;omit&#39;):
+    def get_results(self, condition=None):
         &#39;&#39;&#39;
         Return a dictionary containing the game results,
         e.g. number of wins and losses.  Trials are counted
@@ -1519,33 +1503,17 @@ simulation.</p>
 
         Parameters
         ----------
-        spoiled_games : str, optional
-            Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
-            - &#39;omit&#39;: discard spoiled games
-            - &#39;include&#39;: include spoiled games in the results
-            - &#39;only&#39;: only show the results for spoiled games
-
-        Raises
-        ------
-        ValueError
-            Unrecognized value for `spoiled_games`.
+        condition :  callable or list-like
+            A pre-computed 1D boolean arrray used to index the simulation.
 
         Returns
         -------
-        results : dict
-            Dictionary of results.
+        None.
 
         &#39;&#39;&#39;
 
-        spoiled = self.spoiled == 1
-        if spoiled_games == &#39;include&#39;:
-            sim = self
-        elif spoiled_games == &#39;omit&#39;:
-            sim = self.select(~spoiled)
-        elif spoiled_games == &#39;only&#39;:
-            sim = self.select(spoiled)
-        else:
-            raise ValueError(&#39;`spoiled_games` must be &#34;include&#34;, &#34;omit&#34;, or &#34;only&#34;.&#39;)
+
+        sim = self.select(x=condition) if condition is not None else self
 
         wins = np.sum(np.any(sim.picked * sim.cars, axis=1))
         losses = sim.n - wins
@@ -1577,7 +1545,7 @@ simulation.</p>
 <dt><strong><code>cars</code></strong> :&ensp;<code>2D numpy array</code>, optional</dt>
 <dd>Integer array indicating doors containing cars. The default is None.</dd>
 <dt><strong><code>spoiled</code></strong> :&ensp;<code>1D numpy array</code>, optional</dt>
-<dd>Integer array indicating spoiled trials. The default is None.</dd>
+<dd>Boolean array indicating spoiled trials. The default is None.</dd>
 <dt><strong><code>default</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>When only some of <code>picked</code>/<code>revealed</code>/<code>cars</code> are provided, use
 this value to fill the missing arrays. The default is 0.</dd>
@@ -1621,7 +1589,7 @@ def from_arrays(cls, picked=None, revealed=None, cars=None,
     cars : 2D numpy array, optional
         Integer array indicating doors containing cars. The default is None.
     spoiled : 1D numpy array, optional
-        Integer array indicating spoiled trials. The default is None.
+        Boolean array indicating spoiled trials. The default is None.
     default : int, optional
         When only some of `picked`/`revealed`/`cars` are provided, use
         this value to fill the missing arrays. The default is 0.
@@ -1667,7 +1635,7 @@ def from_arrays(cls, picked=None, revealed=None, cars=None,
 
     n, doors = shape
     if spoiled is None:
-        spoiled = np.zeros(n, dtype=int)
+        spoiled = np.zeros(n, dtype=bool)
     if len(spoiled) != n:
         raise ValueError(&#39;spoiled array does not match&#39;)
 
@@ -1853,7 +1821,7 @@ Target is <code>cars</code>, <code>picked</code>, or <code>revealed</code>.</p><
 </details>
 </dd>
 <dt id="cargoat.sim.MontyHallSim.get_results"><code class="name flex">
-<span>def <span class="ident">get_results</span></span>(<span>self, spoiled_games='omit')</span>
+<span>def <span class="ident">get_results</span></span>(<span>self, condition=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Return a dictionary containing the game results,
@@ -1863,27 +1831,16 @@ as wins when at least one pick and car overlap, i.e.
 both have 1s in the same position.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code>, optional</dt>
-<dd>Behavior for dealing with spoiled games. The default is 'omit'.
-- 'omit': discard spoiled games
-- 'include': include spoiled games in the results
-- 'only': only show the results for spoiled games</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>ValueError</code></dt>
-<dd>Unrecognized value for <code>spoiled_games</code>.</dd>
+<dt><strong><code>condition</code></strong> :&ensp;<code> callable</code> or <code>list-like</code></dt>
+<dd>A pre-computed 1D boolean arrray used to index the simulation.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><strong><code>results</code></strong> :&ensp;<code>dict</code></dt>
-<dd>Dictionary of results.</dd>
-</dl></div>
+<p>None.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_results(self, spoiled_games=&#39;omit&#39;):
+<pre><code class="python">def get_results(self, condition=None):
     &#39;&#39;&#39;
     Return a dictionary containing the game results,
     e.g. number of wins and losses.  Trials are counted
@@ -1892,33 +1849,17 @@ both have 1s in the same position.</p>
 
     Parameters
     ----------
-    spoiled_games : str, optional
-        Behavior for dealing with spoiled games. The default is &#39;omit&#39;.
-        - &#39;omit&#39;: discard spoiled games
-        - &#39;include&#39;: include spoiled games in the results
-        - &#39;only&#39;: only show the results for spoiled games
-
-    Raises
-    ------
-    ValueError
-        Unrecognized value for `spoiled_games`.
+    condition :  callable or list-like
+        A pre-computed 1D boolean arrray used to index the simulation.
 
     Returns
     -------
-    results : dict
-        Dictionary of results.
+    None.
 
     &#39;&#39;&#39;
 
-    spoiled = self.spoiled == 1
-    if spoiled_games == &#39;include&#39;:
-        sim = self
-    elif spoiled_games == &#39;omit&#39;:
-        sim = self.select(~spoiled)
-    elif spoiled_games == &#39;only&#39;:
-        sim = self.select(spoiled)
-    else:
-        raise ValueError(&#39;`spoiled_games` must be &#34;include&#34;, &#34;omit&#34;, or &#34;only&#34;.&#39;)
+
+    sim = self.select(x=condition) if condition is not None else self
 
     wins = np.sum(np.any(sim.picked * sim.cars, axis=1))
     losses = sim.n - wins
@@ -1950,7 +1891,7 @@ both have 1s in the same position.</p>
     self.cars = np.zeros(shape, dtype=int)
     self.picked = np.zeros(shape, dtype=int)
     self.revealed = np.zeros(shape, dtype=int)
-    self.spoiled = np.zeros(self.n, dtype=int)</code></pre>
+    self.spoiled = np.zeros(self.n, dtype=bool)</code></pre>
 </details>
 </dd>
 <dt id="cargoat.sim.MontyHallSim.make_empty"><code class="name flex">
@@ -1967,7 +1908,7 @@ both have 1s in the same position.</p>
     self.cars = np.empty(0, dtype=int)
     self.picked = np.empty(0, dtype=int)
     self.revealed = np.empty(0, dtype=int)
-    self.spoiled = np.empty(0, dtype=int)</code></pre>
+    self.spoiled = np.empty(0, dtype=bool)</code></pre>
 </details>
 </dd>
 <dt id="cargoat.sim.MontyHallSim.pickable_doors"><code class="name flex">

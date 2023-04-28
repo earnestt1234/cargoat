@@ -81,7 +81,7 @@ class TestSimEqual:
         a.init_doors(3)
         b = a.copy()
         if target == 'spoiled':
-            b.spoiled[0] = 1
+            b.spoiled[0] = True
         else:
             getattr(b, target)[0, 0] = 1
         assert a != b
@@ -179,18 +179,18 @@ class TestSimFromArrays:
 
     def test_pass_spoiled(self):
         a = np.ones((10, 5), dtype=int)
-        spoiled = np.zeros(10, dtype=int)
+        spoiled = np.zeros(10, dtype=bool)
         sim = cg.MontyHallSim.from_arrays(picked = a, spoiled=spoiled)
-        assert (sim.spoiled == np.zeros(10, dtype=int)).all()
+        assert (sim.spoiled == np.zeros(10, dtype=bool)).all()
 
     def test_pass_spoiled_bad_size(self):
         a = np.ones((10, 5), dtype=int)
-        spoiled = np.zeros(9, dtype=int)
+        spoiled = np.zeros(9, dtype=bool)
         with pytest.raises(ValueError):
             cg.MontyHallSim.from_arrays(picked = a, spoiled=spoiled)
 
     def test_pass_spoiled_only(self):
-        spoiled = np.zeros(9, dtype=int)
+        spoiled = np.zeros(9, dtype=bool)
         with pytest.raises(ValueError):
             cg.MontyHallSim.from_arrays(spoiled=spoiled)
 
@@ -491,7 +491,7 @@ class TestSetArrayOneDoor:
 
         elif should_spoil and allow_spoiled:
             setter(sim, new_array)
-            if sim.spoiled[0] == 1:
+            if sim.spoiled[0] == True:
                 SUCCESS = True
 
         else:
@@ -556,13 +556,13 @@ class TestCopy:
         a.cars[:] = 1
         a.picked[:] = 1
         a.revealed[:] = 1
-        a.spoiled[:] = 1
+        a.spoiled[:] = True
 
         b = a.copy()
         assert all([np.all(b.cars == 1),
                     np.all(b.picked == 1),
                     np.all(b.revealed == 1),
-                    np.all(b.spoiled == 1)])
+                    np.all(b.spoiled == True)])
 
 class TestGetResults:
 
@@ -579,7 +579,7 @@ class TestGetResults:
     def make_sim_spoiled(self):
         # same as above, but mark doors 0-5 as spoiled
         sim = self.make_sim()
-        sim.spoiled[:5] = 1
+        sim.spoiled[:5] = True
 
         return sim
 
@@ -615,7 +615,7 @@ class TestGetResults:
     def test_wins_omit_spoiled(self):
         sim = self.make_sim_spoiled()
         sim.picked = sim.cars
-        r = sim.get_results(condition=~sim.spoiled.astype(bool))
+        r = sim.get_results(condition=~sim.spoiled)
         assert (r['wins'] == 5) and (r['percent_wins'] == 100)
 
     def test_wins_include_spoiled(self):
@@ -627,7 +627,7 @@ class TestGetResults:
     def test_wins_only_spoiled(self):
         sim = self.make_sim_spoiled()
         sim.picked = sim.cars
-        r = sim.get_results(condition=sim.spoiled.astype(bool))
+        r = sim.get_results(condition=sim.spoiled)
         assert (r['wins'] == 5) and (r['percent_wins'] == 100)
 
 class TestCombineSims:

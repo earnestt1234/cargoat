@@ -91,7 +91,7 @@ class InitDoorsFixed(MontyHallAction):
         sim.cars[:, cols] = 1
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
         return sim
 
 class InitDoorsRandom(MontyHallAction):
@@ -120,7 +120,7 @@ class InitDoorsRandom(MontyHallAction):
         shape = (sim.n, self.cars + self.goats)
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
 
         if self.cars == 1:
             sim.cars = one_per_row(shape, dtype=int)
@@ -234,7 +234,7 @@ simulation, all with placement goat-goat-car.</dd>
         sim.cars[:, cols] = 1
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -290,7 +290,7 @@ is closest to the original Monty Hall game.</p>
         shape = (sim.n, self.cars + self.goats)
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
-        sim.spoiled = np.zeros(sim.n, dtype=int)
+        sim.spoiled = np.zeros(sim.n, dtype=bool)
 
         if self.cars == 1:
             sim.cars = one_per_row(shape, dtype=int)

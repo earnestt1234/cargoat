@@ -29,7 +29,7 @@ class TestCheckSpoiled:
                 action(sim)
         elif behavior == 'spoil':
             action(sim)
-            assert np.all(sim.spoiled == [1, 0, 0])
+            assert np.all(sim.spoiled == [True, False, False])
 
     @pytest.mark.parametrize('behavior', ['spoil', 'raise'])
     def test_revealed_cars(self, behavior):
@@ -42,7 +42,7 @@ class TestCheckSpoiled:
                 action(sim)
         elif behavior == 'spoil':
             action(sim)
-            assert np.all(sim.spoiled == [1, 0, 0])
+            assert np.all(sim.spoiled == [True, False, False])
 
     @pytest.mark.parametrize('behavior', ['spoil', 'raise'])
     def test_no_cars(self, behavior):
@@ -53,7 +53,7 @@ class TestCheckSpoiled:
                 action(sim)
         elif behavior == 'spoil':
             action(sim)
-            assert np.all(sim.spoiled == [1, 1, 1])
+            assert np.all(sim.spoiled == [True, True, True])
 
     @pytest.mark.parametrize('behavior', ['spoil', 'raise'])
     def test_multiple_picks(self, behavior):
@@ -65,4 +65,4 @@ class TestCheckSpoiled:
                 action(sim)
         elif behavior == 'spoil':
             action(sim)
-            assert np.all(sim.spoiled == [1, 1, 1])
+            assert np.all(sim.spoiled == [True, True, True])

@@ -63,12 +63,12 @@ class ChanceTo(MontyHallAction):
 
     def __call__(self, sim):
         draws = np.random.rand(len(sim.idx))
-        action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
+        action = IfElse(draws &lt; self.p, self.action, Pass(), condition_call=False)
         action(sim)
         return sim
 
 class IfElse(MontyHallAction):
-    def __init__(self, condition, a, b, call=True):
+    def __init__(self, condition, a, b, condition_call=True):
         &#39;&#39;&#39;
         Do an if-else comparison to decide which of two actions
         to apply.  A condition is tested on all rows of the simulation
@@ -102,13 +102,15 @@ class IfElse(MontyHallAction):
         self.condition = condition
         self.a = a
         self.b = b
-        self.call = call
+        self.condition_call = condition_call
 
     def __call__(self, sim):
 
-        bools = self.condition(sim) if self.call else self.condition
+        bools = self.condition(sim) if self.condition_call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
+        sim_true._ifelse_index = bools
+        sim_false._ifelse_index = ~bools
 
         self.a(sim_true)
         self.b(sim_false)
@@ -218,7 +220,7 @@ the simulation will have the action applied.</p>
 
     def __call__(self, sim):
         draws = np.random.rand(len(sim.idx))
-        action = IfElse(draws &lt; self.p, self.action, Pass(), call=False)
+        action = IfElse(draws &lt; self.p, self.action, Pass(), condition_call=False)
         action(sim)
         return sim</code></pre>
 </details>
@@ -229,7 +231,7 @@ the simulation will have the action applied.</p>
 </dd>
 <dt id="cargoat.actions.logical.IfElse"><code class="flex name class">
 <span>class <span class="ident">IfElse</span></span>
-<span>(</span><span>condition, a, b, call=True)</span>
+<span>(</span><span>condition, a, b, condition_call=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Do an if-else comparison to decide which of two actions
@@ -266,7 +268,7 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class IfElse(MontyHallAction):
-    def __init__(self, condition, a, b, call=True):
+    def __init__(self, condition, a, b, condition_call=True):
         &#39;&#39;&#39;
         Do an if-else comparison to decide which of two actions
         to apply.  A condition is tested on all rows of the simulation
@@ -300,13 +302,15 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
         self.condition = condition
         self.a = a
         self.b = b
-        self.call = call
+        self.condition_call = condition_call
 
     def __call__(self, sim):
 
-        bools = self.condition(sim) if self.call else self.condition
+        bools = self.condition(sim) if self.condition_call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
+        sim_true._ifelse_index = bools
+        sim_false._ifelse_index = ~bools
 
         self.a(sim_true)
         self.b(sim_false)

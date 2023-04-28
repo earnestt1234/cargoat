@@ -123,7 +123,7 @@ def combine_sims(sims, index=None, copy=True):
     cars = np.zeros(shape, dtype=int)
     picked = np.zeros(shape, dtype=int)
     revealed = np.zeros(shape, dtype=int)
-    spoiled = np.zeros(shape[0], dtype=int)
+    spoiled = np.zeros(shape[0], dtype=bool)
 
     for i in np.unique(index):
         sim = sims[i]
@@ -160,7 +160,7 @@ class MontyHallSim:
         the number of trials.  The number of doors is determined by the particular
         game being played.
 
-        There is also a `spoiled` attribute, which is a numpy array of
+        There is also a `spoiled` attribute, which is a boolean numpy array of
         shape (trials,).  This simply records whether a trial has broken
         the rules of the traditional Monty Hall game.
 
@@ -218,7 +218,7 @@ class MontyHallSim:
         cars : 2D numpy array, optional
             Integer array indicating doors containing cars. The default is None.
         spoiled : 1D numpy array, optional
-            Integer array indicating spoiled trials. The default is None.
+            Boolean array indicating spoiled trials. The default is None.
         default : int, optional
             When only some of `picked`/`revealed`/`cars` are provided, use
             this value to fill the missing arrays. The default is 0.
@@ -264,7 +264,7 @@ class MontyHallSim:
 
         n, doors = shape
         if spoiled is None:
-            spoiled = np.zeros(n, dtype=int)
+            spoiled = np.zeros(n, dtype=bool)
         if len(spoiled) != n:
             raise ValueError('spoiled array does not match')
 
@@ -315,14 +315,14 @@ class MontyHallSim:
         self.cars = np.zeros(shape, dtype=int)
         self.picked = np.zeros(shape, dtype=int)
         self.revealed = np.zeros(shape, dtype=int)
-        self.spoiled = np.zeros(self.n, dtype=int)
+        self.spoiled = np.zeros(self.n, dtype=bool)
 
     def make_empty(self):
         '''Save empty arrays into main arrays.'''
         self.cars = np.empty(0, dtype=int)
         self.picked = np.empty(0, dtype=int)
         self.revealed = np.empty(0, dtype=int)
-        self.spoiled = np.empty(0, dtype=int)
+        self.spoiled = np.empty(0, dtype=bool)
 
     # ---- Indexing
     def select(self, x=None, y=None, copy=True, use_ix_=True):

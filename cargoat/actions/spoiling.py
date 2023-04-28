@@ -21,7 +21,7 @@ def _verify_all_good_2D(sim, good_array, fail_message, behavior='raise'):
                f"trial {trial} door {door}.")
         bad_trials_raise(invalid_rows, msg, MontyHallError)
     elif behavior == 'spoil':
-        sim.spoiled[invalid_rows] = 1
+        sim.spoiled[invalid_rows] = True
     elif behavior != 'nothing':
         raise ValueError('action must be one of "raise", "spoil", or "nothing".')
 
@@ -34,7 +34,7 @@ def _verify_all_good_1D(sim, good_array, fail_message, behavior='raise'):
         msg = (f"{fail_message}.")
         bad_trials_raise(invalid, msg, MontyHallError)
     elif behavior == 'spoil':
-        sim.spoiled[invalid] = 1
+        sim.spoiled[invalid] = True
     elif behavior != 'nothing':
         raise ValueError('action must be one of "raise", "spoil", or "nothing".')
 
@@ -106,12 +106,12 @@ class MarkSpoiled(MontyHallAction):
     '''Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.'''
     def __call__(self, sim):
-        sim.spoiled[True] = 1
+        sim.spoiled[:] = True
         return sim
 
 class MarkUnspoiled(MontyHallAction):
     '''Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.'''
     def __call__(self, sim):
-        sim.spoiled[True] = 0
+        sim.spoiled[:] = False
         return sim

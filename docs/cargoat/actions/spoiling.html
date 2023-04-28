@@ -50,7 +50,7 @@ def _verify_all_good_2D(sim, good_array, fail_message, behavior=&#39;raise&#39;)
                f&#34;trial {trial} door {door}.&#34;)
         bad_trials_raise(invalid_rows, msg, MontyHallError)
     elif behavior == &#39;spoil&#39;:
-        sim.spoiled[invalid_rows] = 1
+        sim.spoiled[invalid_rows] = True
     elif behavior != &#39;nothing&#39;:
         raise ValueError(&#39;action must be one of &#34;raise&#34;, &#34;spoil&#34;, or &#34;nothing&#34;.&#39;)
 
@@ -63,7 +63,7 @@ def _verify_all_good_1D(sim, good_array, fail_message, behavior=&#39;raise&#39;)
         msg = (f&#34;{fail_message}.&#34;)
         bad_trials_raise(invalid, msg, MontyHallError)
     elif behavior == &#39;spoil&#39;:
-        sim.spoiled[invalid] = 1
+        sim.spoiled[invalid] = True
     elif behavior != &#39;nothing&#39;:
         raise ValueError(&#39;action must be one of &#34;raise&#34;, &#34;spoil&#34;, or &#34;nothing&#34;.&#39;)
 
@@ -135,14 +135,14 @@ class MarkSpoiled(MontyHallAction):
     &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 1
+        sim.spoiled[:] = True
         return sim
 
 class MarkUnspoiled(MontyHallAction):
     &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 0
+        sim.spoiled[:] = False
         return sim</code></pre>
 </details>
 </section>
@@ -277,7 +277,7 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as spoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 1
+        sim.spoiled[:] = True
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -300,7 +300,7 @@ Can be combined with
     &#39;&#39;&#39;Manually mark all trials as unspoiled.  Can be combined with
     `cargoat.actions.logical.IfElse` for conditional marking.&#39;&#39;&#39;
     def __call__(self, sim):
-        sim.spoiled[True] = 0
+        sim.spoiled[:] = False
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
