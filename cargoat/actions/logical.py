@@ -80,6 +80,8 @@ class IfElse(MontyHallAction):
         bools = self.condition(sim) if self.call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
+        sim_true._ifelse_index = bools
+        sim_false._ifelse_index = ~bools
 
         self.a(sim_true)
         self.b(sim_false)
