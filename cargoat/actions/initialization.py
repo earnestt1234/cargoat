@@ -9,6 +9,7 @@ Created on Thu Nov 17 12:17:34 2022
 import numpy as np
 
 from cargoat.actions.base import MontyHallAction
+from cargoat.arrayops import one_per_row, n_per_row
 
 class InitDoorsEmpty(MontyHallAction):
     def __init__(self, doors):
@@ -55,7 +56,9 @@ class InitDoorsFixed(MontyHallAction):
 
     def __call__(self, sim):
         shape = (sim.n, len(self.placement))
-        sim.cars = np.tile(self.placement, (sim.n, 1))
+        cols = [i for i in range(len(self.placement)) if self.placement[i] == 1]
+        sim.cars = np.zeros(shape, dtype=int)
+        sim.cars[:, cols] = 1
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
@@ -85,11 +88,13 @@ class InitDoorsRandom(MontyHallAction):
 
     def __call__(self, sim):
         shape = (sim.n, self.cars + self.goats)
-        sim.cars = np.zeros(shape, dtype=int)
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
-        p = np.random.rand(shape[0], shape[1]).argsort(1)
-        sim.cars[p < self.cars] = 1
+        if self.cars == 1:
+            sim.cars = one_per_row(shape, dtype=int)
+        else:
+            sim.cars = n_per_row(shape, n=self.cars, dtype=int)
+
         return sim

@@ -645,7 +645,9 @@ simulation, all with placement goat-goat-car.</dd>
 
     def __call__(self, sim):
         shape = (sim.n, len(self.placement))
-        sim.cars = np.tile(self.placement, (sim.n, 1))
+        cols = [i for i in range(len(self.placement)) if self.placement[i] == 1]
+        sim.cars = np.zeros(shape, dtype=int)
+        sim.cars[:, cols] = 1
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
@@ -702,13 +704,15 @@ is closest to the original Monty Hall game.</p>
 
     def __call__(self, sim):
         shape = (sim.n, self.cars + self.goats)
-        sim.cars = np.zeros(shape, dtype=int)
         sim.picked = np.zeros(shape, dtype=int)
         sim.revealed = np.zeros(shape, dtype=int)
         sim.spoiled = np.zeros(sim.n, dtype=int)
 
-        p = np.random.rand(shape[0], shape[1]).argsort(1)
-        sim.cars[p &lt; self.cars] = 1
+        if self.cars == 1:
+            sim.cars = one_per_row(shape, dtype=int)
+        else:
+            sim.cars = n_per_row(shape, n=self.cars, dtype=int)
+
         return sim</code></pre>
 </details>
 <h3>Ancestors</h3>
