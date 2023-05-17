@@ -697,12 +697,14 @@ class MontyHallSim:
         losses = sim.n - wins
         percent_wins = (wins / sim.n) * 100
         percent_losses = (losses / sim.n) * 100
+        spoiled_games = np.any(sim.spoiled)
         results = {
             'trials': sim.n,
             'wins': wins,
             'losses': losses,
             'percent_wins': percent_wins,
-            'percent_losses': percent_losses
+            'percent_losses': percent_losses,
+            'spoiled_games': spoiled_games
             }
 
         return results

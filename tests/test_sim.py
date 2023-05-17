@@ -586,7 +586,8 @@ class TestGetResults:
     def test_expected_keys(self):
         sim = self.make_sim()
         r = sim.get_results()
-        assert set(r.keys()) == {'wins', 'losses', 'trials', 'percent_wins', 'percent_losses'}
+        s = {'wins', 'losses', 'trials', 'percent_wins', 'percent_losses', 'spoiled_games'}
+        assert set(r.keys()) == s
 
     def test_wins_none_picked(self):
         sim = self.make_sim()
