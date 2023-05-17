@@ -4,10 +4,12 @@
 Core functions for doing things in cargoat.
 """
 
+import numpy as np
+
 from cargoat.errors import MontyHallError
 from cargoat.sim import MontyHallSim
 
-def play(game, n=100):
+def play(game, n=100, seed=None):
     '''
     Run a MontyHall simulation.
 
@@ -17,6 +19,8 @@ def play(game, n=100):
         A list of objects from the `cargoat.actions` subpackage.
     n : int, optional
         Number of games to simulate. The default is 100.
+    seed: number, optional
+        Set the seed for the RNG.  See numpy docs for more information.
 
     Raises
     ------
@@ -29,6 +33,9 @@ def play(game, n=100):
         Simulation object, recording the trials and results.
 
     '''
+    if seed:
+        np.random.seed(seed)
+
     sim = MontyHallSim(n=n)
     for i, action in enumerate(game):
         try:

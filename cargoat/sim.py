@@ -442,6 +442,18 @@ class MontyHallSim:
         arr = getattr(self, target)
         return arr.sum(axis=1)
 
+    def show(self, start=0, end=10):
+        '''Printout a representation of a selection of rows of the simulation.'''
+        start = max(0, start)
+        end = min(self.n, end)
+        print(f'Trials: {start}-{end-1}')
+        print('\nCars:')
+        print(self.cars[start:end, ])
+        print('\nRevealed:')
+        print(self.revealed[start:end, ])
+        print('\nPicked:')
+        print(self.picked[start:end, ])
+
     # ---- Generic setter functions
 
     def _get_spoiling_func(self, target):
@@ -651,6 +663,15 @@ class MontyHallSim:
                                     copy=True)
 
     # ---- Results
+
+    def is_win(self):
+        '''
+        Return a boolean array indicating which trials are wins.  I.e.,
+        at least one door with a car is picked.  Spoiled games have not
+        bearing on this method
+        '''
+        return np.any(self.picked * self.cars, axis=1)
+
     def get_results(self, condition=None):
         '''
         Return a dictionary containing the game results,
