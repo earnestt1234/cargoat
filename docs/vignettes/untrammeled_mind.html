@@ -15811,7 +15811,7 @@ Picked:
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>&lt;matplotlib.legend.Legend at 0x129ca8810&gt;</pre>
+<pre>&lt;matplotlib.legend.Legend at 0x124bd0850&gt;</pre>
 </div>
 
 </div>
@@ -15938,7 +15938,7 @@ File <span class="ansi-green-fg">~/Documents/GitHub/cargoat/cargoat/core.py:45</
 <span class="ansi-green-fg">---&gt; 45</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> MontyHallError(msg) <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> <span class="ansi-bold" style="color: rgb(0,0,255)">error</span>
 <span class="ansi-green-intense-fg ansi-bold">     47</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> sim
 
-<span class="ansi-red-fg">MontyHallError</span>: Error for step 2: &lt;cargoat.actions.reveal.Reveal object at 0x129df6c90&gt;</pre>
+<span class="ansi-red-fg">MontyHallError</span>: Error for step 2: &lt;cargoat.actions.reveal.Reveal object at 0x124a7b710&gt;</pre>
 </div>
 </div>
 
@@ -16614,6 +16614,7 @@ File <span class="ansi-green-fg">~/Documents/GitHub/cargoat/cargoat/core.py:45</
         <span class="n">cg</span><span class="o">.</span><span class="n">IfElse</span><span class="p">(</span><span class="k">lambda</span> <span class="n">sim</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">picked</span> <span class="o">&amp;</span> <span class="n">sim</span><span class="o">.</span><span class="n">cars</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
                   <span class="k">lambda</span> <span class="n">sim</span><span class="p">:</span> <span class="n">set_tell</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">_ifelse_index</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.95</span><span class="p">),</span>
                   <span class="k">lambda</span> <span class="n">sim</span><span class="p">:</span> <span class="n">set_tell</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">_ifelse_index</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">.1</span><span class="p">)),</span>
+        <span class="n">cg</span><span class="o">.</span><span class="n">Reveal</span><span class="p">(),</span>
         <span class="n">cg</span><span class="o">.</span><span class="n">Stay</span><span class="p">()]</span>
 
 <span class="n">sim</span> <span class="o">=</span> <span class="n">cg</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
