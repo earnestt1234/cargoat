@@ -332,7 +332,7 @@ array([[1, 1, 1],
 </details>
 </dd>
 <dt id="cargoat.play"><code class="name flex">
-<span>def <span class="ident">play</span></span>(<span>game, n=100)</span>
+<span>def <span class="ident">play</span></span>(<span>game, n=100, seed=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Run a MontyHall simulation.</p>
@@ -342,6 +342,9 @@ array([[1, 1, 1],
 <dd>A list of objects from the <code><a title="cargoat.actions" href="actions/index.html">cargoat.actions</a></code> subpackage.</dd>
 <dt><strong><code>n</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Number of games to simulate. The default is 100.</dd>
+<dt><strong><code>seed</code></strong> :&ensp;<code>number</code>, optional</dt>
+<dd>Set the seed for the RNG.
+See numpy docs for more information.</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
@@ -357,7 +360,7 @@ array([[1, 1, 1],
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def play(game, n=100):
+<pre><code class="python">def play(game, n=100, seed=None):
     &#39;&#39;&#39;
     Run a MontyHall simulation.
 
@@ -367,6 +370,8 @@ array([[1, 1, 1],
         A list of objects from the `cargoat.actions` subpackage.
     n : int, optional
         Number of games to simulate. The default is 100.
+    seed: number, optional
+        Set the seed for the RNG.  See numpy docs for more information.
 
     Raises
     ------
@@ -379,6 +384,9 @@ array([[1, 1, 1],
         Simulation object, recording the trials and results.
 
     &#39;&#39;&#39;
+    if seed:
+        np.random.seed(seed)
+
     sim = MontyHallSim(n=n)
     for i, action in enumerate(game):
         try:
@@ -787,7 +795,7 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
 
     def __call__(self, sim):
 
-        bools = self.condition(sim) if self.condition_call else self.condition
+        bools = self.condition(sim).astype(bool) if self.condition_call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
         sim_true._ifelse_index = bools
@@ -1372,6 +1380,18 @@ simulation.</p>
         arr = getattr(self, target)
         return arr.sum(axis=1)
 
+    def show(self, start=0, end=10):
+        &#39;&#39;&#39;Printout a representation of a selection of rows of the simulation.&#39;&#39;&#39;
+        start = max(0, start)
+        end = min(self.n, end)
+        print(f&#39;Trials: {start}-{end-1}&#39;)
+        print(&#39;\nCars:&#39;)
+        print(self.cars[start:end, ])
+        print(&#39;\nRevealed:&#39;)
+        print(self.revealed[start:end, ])
+        print(&#39;\nPicked:&#39;)
+        print(self.picked[start:end, ])
+
     # ---- Generic setter functions
 
     def _get_spoiling_func(self, target):
@@ -1581,6 +1601,15 @@ simulation.</p>
                                     copy=True)
 
     # ---- Results
+
+    def is_win(self):
+        &#39;&#39;&#39;
+        Return a boolean array indicating which trials are wins.  I.e.,
+        at least one door with a car is picked.  Spoiled games have not
+        bearing on this method
+        &#39;&#39;&#39;
+        return np.any(self.picked * self.cars, axis=1)
+
     def get_results(self, condition=None):
         &#39;&#39;&#39;
         Return a dictionary containing the game results,
@@ -1606,12 +1635,14 @@ simulation.</p>
         losses = sim.n - wins
         percent_wins = (wins / sim.n) * 100
         percent_losses = (losses / sim.n) * 100
+        spoiled_games = np.any(sim.spoiled)
         results = {
             &#39;trials&#39;: sim.n,
             &#39;wins&#39;: wins,
             &#39;losses&#39;: losses,
             &#39;percent_wins&#39;: percent_wins,
-            &#39;percent_losses&#39;: percent_losses
+            &#39;percent_losses&#39;: percent_losses,
+            &#39;spoiled_games&#39;: spoiled_games
             }
 
         return results</code></pre>
@@ -1952,12 +1983,14 @@ both have 1s in the same position.</p>
     losses = sim.n - wins
     percent_wins = (wins / sim.n) * 100
     percent_losses = (losses / sim.n) * 100
+    spoiled_games = np.any(sim.spoiled)
     results = {
         &#39;trials&#39;: sim.n,
         &#39;wins&#39;: wins,
         &#39;losses&#39;: losses,
         &#39;percent_wins&#39;: percent_wins,
-        &#39;percent_losses&#39;: percent_losses
+        &#39;percent_losses&#39;: percent_losses,
+        &#39;spoiled_games&#39;: spoiled_games
         }
 
     return results</code></pre>
@@ -1979,6 +2012,28 @@ both have 1s in the same position.</p>
     self.picked = np.zeros(shape, dtype=int)
     self.revealed = np.zeros(shape, dtype=int)
     self.spoiled = np.zeros(self.n, dtype=bool)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.is_win"><code class="name flex">
+<span>def <span class="ident">is_win</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a boolean array indicating which trials are wins.
+I.e.,
+at least one door with a car is picked.
+Spoiled games have not
+bearing on this method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_win(self):
+    &#39;&#39;&#39;
+    Return a boolean array indicating which trials are wins.  I.e.,
+    at least one door with a car is picked.  Spoiled games have not
+    bearing on this method
+    &#39;&#39;&#39;
+    return np.any(self.picked * self.cars, axis=1)</code></pre>
 </details>
 </dd>
 <dt id="cargoat.MontyHallSim.make_empty"><code class="name flex">
@@ -2196,6 +2251,28 @@ indexing both rows and columns is not as simple as passing
                             cars=cars,
                             spoiled=spoiled,
                             copy=False)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.MontyHallSim.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self, start=0, end=10)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Printout a representation of a selection of rows of the simulation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self, start=0, end=10):
+    &#39;&#39;&#39;Printout a representation of a selection of rows of the simulation.&#39;&#39;&#39;
+    start = max(0, start)
+    end = min(self.n, end)
+    print(f&#39;Trials: {start}-{end-1}&#39;)
+    print(&#39;\nCars:&#39;)
+    print(self.cars[start:end, ])
+    print(&#39;\nRevealed:&#39;)
+    print(self.revealed[start:end, ])
+    print(&#39;\nPicked:&#39;)
+    print(self.picked[start:end, ])</code></pre>
 </details>
 </dd>
 </dl>
@@ -2826,12 +2903,24 @@ The default is True.</dd>
 </dd>
 <dt id="cargoat.ShowResults"><code class="flex name class">
 <span>class <span class="ident">ShowResults</span></span>
-<span>(</span><span>condition=None, condition_call=True)</span>
+<span>(</span><span>spoiled_games=None, condition=None, condition_call=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Print the number of wins and losses.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
+<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>Convenience option for dealing with spoiled games.
+Options are:</p>
+<pre><code>- 'ignore': get results for all trial
+- 'omit': don't include spoiled games
+- 'only': only include results for spoiled games
+- None: use a user-specified condition if provided
+</code></pre>
+<p>When specified, the <code>condition</code> and <code>condition_call</code> arguments
+are ignored.</p>
+</dd>
 <dt><strong><code>condition</code></strong> :&ensp;<code> callable</code> or <code>list-like</code></dt>
 <dd>
 <p>Use this argument to show result for only certain trials.
@@ -2843,7 +2932,7 @@ passed the current simulation, and is expected to return a boolean
 <code>condition_call=False</code> - in this case, <code>condition</code> will not be called,
 it will simply be used to index the simulation.</p>
 </dd>
-<dt><strong><code>call</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dt><strong><code>condition_call</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat <code>condition</code> as a callable. The default is True.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -2853,12 +2942,23 @@ it will simply be used to index the simulation.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ShowResults(MontyHallAction):
-    def __init__(self, condition=None, condition_call=True):
+    def __init__(self, spoiled_games=None, condition=None, condition_call=True):
         &#39;&#39;&#39;
         Print the number of wins and losses.
 
         Parameters
         ----------
+        spoiled_games: str
+            Convenience option for dealing with spoiled games.  Options are:
+
+                - &#39;ignore&#39;: get results for all trial
+                - &#39;omit&#39;: don&#39;t include spoiled games
+                - &#39;only&#39;: only include results for spoiled games
+                - None: use a user-specified condition if provided
+
+            When specified, the `condition` and `condition_call` arguments
+            are ignored.
+
         condition :  callable or list-like
             Use this argument to show result for only certain trials.
             By default, this is expected to be a callable.  The callable is
@@ -2868,7 +2968,7 @@ it will simply be used to index the simulation.</p>
             A pre-computed condition can be applied by passing
             `condition_call=False` - in this case, `condition` will not be called,
             it will simply be used to index the simulation.
-        call : bool, optional
+        condition_call : bool, optional
             Treat `condition` as a callable. The default is True.
 
         Returns
@@ -2876,12 +2976,27 @@ it will simply be used to index the simulation.</p>
         None.
 
         &#39;&#39;&#39;
+        self.spoiled_games = spoiled_games
         self.condition = condition
         self.condition_call = condition_call
 
+    def _get_spoiled_games_condition(self, sim):
+        if self.spoiled_games == &#39;ignore&#39;:
+            bools = np.ones(sim.n, dtype=bool)
+        elif self.spoiled_games == &#39;omit&#39;:
+            bools = ~sim.spoiled
+        elif self.spoiled_games == &#39;only&#39;:
+            bools = sim.spoiled
+        else:
+            raise ValueError(&#39;`spoiled_games` must be &#34;ignore&#34;, &#34;omit&#34;, or &#34;only&#34;.&#39;)
+        return bools
+
     def __call__(self, sim):
-        condition_call = False if self.condition is None else self.condition_call
-        bools = self.condition(sim) if condition_call else self.conditon
+        if self.spoiled_games is not None:
+            bools = self._get_spoiled_games_condition(sim)
+        else:
+            condition_call = False if self.condition is None else self.condition_call
+            bools = self.condition(sim) if condition_call else self.condition
         res = sim.get_results(condition=bools)
         pprint.pprint(res, sort_dicts=False)
         return sim</code></pre>
@@ -3201,12 +3316,14 @@ The default is True.</dd>
 <li><code><a title="cargoat.MontyHallSim.get_results" href="#cargoat.MontyHallSim.get_results">get_results</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.idx" href="#cargoat.MontyHallSim.idx">idx</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.init_doors" href="#cargoat.MontyHallSim.init_doors">init_doors</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.is_win" href="#cargoat.MontyHallSim.is_win">is_win</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.make_empty" href="#cargoat.MontyHallSim.make_empty">make_empty</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.pickable_doors" href="#cargoat.MontyHallSim.pickable_doors">pickable_doors</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.query_doors_or" href="#cargoat.MontyHallSim.query_doors_or">query_doors_or</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.revealable_doors" href="#cargoat.MontyHallSim.revealable_doors">revealable_doors</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.select" href="#cargoat.MontyHallSim.select">select</a></code></li>
 <li><code><a title="cargoat.MontyHallSim.shape" href="#cargoat.MontyHallSim.shape">shape</a></code></li>
+<li><code><a title="cargoat.MontyHallSim.show" href="#cargoat.MontyHallSim.show">show</a></code></li>
 </ul>
 </li>
 <li>

@@ -533,7 +533,7 @@ be used to decide how to apply actions <code>a</code> and <code>b</code>.</p>
 
     def __call__(self, sim):
 
-        bools = self.condition(sim) if self.condition_call else self.condition
+        bools = self.condition(sim).astype(bool) if self.condition_call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
         sim_true._ifelse_index = bools
@@ -1394,12 +1394,24 @@ The default is True.</dd>
 </dd>
 <dt id="cargoat.actions.ShowResults"><code class="flex name class">
 <span>class <span class="ident">ShowResults</span></span>
-<span>(</span><span>condition=None, condition_call=True)</span>
+<span>(</span><span>spoiled_games=None, condition=None, condition_call=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Print the number of wins and losses.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
+<dt><strong><code>spoiled_games</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>Convenience option for dealing with spoiled games.
+Options are:</p>
+<pre><code>- 'ignore': get results for all trial
+- 'omit': don't include spoiled games
+- 'only': only include results for spoiled games
+- None: use a user-specified condition if provided
+</code></pre>
+<p>When specified, the <code>condition</code> and <code>condition_call</code> arguments
+are ignored.</p>
+</dd>
 <dt><strong><code>condition</code></strong> :&ensp;<code> callable</code> or <code>list-like</code></dt>
 <dd>
 <p>Use this argument to show result for only certain trials.
@@ -1411,7 +1423,7 @@ passed the current simulation, and is expected to return a boolean
 <code>condition_call=False</code> - in this case, <code>condition</code> will not be called,
 it will simply be used to index the simulation.</p>
 </dd>
-<dt><strong><code>call</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dt><strong><code>condition_call</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Treat <code>condition</code> as a callable. The default is True.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
@@ -1421,12 +1433,23 @@ it will simply be used to index the simulation.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ShowResults(MontyHallAction):
-    def __init__(self, condition=None, condition_call=True):
+    def __init__(self, spoiled_games=None, condition=None, condition_call=True):
         &#39;&#39;&#39;
         Print the number of wins and losses.
 
         Parameters
         ----------
+        spoiled_games: str
+            Convenience option for dealing with spoiled games.  Options are:
+
+                - &#39;ignore&#39;: get results for all trial
+                - &#39;omit&#39;: don&#39;t include spoiled games
+                - &#39;only&#39;: only include results for spoiled games
+                - None: use a user-specified condition if provided
+
+            When specified, the `condition` and `condition_call` arguments
+            are ignored.
+
         condition :  callable or list-like
             Use this argument to show result for only certain trials.
             By default, this is expected to be a callable.  The callable is
@@ -1436,7 +1459,7 @@ it will simply be used to index the simulation.</p>
             A pre-computed condition can be applied by passing
             `condition_call=False` - in this case, `condition` will not be called,
             it will simply be used to index the simulation.
-        call : bool, optional
+        condition_call : bool, optional
             Treat `condition` as a callable. The default is True.
 
         Returns
@@ -1444,12 +1467,27 @@ it will simply be used to index the simulation.</p>
         None.
 
         &#39;&#39;&#39;
+        self.spoiled_games = spoiled_games
         self.condition = condition
         self.condition_call = condition_call
 
+    def _get_spoiled_games_condition(self, sim):
+        if self.spoiled_games == &#39;ignore&#39;:
+            bools = np.ones(sim.n, dtype=bool)
+        elif self.spoiled_games == &#39;omit&#39;:
+            bools = ~sim.spoiled
+        elif self.spoiled_games == &#39;only&#39;:
+            bools = sim.spoiled
+        else:
+            raise ValueError(&#39;`spoiled_games` must be &#34;ignore&#34;, &#34;omit&#34;, or &#34;only&#34;.&#39;)
+        return bools
+
     def __call__(self, sim):
-        condition_call = False if self.condition is None else self.condition_call
-        bools = self.condition(sim) if condition_call else self.conditon
+        if self.spoiled_games is not None:
+            bools = self._get_spoiled_games_condition(sim)
+        else:
+            condition_call = False if self.condition is None else self.condition_call
+            bools = self.condition(sim) if condition_call else self.condition
         res = sim.get_results(condition=bools)
         pprint.pprint(res, sort_dicts=False)
         return sim</code></pre>

@@ -473,6 +473,18 @@ class MontyHallSim:
         arr = getattr(self, target)
         return arr.sum(axis=1)
 
+    def show(self, start=0, end=10):
+        &#39;&#39;&#39;Printout a representation of a selection of rows of the simulation.&#39;&#39;&#39;
+        start = max(0, start)
+        end = min(self.n, end)
+        print(f&#39;Trials: {start}-{end-1}&#39;)
+        print(&#39;\nCars:&#39;)
+        print(self.cars[start:end, ])
+        print(&#39;\nRevealed:&#39;)
+        print(self.revealed[start:end, ])
+        print(&#39;\nPicked:&#39;)
+        print(self.picked[start:end, ])
+
     # ---- Generic setter functions
 
     def _get_spoiling_func(self, target):
@@ -682,6 +694,15 @@ class MontyHallSim:
                                     copy=True)
 
     # ---- Results
+
+    def is_win(self):
+        &#39;&#39;&#39;
+        Return a boolean array indicating which trials are wins.  I.e.,
+        at least one door with a car is picked.  Spoiled games have not
+        bearing on this method
+        &#39;&#39;&#39;
+        return np.any(self.picked * self.cars, axis=1)
+
     def get_results(self, condition=None):
         &#39;&#39;&#39;
         Return a dictionary containing the game results,
@@ -707,12 +728,14 @@ class MontyHallSim:
         losses = sim.n - wins
         percent_wins = (wins / sim.n) * 100
         percent_losses = (losses / sim.n) * 100
+        spoiled_games = np.any(sim.spoiled)
         results = {
             &#39;trials&#39;: sim.n,
             &#39;wins&#39;: wins,
             &#39;losses&#39;: losses,
             &#39;percent_wins&#39;: percent_wins,
-            &#39;percent_losses&#39;: percent_losses
+            &#39;percent_losses&#39;: percent_losses,
+            &#39;spoiled_games&#39;: spoiled_games
             }
 
         return results</code></pre>
@@ -1285,6 +1308,18 @@ simulation.</p>
         arr = getattr(self, target)
         return arr.sum(axis=1)
 
+    def show(self, start=0, end=10):
+        &#39;&#39;&#39;Printout a representation of a selection of rows of the simulation.&#39;&#39;&#39;
+        start = max(0, start)
+        end = min(self.n, end)
+        print(f&#39;Trials: {start}-{end-1}&#39;)
+        print(&#39;\nCars:&#39;)
+        print(self.cars[start:end, ])
+        print(&#39;\nRevealed:&#39;)
+        print(self.revealed[start:end, ])
+        print(&#39;\nPicked:&#39;)
+        print(self.picked[start:end, ])
+
     # ---- Generic setter functions
 
     def _get_spoiling_func(self, target):
@@ -1494,6 +1529,15 @@ simulation.</p>
                                     copy=True)
 
     # ---- Results
+
+    def is_win(self):
+        &#39;&#39;&#39;
+        Return a boolean array indicating which trials are wins.  I.e.,
+        at least one door with a car is picked.  Spoiled games have not
+        bearing on this method
+        &#39;&#39;&#39;
+        return np.any(self.picked * self.cars, axis=1)
+
     def get_results(self, condition=None):
         &#39;&#39;&#39;
         Return a dictionary containing the game results,
@@ -1519,12 +1563,14 @@ simulation.</p>
         losses = sim.n - wins
         percent_wins = (wins / sim.n) * 100
         percent_losses = (losses / sim.n) * 100
+        spoiled_games = np.any(sim.spoiled)
         results = {
             &#39;trials&#39;: sim.n,
             &#39;wins&#39;: wins,
             &#39;losses&#39;: losses,
             &#39;percent_wins&#39;: percent_wins,
-            &#39;percent_losses&#39;: percent_losses
+            &#39;percent_losses&#39;: percent_losses,
+            &#39;spoiled_games&#39;: spoiled_games
             }
 
         return results</code></pre>
@@ -1865,12 +1911,14 @@ both have 1s in the same position.</p>
     losses = sim.n - wins
     percent_wins = (wins / sim.n) * 100
     percent_losses = (losses / sim.n) * 100
+    spoiled_games = np.any(sim.spoiled)
     results = {
         &#39;trials&#39;: sim.n,
         &#39;wins&#39;: wins,
         &#39;losses&#39;: losses,
         &#39;percent_wins&#39;: percent_wins,
-        &#39;percent_losses&#39;: percent_losses
+        &#39;percent_losses&#39;: percent_losses,
+        &#39;spoiled_games&#39;: spoiled_games
         }
 
     return results</code></pre>
@@ -1892,6 +1940,28 @@ both have 1s in the same position.</p>
     self.picked = np.zeros(shape, dtype=int)
     self.revealed = np.zeros(shape, dtype=int)
     self.spoiled = np.zeros(self.n, dtype=bool)</code></pre>
+</details>
+</dd>
+<dt id="cargoat.sim.MontyHallSim.is_win"><code class="name flex">
+<span>def <span class="ident">is_win</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a boolean array indicating which trials are wins.
+I.e.,
+at least one door with a car is picked.
+Spoiled games have not
+bearing on this method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_win(self):
+    &#39;&#39;&#39;
+    Return a boolean array indicating which trials are wins.  I.e.,
+    at least one door with a car is picked.  Spoiled games have not
+    bearing on this method
+    &#39;&#39;&#39;
+    return np.any(self.picked * self.cars, axis=1)</code></pre>
 </details>
 </dd>
 <dt id="cargoat.sim.MontyHallSim.make_empty"><code class="name flex">
@@ -2111,6 +2181,28 @@ indexing both rows and columns is not as simple as passing
                             copy=False)</code></pre>
 </details>
 </dd>
+<dt id="cargoat.sim.MontyHallSim.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self, start=0, end=10)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Printout a representation of a selection of rows of the simulation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self, start=0, end=10):
+    &#39;&#39;&#39;Printout a representation of a selection of rows of the simulation.&#39;&#39;&#39;
+    start = max(0, start)
+    end = min(self.n, end)
+    print(f&#39;Trials: {start}-{end-1}&#39;)
+    print(&#39;\nCars:&#39;)
+    print(self.cars[start:end, ])
+    print(&#39;\nRevealed:&#39;)
+    print(self.revealed[start:end, ])
+    print(&#39;\nPicked:&#39;)
+    print(self.picked[start:end, ])</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -2145,12 +2237,14 @@ indexing both rows and columns is not as simple as passing
 <li><code><a title="cargoat.sim.MontyHallSim.get_results" href="#cargoat.sim.MontyHallSim.get_results">get_results</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.idx" href="#cargoat.sim.MontyHallSim.idx">idx</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.init_doors" href="#cargoat.sim.MontyHallSim.init_doors">init_doors</a></code></li>
+<li><code><a title="cargoat.sim.MontyHallSim.is_win" href="#cargoat.sim.MontyHallSim.is_win">is_win</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.make_empty" href="#cargoat.sim.MontyHallSim.make_empty">make_empty</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.pickable_doors" href="#cargoat.sim.MontyHallSim.pickable_doors">pickable_doors</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.query_doors_or" href="#cargoat.sim.MontyHallSim.query_doors_or">query_doors_or</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.revealable_doors" href="#cargoat.sim.MontyHallSim.revealable_doors">revealable_doors</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.select" href="#cargoat.sim.MontyHallSim.select">select</a></code></li>
 <li><code><a title="cargoat.sim.MontyHallSim.shape" href="#cargoat.sim.MontyHallSim.shape">shape</a></code></li>
+<li><code><a title="cargoat.sim.MontyHallSim.show" href="#cargoat.sim.MontyHallSim.show">show</a></code></li>
 </ul>
 </li>
 </ul>
