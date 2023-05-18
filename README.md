@@ -70,15 +70,13 @@ Additonally, cargoat allows you to have "spoiled" games where the actions of pla
 
 ## Documentation
 
-[API documentation is available here.](https://earnestt1234.github.io/cargoat/cargoat/) 
+[API documentation is available for cargoat](https://earnestt1234.github.io/cargoat/cargoat/).
 
-I am working on creating some vignettes showing more games, hopefully with some mathematical analysis, [a la this great post](https://www.untrammeledmind.com/2018/11/monty-hall-problem-and-variations-intuitive-solutions/).
+Also, [there are some vignettes showing more detailed usage of the package](https://htmlpreview.github.io/?https://github.com/earnestt1234/cargoat/blob/main/docs/vignettes/untrammeled_mind.html).  These examples simulate some variations explained [in this great post](https://www.untrammeledmind.com/2018/11/monty-hall-problem-and-variations-intuitive-solutions/).
 
 ## Contributing
 
 Please raise any issues, suggestions, or requests on the [issues page](https://github.com/earnestt1234/cargoat/issues).  I would love to have other contribute - specific guidelines TBD.
-
-The immediate goal for cargoat is to add a testing suite.
 
 ## License
 
