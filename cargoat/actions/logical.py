@@ -77,7 +77,7 @@ class IfElse(MontyHallAction):
 
     def __call__(self, sim):
 
-        bools = self.condition(sim) if self.condition_call else self.condition
+        bools = self.condition(sim).astype(bool) if self.condition_call else self.condition
         sim_true = sim.select(x=bools)
         sim_false = sim.select(x=~bools)
         sim_true._ifelse_index = bools
